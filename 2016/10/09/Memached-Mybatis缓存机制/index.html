@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="FastDFS," />
+  <meta name="keywords" content="data," />
 
 
 
@@ -79,21 +79,24 @@
 
 
 
-<meta name="description" content="一.前言前面我们说到FastDFS是一款高性能分布式文件系统，他的服务端主要分为两种角色：跟踪器和存储节点其实FastDFS这么牛逼，被很多公司使用最主要的原因还是因为他的分布式特点，为啥这么说呢，我个人理解就是他是分布式啊，分布式可以跨机器还能构建集群，这不就解决了很多内存啊效率的限制，主要还是用来解决海量数据的存储问题，你想啊，只要我有钱，多搭点集群，啥不都解决了~.~，下面来说下这款系统的由">
-<meta name="keywords" content="FastDFS">
+<meta name="description" content="简介关于缓存的问题，首先我们要知道为什么需要用到缓存——在我们做接触的缓存中大多是与数据库想关系的，而我们在实现业务也数据库相交互的时候，都会涉及底层框架JDBC，&amp;lt;不论是Hibernate还是Mybatis&amp;gt;,那么JDBC在实现操作数据库的增删改查是都会体现io流的操作，所以为了避免这种频繁的与数据库交互也增强了查询效率，提高用户的体验，我们使用缓存的形式，以付出内存来提高效率和安全">
+<meta name="keywords" content="data">
 <meta property="og:type" content="article">
-<meta property="og:title" content="FastDFS理论">
-<meta property="og:url" content="http://yoursite.com/2016/08/27/FastDFS理论/index.html">
+<meta property="og:title" content="Memached+Mybatis缓存机制">
+<meta property="og:url" content="http://yoursite.com/2016/10/09/Memached-Mybatis缓存机制/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="一.前言前面我们说到FastDFS是一款高性能分布式文件系统，他的服务端主要分为两种角色：跟踪器和存储节点其实FastDFS这么牛逼，被很多公司使用最主要的原因还是因为他的分布式特点，为啥这么说呢，我个人理解就是他是分布式啊，分布式可以跨机器还能构建集群，这不就解决了很多内存啊效率的限制，主要还是用来解决海量数据的存储问题，你想啊，只要我有钱，多搭点集群，啥不都解决了~.~，下面来说下这款系统的由">
+<meta property="og:description" content="简介关于缓存的问题，首先我们要知道为什么需要用到缓存——在我们做接触的缓存中大多是与数据库想关系的，而我们在实现业务也数据库相交互的时候，都会涉及底层框架JDBC，&amp;lt;不论是Hibernate还是Mybatis&amp;gt;,那么JDBC在实现操作数据库的增删改查是都会体现io流的操作，所以为了避免这种频繁的与数据库交互也增强了查询效率，提高用户的体验，我们使用缓存的形式，以付出内存来提高效率和安全">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/images/FastDFS_gaiyao.png">
-<meta property="og:image" content="http://yoursite.com/images/FastDFS_nginx.png">
-<meta property="og:updated_time" content="2018-08-26T06:12:48.663Z">
+<meta property="og:image" content="http://yoursite.com/images/memached_start.jpg">
+<meta property="og:image" content="http://yoursite.com/images/memached_1.jpg">
+<meta property="og:image" content="http://yoursite.com/images/memached_7.jpg">
+<meta property="og:image" content="http://yoursite.com/images/menached_suanfa.png">
+<meta property="og:image" content="http://yoursite.com/images/memached_end.png">
+<meta property="og:updated_time" content="2018-08-26T07:20:10.832Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="FastDFS理论">
-<meta name="twitter:description" content="一.前言前面我们说到FastDFS是一款高性能分布式文件系统，他的服务端主要分为两种角色：跟踪器和存储节点其实FastDFS这么牛逼，被很多公司使用最主要的原因还是因为他的分布式特点，为啥这么说呢，我个人理解就是他是分布式啊，分布式可以跨机器还能构建集群，这不就解决了很多内存啊效率的限制，主要还是用来解决海量数据的存储问题，你想啊，只要我有钱，多搭点集群，啥不都解决了~.~，下面来说下这款系统的由">
-<meta name="twitter:image" content="http://yoursite.com/images/FastDFS_gaiyao.png">
+<meta name="twitter:title" content="Memached+Mybatis缓存机制">
+<meta name="twitter:description" content="简介关于缓存的问题，首先我们要知道为什么需要用到缓存——在我们做接触的缓存中大多是与数据库想关系的，而我们在实现业务也数据库相交互的时候，都会涉及底层框架JDBC，&amp;lt;不论是Hibernate还是Mybatis&amp;gt;,那么JDBC在实现操作数据库的增删改查是都会体现io流的操作，所以为了避免这种频繁的与数据库交互也增强了查询效率，提高用户的体验，我们使用缓存的形式，以付出内存来提高效率和安全">
+<meta name="twitter:image" content="http://yoursite.com/images/memached_start.jpg">
 
 
 
@@ -123,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/08/27/FastDFS理论/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/10/09/Memached-Mybatis缓存机制/"/>
 
 
 
 
 
-  <title>FastDFS理论 | Hexo</title>
+  <title>Memached+Mybatis缓存机制 | Hexo</title>
   
 
 
@@ -245,7 +248,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/08/27/FastDFS理论/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/10/09/Memached-Mybatis缓存机制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -262,7 +265,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">FastDFS理论</h1>
+          <h1 class="post-title" itemprop="name headline">Memached+Mybatis缓存机制</h1>
         
 
         <div class="post-meta">
@@ -274,8 +277,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-27T13:05:39+08:00">
-                2016-08-27
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-09T09:59:44+08:00">
+                2016-10-09
               </time>
             
 
@@ -312,8 +315,9 @@
       
 
       
-        <h3 id="一-前言"><a href="#一-前言" class="headerlink" title="一.前言"></a>一.前言</h3><p>前面我们说到<strong>FastDFS</strong>是一款高性能分布式文件系统，他的服务端主要分为两种角色：<em>跟踪器</em>和<em>存储节点</em><br>其实<strong>FastDFS</strong>这么牛逼，被很多公司使用最主要的原因还是因为他的分布式特点，为啥这么说呢，我个人理解<br>就是他是分布式啊，分布式可以跨机器还能构建集群，这不就解决了很多内存啊效率的限制，主要还是用来解决海量<br>数据的存储问题，你想啊，只要我有钱，多搭点集群，啥不都解决了~.~，下面来说下这款系统的由来：*<em>FastDFS</em><br>据说是国内alibaba一个特别牛逼的架构师“余庆”开源的，是<em>C语言</em>编写的，并不是java，更多的就是适用于像我们<br>这种中小型的公司，他的主要使用于存储图片.视频.音频等这些小于100mb的小文件存储<br>具体流程思想呢，我是这样理解的：<br>首先，客户端发起文件上传的请求，然后先访问跟踪服务器集群(Tracker<br>cluster),跟踪服务器集群会选择真正存储文件的节点信息返回给客户端，客户端在发起真正的存储请求访问存储节<br>点Storage ，其实可以想象成跟踪器集群主要对存储节点起到一种监听作用<br><a id="more"></a></p>
-<h3 id="二-反向代理"><a href="#二-反向代理" class="headerlink" title="二.反向代理"></a>二.反向代理</h3><p>更详细一点说就是：Tracker负责协调client并与之发生心跳反应从而控制stroage，将客户端存储的信息具体应当存<br>放在哪个组告知client client从而直接存储在所告知的组里，组与组直接采用分布式系统<br>协调容纳客户端所带来的大容量的数据存储<br>其中每个组中起码会有两个stroage协调合作，但是两者存储的信息完全相同或者说是短板效应，其主要目的就是为<br>了备份和负载均衡的作用，当然了这样的集成肯定要用到nginx，简单点如图：<br><img src="/images/FastDFS_gaiyao.png" alt=""><br>fastdfs支持文件去重，他采用的是crc32算法相比于md5的加密技术还要高一些，去重的思想主要是数据存储后会以<br>一个源文件多个快捷方式，客户端操作的只是快捷方式，源文件并不会改动<br>为了避免分布式文件系统 的多ip情况 fastdfs提供了nginx反向代理 通过提供统一的请求入口<br>一方面避免了客户端访问多个ip存储数据的麻烦而且也不会将存储节点暴露给客户端起到了一定的数据安全作用<br><img src="/images/FastDFS_nginx.png" alt=""></p>
+        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>关于缓存的问题，<br>首先我们要知道为什么需要用到缓存——<br>在我们做接触的缓存中大多是与数据库想关系的，而我们在实现业务也数据库相交互的时候，都会涉及底层框架JDBC，&lt;不论是Hibernate还是Mybatis&gt;,那么JDBC在实现操作数据库的增删改查是都会体现io流的操作，所以为了避免这种频繁的与数据库交互也增强了查询效率，提高用户的体验，我们使用缓存的形式，以付出内存来提高效率和安全，下面简单说一下关于Mybatis的缓存机制：<br>就目前来看Mybatis提供了两种缓存机制（一级缓存.二级缓存），然而对于一级缓存，<em>Mybatis</em>是默认开始的，一级缓存只是相对于同一个SqlSession而言。所以在参数和SQL完全一样的情况下，我们使用同一个SqlSession对象调用一个Mapper方法，往往只执行一次SQL，因为使用SelSession第一次查询后，MyBatis会将其放在缓存中，以后再查询的时候，如果没有声明需要刷新，并且缓存没有超时的情况下，SqlSession都会取出当前缓存的数据，而不会再次发送SQL到数据库。每次执行缓存，都会创建一个SqlSession对象，然而一级缓存机制也紧紧存活在一次会话当中我们以图为例：<br><img src="/images/memached_start.jpg" alt=""><br><a id="more"></a></p>
+<h3 id="Mybatis二级缓存"><a href="#Mybatis二级缓存" class="headerlink" title="Mybatis二级缓存"></a>Mybatis二级缓存</h3><p>下面来说下<strong>二级缓存</strong>，二级缓存区分于一级缓存最大的收益就是他不仅仅存活在一次会话，他是属于一种Application级别的缓存，存活时间想当然，但是基于二级缓存的Mybaits一定要实现序列化接口。<br>关于Mybatis的缓存机制也就这么多了，下面说一下我接触到的分布式缓存机制：Redis的缓存框架给我们封装好了，仔细说一下冠以Memached的分布式缓存**<br>Memcached是一款免费，开源的，高性能的分布式缓存系统。当然这两种缓存是不一样的，一会在来说一下他们之间的区别，但是，你可以把redis比作一种数据库但是Memcached不是，他只是一个缓存系统，为啥这么说呢？我们说Redis可以通过RDB和AOF实现持久化，但是Memcached是没有持久化的，缓存没了就是没了，还需要从新在数据库中加载，所以啊，Memcached就是一种缓存系统，人家框架出来的目的就是为了让你缓存用的，你当别的用出了问题也怨你自己啊！<br>特点： 1 使用简单的key-value 存储的话，Memcached 的内存利用率更高。<br>2 频繁使用小数据，将这些小数据进行缓存，定期持久化就可以了，查询操作一直都 在内存中运行。<br>3 Memcached 仅限于缓存数据的应用，即使当机了，也不影响业务正常开展的这种<br>关于缓存的算法的主要有两种，余数算法和一致性Hash算法，简单说一下对这两种算法的理解：<br>余数算法：key.hashCode() % nodeCount=nodeIndex<br>主要是通过key的hash值 模上 服务器数量 对应的连接就是要存储的节点<br>这个比较简单，不多说了，<br>他的主要缺点就是如果服务器的数量发生变化，所有的服务器缓存都会在同一时间失效，这样所有的缓存都当机了，全部需要回到数据库从新操作，服务器会咋样想想都知道了,如图：<br><img src="/images/memached_1.jpg" alt=""></p>
+<h3 id="一致性算法"><a href="#一致性算法" class="headerlink" title="一致性算法"></a>一致性算法</h3><p><strong>一致性hash算法</strong>：这个就比较牛逼了，具体说下Memcached是怎么通过这种算法实现缓存的！<br>他首先是先求出memcached服务器节点的哈希值，并将其配置在0~2的32次方 的圆上如图所示：<br><img src="/images/memached_7.jpg" alt=""><br>然后在采用同样的方法算出存储数据key的hash值，然后映射到相同的圆上，然后从数据映射到的位置开始顺时针查找，将数据保存到找到的第⼀一个服务器器上。如果超过232 仍然找不不到服务器，就会保存到第一台memcached服务器器上 添加一台memcached服务器。余数分布式算法由于保存键的服务器器会发⽣生巨⼤大变化⽽而影响缓存 的命中率，但Consistent Hashing中，只有在圆（continuum）上增加服务器器的地点逆时针⽅方向 的第⼀一台服务器器上的键会受到影响，如下图所示：<br><img src="/images/menached_suanfa.png" alt=""><br>就是啥，每个缓存的节点都会找附近顺时针对应的最近的node上<br><img src="/images/memached_end.png" alt=""><br>就比如我在nodeB和nodeC有节点对应的缓存，假如C不行当机了NodeX就会寻找逆时针最近的服务器，这样来说受影响的只是服务器B和其他都没啥关系，对于数据库也没啥压力，对吧？他就是这个思想。一致性哈希算法是缓存机制应用的核心！<br>说了这么多 使用Redis实现缓存和Memached缓存的区别是啥呢？简单来说下：<br>1.Redis不仅仅可以key/values存储数据，还可以提供list set zset hash等类型的存储，而Memached只有key/values的存储方式，所以他的应用相对广泛<br>2.Redis支持数据的备份，即master-slave模式的数据备份<br>3.Redis支持数据持久化{RDB 和AOF}，将数据保存在磁盘中下次还可以提取出来，Memached不支持<br>4.redis单线程 Memcached多线程<br>5.Redis允许values最大512mb Memcached的values允许最大1mb<br>就差不多这些 个人感觉还是redis好，嘻嘻，毕竟用的多还不用多学习其他框架结构</p>
 
       
     </div>
@@ -331,7 +335,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/FastDFS/" rel="tag"># FastDFS</a>
+            <a href="/tags/data/" rel="tag"># data</a>
           
         </div>
       
@@ -344,8 +348,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/08/26/FastDFS心得/" rel="next" title="FastDFS心得">
-                <i class="fa fa-chevron-left"></i> FastDFS心得
+              <a href="/2016/09/18/Freemarker/" rel="next" title="Freemarker">
+                <i class="fa fa-chevron-left"></i> Freemarker
               </a>
             
           </div>
@@ -354,8 +358,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/09/18/Freemarker/" rel="prev" title="Freemarker">
-                Freemarker <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/25/hello-world/" rel="prev" title="Hello World">
+                Hello World <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -492,7 +496,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一-前言"><span class="nav-number">1.</span> <span class="nav-text">一.前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二-反向代理"><span class="nav-number">2.</span> <span class="nav-text">二.反向代理</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mybatis二级缓存"><span class="nav-number">2.</span> <span class="nav-text">Mybatis二级缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一致性算法"><span class="nav-number">3.</span> <span class="nav-text">一致性算法</span></a></li></ol></div>
             
 
           </div>
