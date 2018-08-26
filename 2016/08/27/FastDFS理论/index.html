@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="FastDFS," />
 
 
 
@@ -79,17 +79,21 @@
 
 
 
-<meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="description" content="一.前言前面我们说到FastDFS是一款高性能分布式文件系统，他的服务端主要分为两种角色：跟踪器和存储节点其实FastDFS这么牛逼，被很多公司使用最主要的原因还是因为他的分布式特点，为啥这么说呢，我个人理解就是他是分布式啊，分布式可以跨机器还能构建集群，这不就解决了很多内存啊效率的限制，主要还是用来解决海量数据的存储问题，你想啊，只要我有钱，多搭点集群，啥不都解决了~.~，下面来说下这款系统的由">
+<meta name="keywords" content="FastDFS">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://yoursite.com/2018/08/25/hello-world/index.html">
+<meta property="og:title" content="FastDFS理论">
+<meta property="og:url" content="http://yoursite.com/2016/08/27/FastDFS理论/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="一.前言前面我们说到FastDFS是一款高性能分布式文件系统，他的服务端主要分为两种角色：跟踪器和存储节点其实FastDFS这么牛逼，被很多公司使用最主要的原因还是因为他的分布式特点，为啥这么说呢，我个人理解就是他是分布式啊，分布式可以跨机器还能构建集群，这不就解决了很多内存啊效率的限制，主要还是用来解决海量数据的存储问题，你想啊，只要我有钱，多搭点集群，啥不都解决了~.~，下面来说下这款系统的由">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-25T08:51:23.346Z">
+<meta property="og:image" content="http://yoursite.com/images/FastDFS_gaiyao.png">
+<meta property="og:image" content="http://yoursite.com/images/FastDFS_nginx.png">
+<meta property="og:updated_time" content="2018-08-26T06:10:27.346Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="twitter:title" content="FastDFS理论">
+<meta name="twitter:description" content="一.前言前面我们说到FastDFS是一款高性能分布式文件系统，他的服务端主要分为两种角色：跟踪器和存储节点其实FastDFS这么牛逼，被很多公司使用最主要的原因还是因为他的分布式特点，为啥这么说呢，我个人理解就是他是分布式啊，分布式可以跨机器还能构建集群，这不就解决了很多内存啊效率的限制，主要还是用来解决海量数据的存储问题，你想啊，只要我有钱，多搭点集群，啥不都解决了~.~，下面来说下这款系统的由">
+<meta name="twitter:image" content="http://yoursite.com/images/FastDFS_gaiyao.png">
 
 
 
@@ -119,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/08/25/hello-world/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/08/27/FastDFS理论/"/>
 
 
 
 
 
-  <title>Hello World | Hexo</title>
+  <title>FastDFS理论 | Hexo</title>
   
 
 
@@ -241,7 +245,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/25/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/08/27/FastDFS理论/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -258,7 +262,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hello World</h1>
+          <h1 class="post-title" itemprop="name headline">FastDFS理论</h1>
         
 
         <div class="post-meta">
@@ -270,8 +274,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-25T16:51:23+08:00">
-                2018-08-25
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-27T13:05:39+08:00">
+                2016-08-27
               </time>
             
 
@@ -308,15 +312,7 @@
       
 
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+        <h3 id="一-前言"><a href="#一-前言" class="headerlink" title="一.前言"></a>一.前言</h3><p>前面我们说到<strong>FastDFS</strong>是一款高性能分布式文件系统，他的服务端主要分为两种角色：<em>跟踪器</em>和<em>存储节点</em><br>其实<strong>FastDFS</strong>这么牛逼，被很多公司使用最主要的原因还是因为他的分布式特点，为啥这么说呢，我个人理解<br>就是他是分布式啊，分布式可以跨机器还能构建集群，这不就解决了很多内存啊效率的限制，主要还是用来解决海量<br>数据的存储问题，你想啊，只要我有钱，多搭点集群，啥不都解决了~.~，下面来说下这款系统的由来：*<em>FastDFS</em><br>据说是国内alibaba一个特别牛逼的架构师“余庆”开源的，是<em>C语言</em>编写的，并不是java，更多的就是适用于像我们<br>这种中小型的公司，他的主要使用于存储图片.视频.音频等这些小于100mb的小文件存储<br>具体流程思想呢，我是这样理解的：<br>首先，客户端发起文件上传的请求，然后先访问跟踪服务器集群(Tracker<br>cluster),跟踪服务器集群会选择真正存储文件的节点信息返回给客户端，客户端在发起真正的存储请求访问存储节<br>点Storage ，其实可以想象成跟踪器集群主要对存储节点起到一种监听作用<br><a id="more"></a><br>更详细一点说就是：Tracker负责协调client并与之发生心跳反应从而控制stroage，将客户端存储的信息具体应当存<br>放在哪个组告知client client从而直接存储在所告知的组里，组与组直接采用分布式系统<br>协调容纳客户端所带来的大容量的数据存储<br>其中每个组中起码会有两个stroage协调合作，但是两者存储的信息完全相同或者说是短板效应，其主要目的就是为<br>了备份和负载均衡的作用，当然了这样的集成肯定要用到nginx，简单点如图：<br><img src="/images/FastDFS_gaiyao.png" alt=""><br>fastdfs支持文件去重，他采用的是crc32算法相比于md5的加密技术还要高一些，去重的思想主要是数据存储后会以<br>一个源文件多个快捷方式，客户端操作的只是快捷方式，源文件并不会改动<br>为了避免分布式文件系统 的多ip情况 fastdfs提供了nginx反向代理 通过提供统一的请求入口<br>一方面避免了客户端访问多个ip存储数据的麻烦而且也不会将存储节点暴露给客户端起到了一定的数据安全作用<br><img src="/images/FastDFS_nginx.png" alt=""></p>
 
       
     </div>
@@ -332,6 +328,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/FastDFS/" rel="tag"># FastDFS</a>
+          
+        </div>
+      
 
       
       
@@ -341,8 +343,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/08/27/FastDFS理论/" rel="next" title="FastDFS理论">
-                <i class="fa fa-chevron-left"></i> FastDFS理论
+              <a href="/2016/08/26/FastDFS心得/" rel="next" title="FastDFS心得">
+                <i class="fa fa-chevron-left"></i> FastDFS心得
               </a>
             
           </div>
@@ -350,6 +352,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/25/hello-world/" rel="prev" title="Hello World">
+                Hello World <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -485,7 +491,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一-前言"><span class="nav-number">1.</span> <span class="nav-text">一.前言</span></a></li></ol></div>
             
 
           </div>
