@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="JAVA," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="简介关于多线程在JAVASE中应该是除了反射相对抽象复杂的篇幅了，来简单说一下对线程的理解，里面也有很多查找来自资料和百度百科1.什么是线程线程，有时也被称之为轻量进程，是程序执行流的最小单元，一个标准的线程由线程id{Thread.currentThread().getId()获取}.当前指令指针{PC}.寄存器集合和堆栈组成。另外，线程是进程中的一个实体，是被系统独立调度和分派的基本单位，线程">
+<meta name="keywords" content="JAVA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="多线程">
+<meta property="og:url" content="http://yoursite.com/2017/08/27/多线程/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="简介关于多线程在JAVASE中应该是除了反射相对抽象复杂的篇幅了，来简单说一下对线程的理解，里面也有很多查找来自资料和百度百科1.什么是线程线程，有时也被称之为轻量进程，是程序执行流的最小单元，一个标准的线程由线程id{Thread.currentThread().getId()获取}.当前指令指针{PC}.寄存器集合和堆栈组成。另外，线程是进程中的一个实体，是被系统独立调度和分派的基本单位，线程">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/xiancheng.jpg">
+<meta property="og:image" content="http://yoursite.com/images/huchisuo.jpg">
+<meta property="og:image" content="http://yoursite.com/images/ConcurrentHashMap1.jpg">
+<meta property="og:image" content="http://yoursite.com/inages/weixin.jpg">
+<meta property="og:updated_time" content="2018-08-28T01:36:50.671Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="多线程">
+<meta name="twitter:description" content="简介关于多线程在JAVASE中应该是除了反射相对抽象复杂的篇幅了，来简单说一下对线程的理解，里面也有很多查找来自资料和百度百科1.什么是线程线程，有时也被称之为轻量进程，是程序执行流的最小单元，一个标准的线程由线程id{Thread.currentThread().getId()获取}.当前指令指针{PC}.寄存器集合和堆栈组成。另外，线程是进程中的一个实体，是被系统独立调度和分派的基本单位，线程">
+<meta name="twitter:image" content="http://yoursite.com/images/xiancheng.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/27/多线程/"/>
+
+
+
+
+
+  <title>多线程 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-something">
+          <a href="/something" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            something
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/27/多线程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">多线程</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-27T20:40:20+08:00">
+                2017-08-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>关于多线程在JAVASE中应该是除了反射相对抽象复杂的篇幅了，来简单说一下对线程的理解，里面也有很多查找来自资料和百度百科<br><strong>1.什么是线程</strong><br>线程，有时也被称之为轻量进程，是程序执行流的最小单元，一个标准的线程由线程id{Thread.currentThread().getId()获取}.当前指令指针{PC}.寄存器集合和堆栈组成。另外，线程是进程中的一个实体，是被系统独立调度和分派的基本单位，线程自己不拥有系统资源，只拥有一点儿在运行中必不可少的资源，但它可与同属一个进程的其它线程共享进程所拥有的全部资源。一个线程可以创建和撤消另一个线程，同一进程中的多个线程之间可以并发执行。由于线程之间的相互制约，致使线程在运行中呈现出间断性。线程也有就绪、阻塞和运行三种基本状态。就绪状态是指线程具备运行的所有条件，逻辑上可以运行，在等待处理机；运行状态是指线程占有处理机正在运行；阻塞状态是指线程在等待一个事件（如某个信号量），逻辑上不可执行。每一个程序都至少有一个线程，若程序只有一个线程，那就是程序本身。<br><strong>什么又是多线程</strong><br>多线程无非就是这个程序或者说这个进程在运行时产生了不止一个线程。<br><em>那么为什么要用到多线程呢？</em>其实最终的目的只有一个，那就是更好的利用CPU资源，因为所有的多线程代码其实都可以用单线程来实现，使用它的目的也就是为了高效性{其实编程的发展趋势也一样子，每一个新兴的框架崛起都是因为其开发高效实用！}<br><em>什么又是多线程的并行和串行</em>{觉得先了解概念在深入了解比较透彻}<br>并行：指的就是多个cpu程序或者说多个机器同时去执行一段处理逻辑<br>串行：通过cpu调度算法，让用户看上去同时执行，实际上从cpu操作层面不是真正的同时。并发往往在场景中有公用的资源，那么针对这个公用的资源往往产生瓶颈，我们会用TPS或者QPS来反应这个系统的处理能力<br>我们现代的电脑运行程序可以这样理解：cpu分时间片宏观并行，微观串行！<br><a id="more"></a><br>为啥这么说呢？其实我们的电脑你开好多软件同时使用感觉没什么问题为啥就不单单是并行，其实电脑的运行也是cpu在运行时只有一段运行的逻辑，他只是cpu运行的时候分成了时间片 每个我们开启的程序中，他会一个程序执行一点然后换下一个程序在执行一点，只不过他时间特别快你感觉到的就是你开启的所有程序一起运行的{这也是为啥电脑软件开多了会有卡慢的现象，但是现在电脑越出越狠这中运算不灵验了，4核8核16核的，所以啊，科技在进步，思想的努力往前跟，不然生了孩子都不能算出来是不是自己的多愁人啊？？？}</p>
+<h3 id="线程的状态等"><a href="#线程的状态等" class="headerlink" title="线程的状态等"></a>线程的状态等</h3><p>关于线程的其他介绍就不说了，也不知道该咋组织语言说，但是下面的多线程问题.同步机制这些应该会说明线程的一些状态，如图：<br><img src="/images/xiancheng.jpg" alt=""></p>
+<h3 id="多线程问题"><a href="#多线程问题" class="headerlink" title="多线程问题"></a>多线程问题</h3><p>记得某某人概括了一下什么时候回触发多线程问题：当多线程共同访问临界资源时，如果触发了原子操作，就会产生多线程问题{术语应该是}<br>解释下就是：-临界资源-就是用以访问共同资源的一块代码块{就比如一段代码被多个线程同时访问}<br>            -原子操作-就是不可分割的操作<br>            解释下就是当多个线程共同访问了一个资源的时候，如果破坏了其中不可分割的操作就会产生数据的读写不一致的问题</p>
+<h3 id="线程的同步机制"><a href="#线程的同步机制" class="headerlink" title="线程的同步机制"></a>线程的同步机制</h3><p>针对线程的问题JAVA中提供了一种同步机制，当一个线程试图访问一个临界区时，它将使用一种同步机制来查看是不是已有其他线程进入临界区。如果没有其他线程进入临界区，它就可以进入临界区；如果已有线程进入了临界区，它就被同步机制挂起，直到进入的线程离开这个临界区。如果在等待进入临界区的线程不止一个，JVM会随机选择其中的一个，其余的将继续等待。<br>1.通常的做法就是加锁的形式实现线程的同步，在函数返回值前加synchronized关键字声明加锁或者在代码块是使用synchronized关键字</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> public synchronized void caotian(int age) &#123;</span><br><span class="line"> age=18;</span><br><span class="line"> System.out.println(&quot;CTNB&quot;+age)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">synchronized(obj)&#123;</span><br><span class="line">System.out.println(&quot;CTNB&quot;)</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>2.使用非依赖属性实现同步<br>非依赖属性：例如在一个类中有两个非依赖属性，Object obj1,Object obj2;他们被多个线程共享，那么同一时间只允许一个线程访问其中的一个属性变量，其他的某个线程访问另一个属性变量。<br>举例如下：两个看电影的房间和两个售票口，一个售票处卖出的一张票，只能用于其中的一个电影院。不能同时作用于两个电影房间。</p>
+<h3 id="锁分类"><a href="#锁分类" class="headerlink" title="锁分类"></a>锁分类</h3><p>关于锁的分类，有挺多种，死定义加上个人理解简单说一下，接触java大数据的话锁机制还是要安排的明明白白的！</p>
+<h6 id="1-公平锁、非公平锁"><a href="#1-公平锁、非公平锁" class="headerlink" title="1.公平锁、非公平锁"></a>1.公平锁、非公平锁</h6><p>公平锁是指多个线程按照申请锁的顺序来获取锁<br>非公平锁是指多个线程获取锁的顺序并不是按照申请锁的顺序，可能后申请的线程比先申请的线程优先获取锁，也有可能会造成优先级的反转或者饥饿现象。<br>对于Java ReentrantLock{重入锁}而言，通过构造函数指定该锁是否是公平锁，默认是非公平锁。非公平锁的优点在于吞吐量比公平锁大。<br>对于Synchronized而言，也是一种非公平锁。由于其并不像ReentrantLock是通过AQS的来实现线程调度，所以并没有任何办法使其变成公平锁。</p>
+<h6 id="2-可重入锁"><a href="#2-可重入锁" class="headerlink" title="2.可重入锁"></a>2.可重入锁</h6><p>可重入锁又名递归锁，是一种递归无阻塞的同步机制。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">synchronized void Ct1() throws Exception&#123;</span><br><span class="line">    Thread.sleep(3000);</span><br><span class="line">    Ct2();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">synchronized void Ct2() throws Exception&#123;</span><br><span class="line">    Thread.sleep(1000);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h6 id="3-独享锁-共享锁"><a href="#3-独享锁-共享锁" class="headerlink" title="3.独享锁.共享锁"></a>3.独享锁.共享锁</h6><p>独享锁是指该锁一次只能被一个线程所持有。<br>共享锁是指该锁可被多个线程所持有。<br>读锁的共享锁可保证并发读是非常高效的，读写，写读 ，写写的过程是互斥的。<br>独享锁与共享锁也是通过AQS来实现的，通过实现不同的方法，来实现独享或者共享。<br>对于Synchronized而言，当然是独享锁。</p>
+<h6 id="4-互斥锁-读写锁"><a href="#4-互斥锁-读写锁" class="headerlink" title="4.互斥锁.读写锁"></a>4.互斥锁.读写锁</h6><p>关于互斥和读写锁，相交进程之间的关系主要有两种，同步与互斥。所谓互斥，是指散步在不同进程之间的若干程序片断，当某个进程运行其中一个程序片段时，其它进程就不能运行它 们之中的任一程序片段，只能等到该进程运行完这个程序片段后才可以运行。所谓同步，是指散步在不同进程之间的若干程序片断，它们的运行必须严格按照规定的 某种先后次序来运行，这种先后次序依赖于要完成的特定的任务。<br>　　显然，同步是一种更为复杂的互斥，而互斥是一种特殊的同步。<br>　　也就是说互斥是两个线程之间不可以同时运行，他们会相互排斥，必须等待一个线程运行完毕，另一个才能运行，而同步也是不能同时运行，但他是必须要安照某种次序来运行相应的线程（也是一种互斥）！<br>　　总结：互斥：是指某一资源同时只允许一个访问者对其进行访问，具有唯一性和排它性。但互斥无法限制访问者对资源的访问顺序，即访问是无序的。<br>　　同步：是指在互斥的基础上（大多数情况），通过其它机制实现访问者对资源的有序访问。在大多数情况下，同步已经实现了互斥，特别是所有写入资源的情况必定是互斥的。少数情况是指可以允许多个访问者同时访问资源。<br>　　如图{来源百度百科.侵删}：<br>　　<img src="/images/huchisuo.jpg" alt=""></p>
+<h6 id="5-乐观锁-悲观锁"><a href="#5-乐观锁-悲观锁" class="headerlink" title="5.乐观锁.悲观锁"></a>5.乐观锁.悲观锁</h6><p>乐观锁：总是认为不会产生并发问题，每次去取数据的时候总认为不会有其他线程对数据进行修改，因此不会上锁，但是在更新时会判断其他线程在这之前有没有对数据进行修改，一般会使用版本号机制或CAS操作实现<br>悲观锁： 总是假设最坏的情况，每次取数据时都认为其他线程会修改，所以都会加锁（读锁、写锁、行锁等），当其他线程想要访问数据时，都需要阻塞挂起。可以依靠数据库实现，如行锁、读锁和写锁等，都是在操作之前加锁，在Java中，synchronized的思想也是悲观锁。<br>简而言之：<br>悲观锁：假定会发生并发冲突，屏蔽一切可能违反数据完整性的操作。[1]<br>乐观锁：假设不会发生并发冲突，只在提交操作时检查是否违反数据完整性。[1] 乐观锁不能解决脏读的问题。<br>Java中的乐观锁和悲观锁：我们都知道，cpu是时分复用的，也就是把cpu的时间片，分配给不同的thread/process轮流执行，时间片与时间片之间，需要进行cpu切换，也就是会发生进程的切换。切换涉及到清空寄存器，缓存数据。然后重新加载新的thread所需数据。当一个线程被挂起时，加入到阻塞队列，在一定的时间或条件下，在通过notify()，notifyAll()唤醒回来。在某个资源不可用的时候，就将cpu让出，把当前等待线程切换为阻塞状态。等到资源(比如一个共享数据）可用了，那么就将线程唤醒，让他进入runnable状态等待cpu调度。这就是典型的悲观锁的实现。独占锁是一种悲观锁，synchronized就是一种独占锁，它假设最坏的情况，并且只有在确保其它线程不会造成干扰的情况下执行，会导致其它所有需要锁的线程挂起，等待持有锁的线程释放锁。<br>但是，由于在进程挂起和恢复执行过程中存在着很大的开销。当一个线程正在等待锁时，它不能做任何事，所以悲观锁有很大的缺点。举个例子，如果一个线程需要某个资源，但是这个资源的占用时间很短，当线程第一次抢占这个资源时，可能这个资源被占用，如果此时挂起这个线程，可能立刻就发现资源可用，然后又需要花费很长的时间重新抢占锁，时间代价就会非常的高。<br>所以就有了乐观锁的概念，他的核心思路就是，每次不加锁而是假设没有冲突而去完成某项操作，如果因为冲突失败就重试，直到成功为止。在上面的例子中，某个线程可以不让出cpu,而是一直while循环，如果失败就重试，直到成功为止。所以，当数据争用不严重时，乐观锁效果更好。比如CAS就是一种乐观锁思想的应用。<br>JDK1.5中引入了底层的支持，在int、long和对象的引用等类型上都公开了CAS的操作，并且JVM把它们编译为底层硬件提供的最有效的方法，在运行CAS的平台上，运行时把它们编译为相应的机器指令。在java.util.concurrent.atomic包下面的所有的原子变量类型中，比如AtomicInteger，都使用了这些底层的JVM支持为数字类型的引用类型提供一种高效的CAS操作。<br>在CAS操作中，会出现ABA问题。就是如果V的值先由A变成B，再由B变成A，那么仍然认为是发生了变化，并需要重新执行算法中的步骤。有简单的解决方案：不是更新某个引用的值，而是更新两个值，包括一个引用和一个版本号，即使这个值由A变为B，然后为变为A，版本号也是不同的。AtomicStampedReference和AtomicMarkableReference支持在两个变量上执行原子的条件更新。AtomicStampedReference更新一个“对象-引用”二元组，通过在引用上加上“版本号”，从而避免ABA问题，AtomicMarkableReference将更新一个“对象引用-布尔值”的二元组。</p>
+<h6 id="6-分段锁"><a href="#6-分段锁" class="headerlink" title="6.分段锁"></a>6.分段锁</h6><p>在分析ConcurrentHashMap的源码的时候，了解到这个并发容器类的加锁机制是基于粒度更小的分段锁，分段锁也是提升多并发程序性能的重要手段之一。<br>在并发程序中，串行操作是会降低可伸缩性，并且上下文切换也会减低性能。在锁上发生竞争时将通水导致这两种问题，使用独占锁时保护受限资源的时候，基本上是采用串行方式—-每次只能有一个线程能访问它。所以对于可伸缩性来说最大的威胁就是独占锁。<br>我们一般有三种方式降低锁的竞争程度：<br>1、减少锁的持有时间<br>2、降低锁的请求频率<br>3、使用带有协调机制的独占锁，这些机制允许更高的并发性。<br><strong>分段锁</strong>其实是一种锁的设计，并不是具体的一种锁，对于ConcurrentHashMap而言，其并发的实现就是通过分段锁的形式来实现高效的并发操作。<br>我们以ConcurrentHashMap来说一下分段锁的含义以及设计思想，ConcurrentHashMap中的分段锁称为Segment，它即类似于HashMap（JDK7与JDK8中HashMap的实现）的结构，即内部拥有一个Entry数组，数组中的每个元素又是一个链表；同时又是一个ReentrantLock（Segment继承了ReentrantLock)。<br>当需要put元素的时候，并不是对整个hashmap进行加锁，而是先通过hashcode来知道他要放在那一个分段中，然后对这个分段进行加锁，所以当多线程put的时候，只要不是放在一个分段中，就实现了真正的并行的插入。<br>但是，在统计size的时候，可就是获取hashmap全局信息的时候，就需要获取所有的分段锁才能统计。<br><strong>分段锁</strong>的设计目的是细化锁的粒度，当操作不需要更新整个数组的时候，就仅仅针对数组中的一项进行加锁操作。<br><strong>ConcurrentHashMap</strong>是由Segment数组结构和HashEntry数组结构组成。Segment是一种可重入锁ReentrantLock，在ConcurrentHashMap里扮演锁的角色，HashEntry则用于存储键值对数据。一个ConcurrentHashMap里包含一个Segment数组，Segment的结构和HashMap类似，是一种数组和链表结构， 一个Segment里包含一个HashEntry数组，每个HashEntry是一个链表结构的元素， 每个Segment守护者一个HashEntry数组里的元素,当对HashEntry数组的数据进行修改时，必须首先获得它对应的Segment锁。<br><img src="/images/ConcurrentHashMap1.jpg" alt=""></p>
+<h6 id="7-偏向锁-轻量级锁-重量级锁"><a href="#7-偏向锁-轻量级锁-重量级锁" class="headerlink" title="7.偏向锁/轻量级锁/重量级锁"></a>7.偏向锁/轻量级锁/重量级锁</h6><p>这三种锁是指锁的状态，并且是针对Synchronized。在Java 5通过引入锁升级的机制来实现高效Synchronized。这三种锁的状态是通过对象监视器在对象头中的字段来表明的。<br>偏向锁是指一段同步代码一直被一个线程所访问，那么该线程会自动获取锁。降低获取锁的代价。<br>轻量级锁是指当锁是偏向锁的时候，被另一个线程所访问，偏向锁就会升级为轻量级锁，其他线程会通过自旋的形式尝试获取锁，不会阻塞，提高性能。<br>重量级锁是指当锁为轻量级锁的时候，另一个线程虽然是自旋，但自旋不会一直持续下去，当自旋一定次数的时候，还没有获取到锁，就会进入阻塞，该锁膨胀为重量级锁。重量级锁会让其他申请的线程进入阻塞，性能降低。</p>
+<h6 id="8-自旋锁"><a href="#8-自旋锁" class="headerlink" title="8.自旋锁"></a>8.自旋锁</h6><p>在Java中，自旋锁是指尝试获取锁的线程不会立即阻塞，而是采用循环的方式去尝试获取锁，这样的好处是减少线程上下文切换的消耗，缺点是循环会消耗CPU。<br><img src="/inages/weixin.jpg" alt=""></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JAVA/" rel="tag"># JAVA</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/13/Quartz/" rel="next" title="Quartz">
+                <i class="fa fa-chevron-left"></i> Quartz
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/25/hello-world/" rel="prev" title="Hello World">
+                Hello World <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/1.jpg"
+                alt="John Doe" />
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程的状态等"><span class="nav-number">2.</span> <span class="nav-text">线程的状态等</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多线程问题"><span class="nav-number">3.</span> <span class="nav-text">多线程问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程的同步机制"><span class="nav-number">4.</span> <span class="nav-text">线程的同步机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#锁分类"><span class="nav-number">5.</span> <span class="nav-text">锁分类</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-公平锁、非公平锁"><span class="nav-number">5.0.0.1.</span> <span class="nav-text">1.公平锁、非公平锁</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-可重入锁"><span class="nav-number">5.0.0.2.</span> <span class="nav-text">2.可重入锁</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-独享锁-共享锁"><span class="nav-number">5.0.0.3.</span> <span class="nav-text">3.独享锁.共享锁</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#4-互斥锁-读写锁"><span class="nav-number">5.0.0.4.</span> <span class="nav-text">4.互斥锁.读写锁</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#5-乐观锁-悲观锁"><span class="nav-number">5.0.0.5.</span> <span class="nav-text">5.乐观锁.悲观锁</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#6-分段锁"><span class="nav-number">5.0.0.6.</span> <span class="nav-text">6.分段锁</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#7-偏向锁-轻量级锁-重量级锁"><span class="nav-number">5.0.0.7.</span> <span class="nav-text">7.偏向锁/轻量级锁/重量级锁</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#8-自旋锁"><span class="nav-number">5.0.0.8.</span> <span class="nav-text">8.自旋锁</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  访客:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Caotian</a> 驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<script type="text/javascript" src="/js/src/love.js"></script>
