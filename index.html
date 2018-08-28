@@ -358,6 +358,127 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/03/网络应用架构的演变和网络编程问题First/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/03/网络应用架构的演变和网络编程问题First/" itemprop="url">网络应用架构的演变和网络编程问题First</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-03T17:24:54+08:00">
+                2017-09-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>简单说一下高并发互联网应用架构的演变过程<br>开始的互联网知识<strong>单一应用的网络架构</strong>他的主要特点就是框架成分简单，扩展.维护的成本相对较高，耦合度也相对较高，比较开源啊；<br>随着网络的节节高升，<strong>垂直应用的架</strong>构慢慢兴起，他主要出色的地方就在于<strong>垂直应用的架构{即mvc}</strong>分工明确，每个模块都会有各自负责的岗位.各司其职，对于开发来说更加的结构化，规律性比较好在后来<strong>分布式服务架构</strong>因为其服务化的趋向越来越适用于当代需求，许多大型公司开始向服务型架构演变并开发开源，再后来就是<strong>流动计算型架构</strong>了。怎么说呢？并不是越往后的架构就一定比之前的要好，应用框架对于编程来说不仅仅是一个进步的趋势，也是一个相对走向完善完美的方向，每一个方向都会根据实际的需求而定，毕竟业务有需求嘛！</p>
+<p>&lt;–! more–&gt;<br>可能对于架构会有一些抽象化，打个比方：像<strong>单一的应用架构</strong>就像ORM的Hibernate为例，Hibernate就是绝对的单一应用架构。<strong>垂直的应用架构即mvc</strong>我接触到的想struts2和springmvc就是mvc型规则架构了，你看就比如springmvc，有专门的模块，视图，controller，每一个点专门负责各自的位置。但是这个对现在发展趋势而言，他是有缺点的，就比如最明显的，当系统的功能无法提供是，就需要调用第三方的web服务，他是不能实现的。所以啊！<strong>分布式的服务架构</strong>他的服务化走向就越来越牛逼了！这里主要来说的就是服务化的一些架构常识！架构如图：<br><img src="/images/jiagoutu.png" alt=""><br>图示很明显说到异构系统之间的远程调用{RPC} 可以用到<strong>webservice</strong>但是他相对开发服务来说效率并不是很高，因为WebServices 是建立在 HTTP 基础之上的，而 HTTP 是建立在 TCP 基础上的。也就是说 WebServices 在 TCP 基础上包装了两层！<br>而且webservice需要解析XML、需要传递大量重复的XML标记。那什么效率很高呢？我觉得就是网络协议+io模型是最高的RPC效率方案了。<br>下面来说下关于io模型的设计方案和读写状态信息（下篇在说协议相关）<br>关于<strong>io模型</strong>可以分为 BIO.NIO.AIO三种<br><strong>BIO</strong>：BIO又叫做同步阻塞IO，他就像我们JAVASE时候的io设计和传输方式一样，打个比方啊！你肯定听过关于io流 ，按方向分：有输入流和输出流；按单位划分有字节流和字符流；按功能分有节点流和过滤流，来写个关于io流的方式进行文件的读入和写出；如图：<br><img src="/images/BIO.png" alt=""><br><strong>NIO</strong>:NIO有叫做同步非阻塞IO；他里面主要有三个组件  buffer(缓冲区)  channel(管道)  selector(选择器)这里来说下管道一些认识(选择器下篇和协议一起认识下)，简单做了个图片：<br><img src="/images/Buffer.png" alt=""><br>切记 管道的读写是将操作情况交给缓冲区，在由缓冲区负责于管道之间的交互，而管道中读写操作的区间是在positision和limit指针之间；示例代码：<br><img src="/images/niodaima.jpg" alt=""></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/27/多线程/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1420,7 +1541,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1442,7 +1563,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

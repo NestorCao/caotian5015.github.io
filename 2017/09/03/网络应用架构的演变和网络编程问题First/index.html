@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="data," />
+  <meta name="keywords" content="http," />
 
 
 
@@ -79,24 +79,23 @@
 
 
 
-<meta name="description" content="简介关于缓存的问题，首先我们要知道为什么需要用到缓存——在我们做接触的缓存中大多是与数据库想关系的，而我们在实现业务也数据库相交互的时候，都会涉及底层框架JDBC，&amp;lt;不论是Hibernate还是Mybatis&amp;gt;,那么JDBC在实现操作数据库的增删改查是都会体现io流的操作，所以为了避免这种频繁的与数据库交互也增强了查询效率，提高用户的体验，我们使用缓存的形式，以付出内存来提高效率和安全">
-<meta name="keywords" content="data">
+<meta name="description" content="简介简单说一下高并发互联网应用架构的演变过程开始的互联网知识单一应用的网络架构他的主要特点就是框架成分简单，扩展.维护的成本相对较高，耦合度也相对较高，比较开源啊；随着网络的节节高升，垂直应用的架构慢慢兴起，他主要出色的地方就在于垂直应用的架构{即mvc}分工明确，每个模块都会有各自负责的岗位.各司其职，对于开发来说更加的结构化，规律性比较好在后来分布式服务架构因为其服务化的趋向越来越适用于当代需">
+<meta name="keywords" content="http">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Memached+Mybatis缓存机制">
-<meta property="og:url" content="http://yoursite.com/2016/10/09/Memached-Mybatis缓存机制/index.html">
+<meta property="og:title" content="网络应用架构的演变和网络编程问题First">
+<meta property="og:url" content="http://yoursite.com/2017/09/03/网络应用架构的演变和网络编程问题First/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="简介关于缓存的问题，首先我们要知道为什么需要用到缓存——在我们做接触的缓存中大多是与数据库想关系的，而我们在实现业务也数据库相交互的时候，都会涉及底层框架JDBC，&amp;lt;不论是Hibernate还是Mybatis&amp;gt;,那么JDBC在实现操作数据库的增删改查是都会体现io流的操作，所以为了避免这种频繁的与数据库交互也增强了查询效率，提高用户的体验，我们使用缓存的形式，以付出内存来提高效率和安全">
+<meta property="og:description" content="简介简单说一下高并发互联网应用架构的演变过程开始的互联网知识单一应用的网络架构他的主要特点就是框架成分简单，扩展.维护的成本相对较高，耦合度也相对较高，比较开源啊；随着网络的节节高升，垂直应用的架构慢慢兴起，他主要出色的地方就在于垂直应用的架构{即mvc}分工明确，每个模块都会有各自负责的岗位.各司其职，对于开发来说更加的结构化，规律性比较好在后来分布式服务架构因为其服务化的趋向越来越适用于当代需">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/images/memached_start.jpg">
-<meta property="og:image" content="http://yoursite.com/images/memached_1.jpg">
-<meta property="og:image" content="http://yoursite.com/images/memached_7.jpg">
-<meta property="og:image" content="http://yoursite.com/images/menached_suanfa.png">
-<meta property="og:image" content="http://yoursite.com/images/memached_end.png">
-<meta property="og:updated_time" content="2018-08-26T07:20:10.832Z">
+<meta property="og:image" content="http://yoursite.com/images/jiagoutu.png">
+<meta property="og:image" content="http://yoursite.com/images/BIO.png">
+<meta property="og:image" content="http://yoursite.com/images/Buffer.png">
+<meta property="og:image" content="http://yoursite.com/images/niodaima.jpg">
+<meta property="og:updated_time" content="2018-08-28T11:47:16.922Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Memached+Mybatis缓存机制">
-<meta name="twitter:description" content="简介关于缓存的问题，首先我们要知道为什么需要用到缓存——在我们做接触的缓存中大多是与数据库想关系的，而我们在实现业务也数据库相交互的时候，都会涉及底层框架JDBC，&amp;lt;不论是Hibernate还是Mybatis&amp;gt;,那么JDBC在实现操作数据库的增删改查是都会体现io流的操作，所以为了避免这种频繁的与数据库交互也增强了查询效率，提高用户的体验，我们使用缓存的形式，以付出内存来提高效率和安全">
-<meta name="twitter:image" content="http://yoursite.com/images/memached_start.jpg">
+<meta name="twitter:title" content="网络应用架构的演变和网络编程问题First">
+<meta name="twitter:description" content="简介简单说一下高并发互联网应用架构的演变过程开始的互联网知识单一应用的网络架构他的主要特点就是框架成分简单，扩展.维护的成本相对较高，耦合度也相对较高，比较开源啊；随着网络的节节高升，垂直应用的架构慢慢兴起，他主要出色的地方就在于垂直应用的架构{即mvc}分工明确，每个模块都会有各自负责的岗位.各司其职，对于开发来说更加的结构化，规律性比较好在后来分布式服务架构因为其服务化的趋向越来越适用于当代需">
+<meta name="twitter:image" content="http://yoursite.com/images/jiagoutu.png">
 
 
 
@@ -126,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/10/09/Memached-Mybatis缓存机制/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/09/03/网络应用架构的演变和网络编程问题First/"/>
 
 
 
 
 
-  <title>Memached+Mybatis缓存机制 | Hexo</title>
+  <title>网络应用架构的演变和网络编程问题First | Hexo</title>
   
 
 
@@ -248,7 +247,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/10/09/Memached-Mybatis缓存机制/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/03/网络应用架构的演变和网络编程问题First/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -265,7 +264,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Memached+Mybatis缓存机制</h1>
+          <h1 class="post-title" itemprop="name headline">网络应用架构的演变和网络编程问题First</h1>
         
 
         <div class="post-meta">
@@ -277,8 +276,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-09T09:59:44+08:00">
-                2016-10-09
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-03T17:24:54+08:00">
+                2017-09-03
               </time>
             
 
@@ -315,9 +314,8 @@
       
 
       
-        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>关于缓存的问题，<br>首先我们要知道为什么需要用到缓存——<br>在我们做接触的缓存中大多是与数据库想关系的，而我们在实现业务也数据库相交互的时候，都会涉及底层框架JDBC，&lt;不论是Hibernate还是Mybatis&gt;,那么JDBC在实现操作数据库的增删改查是都会体现io流的操作，所以为了避免这种频繁的与数据库交互也增强了查询效率，提高用户的体验，我们使用缓存的形式，以付出内存来提高效率和安全，下面简单说一下关于Mybatis的缓存机制：<br>就目前来看Mybatis提供了两种缓存机制（一级缓存.二级缓存），然而对于一级缓存，<em>Mybatis</em>是默认开始的，一级缓存只是相对于同一个SqlSession而言。所以在参数和SQL完全一样的情况下，我们使用同一个SqlSession对象调用一个Mapper方法，往往只执行一次SQL，因为使用SelSession第一次查询后，MyBatis会将其放在缓存中，以后再查询的时候，如果没有声明需要刷新，并且缓存没有超时的情况下，SqlSession都会取出当前缓存的数据，而不会再次发送SQL到数据库。每次执行缓存，都会创建一个SqlSession对象，然而一级缓存机制也紧紧存活在一次会话当中我们以图为例：<br><img src="/images/memached_start.jpg" alt=""><br><a id="more"></a></p>
-<h3 id="Mybatis二级缓存"><a href="#Mybatis二级缓存" class="headerlink" title="Mybatis二级缓存"></a>Mybatis二级缓存</h3><p>下面来说下<strong>二级缓存</strong>，二级缓存区分于一级缓存最大的收益就是他不仅仅存活在一次会话，他是属于一种Application级别的缓存，存活时间想当然，但是基于二级缓存的Mybaits一定要实现序列化接口。<br>关于Mybatis的缓存机制也就这么多了，下面说一下我接触到的分布式缓存机制：Redis的缓存框架给我们封装好了，仔细说一下冠以Memached的分布式缓存**<br>Memcached是一款免费，开源的，高性能的分布式缓存系统。当然这两种缓存是不一样的，一会在来说一下他们之间的区别，但是，你可以把redis比作一种数据库但是Memcached不是，他只是一个缓存系统，为啥这么说呢？我们说Redis可以通过RDB和AOF实现持久化，但是Memcached是没有持久化的，缓存没了就是没了，还需要从新在数据库中加载，所以啊，Memcached就是一种缓存系统，人家框架出来的目的就是为了让你缓存用的，你当别的用出了问题也怨你自己啊！<br>特点： 1 使用简单的key-value 存储的话，Memcached 的内存利用率更高。<br>2 频繁使用小数据，将这些小数据进行缓存，定期持久化就可以了，查询操作一直都 在内存中运行。<br>3 Memcached 仅限于缓存数据的应用，即使当机了，也不影响业务正常开展的这种<br>关于缓存的算法的主要有两种，余数算法和一致性Hash算法，简单说一下对这两种算法的理解：<br>余数算法：key.hashCode() % nodeCount=nodeIndex<br>主要是通过key的hash值 模上 服务器数量 对应的连接就是要存储的节点<br>这个比较简单，不多说了，<br>他的主要缺点就是如果服务器的数量发生变化，所有的服务器缓存都会在同一时间失效，这样所有的缓存都当机了，全部需要回到数据库从新操作，服务器会咋样想想都知道了,如图：<br><img src="/images/memached_1.jpg" alt=""></p>
-<h3 id="一致性算法"><a href="#一致性算法" class="headerlink" title="一致性算法"></a>一致性算法</h3><p><strong>一致性hash算法</strong>：这个就比较牛逼了，具体说下Memcached是怎么通过这种算法实现缓存的！<br>他首先是先求出memcached服务器节点的哈希值，并将其配置在0~2的32次方 的圆上如图所示：<br><img src="/images/memached_7.jpg" alt=""><br>然后在采用同样的方法算出存储数据key的hash值，然后映射到相同的圆上，然后从数据映射到的位置开始顺时针查找，将数据保存到找到的第⼀一个服务器器上。如果超过232 仍然找不不到服务器，就会保存到第一台memcached服务器器上 添加一台memcached服务器。余数分布式算法由于保存键的服务器器会发⽣生巨⼤大变化⽽而影响缓存 的命中率，但Consistent Hashing中，只有在圆（continuum）上增加服务器器的地点逆时针⽅方向 的第⼀一台服务器器上的键会受到影响，如下图所示：<br><img src="/images/menached_suanfa.png" alt=""><br>就是啥，每个缓存的节点都会找附近顺时针对应的最近的node上<br><img src="/images/memached_end.png" alt=""><br>就比如我在nodeB和nodeC有节点对应的缓存，假如C不行当机了NodeX就会寻找逆时针最近的服务器，这样来说受影响的只是服务器B和其他都没啥关系，对于数据库也没啥压力，对吧？他就是这个思想。一致性哈希算法是缓存机制应用的核心！<br>说了这么多 使用Redis实现缓存和Memached缓存的区别是啥呢？简单来说下：<br>1.Redis不仅仅可以key/values存储数据，还可以提供list set zset hash等类型的存储，而Memached只有key/values的存储方式，所以他的应用相对广泛<br>2.Redis支持数据的备份，即master-slave模式的数据备份<br>3.Redis支持数据持久化{RDB 和AOF}，将数据保存在磁盘中下次还可以提取出来，Memached不支持<br>4.redis单线程 Memcached多线程<br>5.Redis允许values最大512mb Memcached的values允许最大1mb<br>就差不多这些 个人感觉还是redis好，嘻嘻，毕竟用的多还不用多学习其他框架结构</p>
+        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>简单说一下高并发互联网应用架构的演变过程<br>开始的互联网知识<strong>单一应用的网络架构</strong>他的主要特点就是框架成分简单，扩展.维护的成本相对较高，耦合度也相对较高，比较开源啊；<br>随着网络的节节高升，<strong>垂直应用的架</strong>构慢慢兴起，他主要出色的地方就在于<strong>垂直应用的架构{即mvc}</strong>分工明确，每个模块都会有各自负责的岗位.各司其职，对于开发来说更加的结构化，规律性比较好在后来<strong>分布式服务架构</strong>因为其服务化的趋向越来越适用于当代需求，许多大型公司开始向服务型架构演变并开发开源，再后来就是<strong>流动计算型架构</strong>了。怎么说呢？并不是越往后的架构就一定比之前的要好，应用框架对于编程来说不仅仅是一个进步的趋势，也是一个相对走向完善完美的方向，每一个方向都会根据实际的需求而定，毕竟业务有需求嘛！</p>
+<p>&lt;–! more–&gt;<br>可能对于架构会有一些抽象化，打个比方：像<strong>单一的应用架构</strong>就像ORM的Hibernate为例，Hibernate就是绝对的单一应用架构。<strong>垂直的应用架构即mvc</strong>我接触到的想struts2和springmvc就是mvc型规则架构了，你看就比如springmvc，有专门的模块，视图，controller，每一个点专门负责各自的位置。但是这个对现在发展趋势而言，他是有缺点的，就比如最明显的，当系统的功能无法提供是，就需要调用第三方的web服务，他是不能实现的。所以啊！<strong>分布式的服务架构</strong>他的服务化走向就越来越牛逼了！这里主要来说的就是服务化的一些架构常识！架构如图：<br><img src="/images/jiagoutu.png" alt=""><br>图示很明显说到异构系统之间的远程调用{RPC} 可以用到<strong>webservice</strong>但是他相对开发服务来说效率并不是很高，因为WebServices 是建立在 HTTP 基础之上的，而 HTTP 是建立在 TCP 基础上的。也就是说 WebServices 在 TCP 基础上包装了两层！<br>而且webservice需要解析XML、需要传递大量重复的XML标记。那什么效率很高呢？我觉得就是网络协议+io模型是最高的RPC效率方案了。<br>下面来说下关于io模型的设计方案和读写状态信息（下篇在说协议相关）<br>关于<strong>io模型</strong>可以分为 BIO.NIO.AIO三种<br><strong>BIO</strong>：BIO又叫做同步阻塞IO，他就像我们JAVASE时候的io设计和传输方式一样，打个比方啊！你肯定听过关于io流 ，按方向分：有输入流和输出流；按单位划分有字节流和字符流；按功能分有节点流和过滤流，来写个关于io流的方式进行文件的读入和写出；如图：<br><img src="/images/BIO.png" alt=""><br><strong>NIO</strong>:NIO有叫做同步非阻塞IO；他里面主要有三个组件  buffer(缓冲区)  channel(管道)  selector(选择器)这里来说下管道一些认识(选择器下篇和协议一起认识下)，简单做了个图片：<br><img src="/images/Buffer.png" alt=""><br>切记 管道的读写是将操作情况交给缓冲区，在由缓冲区负责于管道之间的交互，而管道中读写操作的区间是在positision和limit指针之间；示例代码：<br><img src="/images/niodaima.jpg" alt=""></p>
 
       
     </div>
@@ -335,7 +333,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/data/" rel="tag"># data</a>
+            <a href="/tags/http/" rel="tag"># http</a>
           
         </div>
       
@@ -348,8 +346,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/09/18/Freemarker/" rel="next" title="Freemarker">
-                <i class="fa fa-chevron-left"></i> Freemarker
+              <a href="/2017/08/27/多线程/" rel="next" title="多线程">
+                <i class="fa fa-chevron-left"></i> 多线程
               </a>
             
           </div>
@@ -358,8 +356,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/12/26/JVM内存结构以及调优/" rel="prev" title="JVM内存结构以及调优">
-                JVM内存结构以及调优 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/25/hello-world/" rel="prev" title="Hello World">
+                Hello World <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -496,7 +494,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mybatis二级缓存"><span class="nav-number">2.</span> <span class="nav-text">Mybatis二级缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一致性算法"><span class="nav-number">3.</span> <span class="nav-text">一致性算法</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li></ol></div>
             
 
           </div>
