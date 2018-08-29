@@ -428,7 +428,8 @@
 
       
         
-          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>我们所说到的三次握手和四次挥手实质就是对应TCP连接建立的过程和断开的过程。那么为什么连接要建立三次或者说断开要断四次呢？简单说下为什么要三次握手四次挥手！！<br><strong><strong>三次握手</strong></strong><br>1.三次握手的主要目的就是为了建立相对可靠的通讯信道，关于通讯，其实就是数据的发送与接收，而三次握手的主要目的也就是为了确保双方{自己和对方}的发送和接收机制正常触发。<br><strong>第一次握手</strong>：Client{客户端}什么都不能确认；而在Server{服务端}确认了对方发送正常；<br><strong>第二次握手</strong>：Client确认了自己发送.接收正常，对方发送.接收正常&lt;客户端已完全确认自己无误&gt;；Server确认了自己接收正常.对方发送正常；<br><strong>第三次握手</strong>：Client确认了完后；Server确认了自己发送接收都正常，对方发送接收也正常。<br>TCP通过这种方式来确认双方接收发送功能都正常，断开哪次握手都不行；如图：<br><img src="/images/canciwoshou.gif" alt=""><br>
+          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>我们所说到的三次握手和四次挥手实质就是对应TCP连接建立的过程和断开的过程。那么为什么连接要建立三次或者说断开要断四次呢？简单说下为什么要三次握手四次挥手！！</p>
+<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p>1.三次握手的主要目的就是为了建立相对可靠的通讯信道，关于通讯，其实就是数据的发送与接收，而三次握手的主要目的也就是为了确保双方{自己和对方}的发送和接收机制正常触发。<br><strong>第一次握手</strong>：Client{客户端}什么都不能确认；而在Server{服务端}确认了对方发送正常；<br><strong>第二次握手</strong>：Client确认了自己发送.接收正常，对方发送.接收正常&lt;客户端已完全确认自己无误&gt;；Server确认了自己接收正常.对方发送正常；<br><strong>第三次握手</strong>：Client确认了完后；Server确认了自己发送接收都正常，对方发送接收也正常。<br>TCP通过这种方式来确认双方接收发送功能都正常，断开哪次握手都不行；如图：<br><img src="/images/canciwoshou.gif" alt=""><br>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/09/24/TCP的三次握手和四次挥手/#more" rel="contents">
