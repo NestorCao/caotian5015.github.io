@@ -358,6 +358,146 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/30/Netty网络通信框架/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/30/Netty网络通信框架/" itemprop="url">Netty网络通信框架</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-30T19:37:31+08:00">
+                2017-09-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Netty是一种异步通讯的网络框架，是用来快速开发可维护行的高性能.搞扩展的协议服务器和客户端，他是封装NIO模型最热门也是最搞笑的网络框架；在Netty里所有的io处理都是异步操作完成的，NIO呢，是JDK1.2版本开始推出的一款同步非阻塞IO模型，而Netty是基于JDK1.7以上开源的封装nio的框架，所以使用Netty的时候JDK版本一定要高于1.6版。</p>
+<h3 id="Netty思想"><a href="#Netty思想" class="headerlink" title="Netty思想"></a>Netty思想</h3><p>个人感觉Netty这中网络框架相比入Spring Servlet Mybatis等这些在思想上相对复杂抽象些，但是从开发角度讲，基础步骤虽然很墨迹但是完全不需要怎样更改，作为一个开发来说，只需要根据业务有一个完整的业务框架内的一些相关逻辑然后在代码实现上只需对<strong>初始化客户端</strong>和<strong>初始化服务端</strong>这两种步骤进行业务更改就可以了{记得导入netty包}；下面从客户端开始说下锁理解的编程步骤。</p>
+<h3 id="简单的客户端"><a href="#简单的客户端" class="headerlink" title="简单的客户端"></a>简单的客户端</h3><p>在了解这门框架的时候，参照着官网{netty.io}进行开发开源，你会发现基础的步骤不会想差太多，只需要更改里面一个业务逻辑就可以了；说下我理解的客户端netty编程步骤：<br>1.初始化客户端引导程序，创建客户端的引导对象<br>2.创建IO处理的线程池，主要进行客户端数据的读写<br>3.绑定线程池<br>4.初始化服务通道<br>5.初始化客户端通道{开发主要在这个位置编写编程}<br>6.连接服务器，以同步方式等待连接成功<br>7.同步等待客户端关闭连接<br>8.释放资源<br>示范：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">package jichuyanz;</span><br><span class="line"></span><br><span class="line">import io.netty.bootstrap.Bootstrap;</span><br><span class="line">import io.netty.channel.ChannelFuture;</span><br><span class="line">import io.netty.channel.ChannelInitializer;</span><br><span class="line">import io.netty.channel.ChannelPipeline;</span><br><span class="line">import io.netty.channel.nio.NioEventLoopGroup;</span><br><span class="line">import io.netty.channel.socket.SocketChannel;</span><br><span class="line">import io.netty.channel.socket.nio.NioSocketChannel;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * You are SuperBoy!</span><br><span class="line"> * Description: 基于netty客户端编程模型</span><br><span class="line"> * Created by caotian on 2017/9/30 17:42</span><br><span class="line"> * ❤❤❤❤❤</span><br><span class="line"> * ❤❤❤</span><br><span class="line"> * ❤</span><br><span class="line"> **/</span><br><span class="line">public class NettyClient &#123;</span><br><span class="line">    public static void main(String[] args) throws InterruptedException &#123;</span><br><span class="line">        //1. 创建客户端的引导对象</span><br><span class="line">        Bootstrap bootstrap = new Bootstrap();</span><br><span class="line">        //2. 创建IO处理的线程池</span><br><span class="line">        NioEventLoopGroup workGroup = new NioEventLoopGroup();</span><br><span class="line">        //3. 绑定线程池</span><br><span class="line">        bootstrap.group(workGroup);</span><br><span class="line">        //4. 初始化服务通道</span><br><span class="line">        bootstrap.channel(NioSocketChannel.class);</span><br><span class="line">        //5. 初始化通讯管道</span><br><span class="line">        bootstrap.handler(new ChannelInitializer&lt;SocketChannel&gt;() &#123;</span><br><span class="line">            /**</span><br><span class="line">             * 初始化客户端的管道</span><br><span class="line">             * @param socketChannel</span><br><span class="line">             * @throws Exception</span><br><span class="line">             */</span><br><span class="line">            protected void initChannel(SocketChannel socketChannel) throws Exception &#123;</span><br><span class="line">                ChannelPipeline channelPipeline = socketChannel.pipeline();</span><br><span class="line">                //**将自定义的handler组装到管道上**</span><br><span class="line">                channelPipeline.addLast(new NettyClientChannelHandlerAdapter());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        //6. 连接服务器</span><br><span class="line">        ChannelFuture channelFuture = bootstrap.connect(&quot;127.0.0.1&quot;, 8888).sync();</span><br><span class="line">        //7. 关闭连接</span><br><span class="line">        channelFuture.channel().closeFuture().sync();</span><br><span class="line">        //8. 释放资源</span><br><span class="line">        workGroup.shutdownGracefully();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在第五步中我们通过自定义的handler类进行设置添加事件，自定义一个类，让这个类继承ChannelHandlerAdapter,这个类里定义了大量的事件方法，我们在完成业务需求的时候只需要将类中的方法重写并完成一系列业务需求就可以了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">package jichuyanz;</span><br><span class="line"></span><br><span class="line">import io.netty.buffer.ByteBuf;</span><br><span class="line">import io.netty.buffer.Unpooled;</span><br><span class="line">import io.netty.channel.ChannelHandlerAdapter;</span><br><span class="line">import io.netty.channel.ChannelHandlerContext;</span><br><span class="line">import io.netty.util.CharsetUtil;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * You are SuperBoy!</span><br><span class="line"> * Description: netty的客户端的通道处理器类</span><br><span class="line"> * Created by caotian on 2017/9/30 18:00</span><br><span class="line"> * ❤❤❤❤❤</span><br><span class="line"> * ❤❤❤</span><br><span class="line"> * ❤</span><br><span class="line"> **/</span><br><span class="line">public class NettyClientChannelHandlerAdapter extends ChannelHandlerAdapter &#123;</span><br><span class="line">    /**</span><br><span class="line">     * 异常事件的回调方法</span><br><span class="line">     * @param ctx</span><br><span class="line">     * @param cause</span><br><span class="line">     * @throws Exception</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception &#123;</span><br><span class="line">        System.out.println(&quot;客户端异常！&quot;);</span><br><span class="line">        cause.printStackTrace();</span><br><span class="line">        ctx.close();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 通道可用的回调方法</span><br><span class="line">     *     给通讯管道写入数据 ByteBuf</span><br><span class="line">     *</span><br><span class="line">     * @param ctx</span><br><span class="line">     * @throws Exception</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public void channelActive(ChannelHandlerContext ctx) throws Exception &#123;</span><br><span class="line">        ByteBuf byteBuf = Unpooled.buffer();</span><br><span class="line">        byteBuf.writeBytes(&quot;您好！服务器，我是客户端......&quot;.getBytes());</span><br><span class="line">        ctx.writeAndFlush(byteBuf);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 读事件的回调方法  响应数据的处理方法</span><br><span class="line">     * @param ctx</span><br><span class="line">     * @param msg</span><br><span class="line">     * @throws Exception</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception &#123;</span><br><span class="line">        ByteBuf byteBuf = (ByteBuf) msg;</span><br><span class="line">        System.out.println(&quot;客户端接受的响应结果：&quot;+byteBuf.toString(CharsetUtil.UTF_8));</span><br><span class="line">        ctx.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里重写了读写还有异常事件的回调方法，当想服务器请求时就会根据所需要的业务进行操作，就比如出现异常就会根据重写处理异常信息，思想如图：<br><img src="/images/kehuduannio.jpg" alt=""><br>在管道中添加添加handler回调，黄色的竖型管道就是handler位置，不论客户端还是服务端只要数据准备从管道出去的时候都会封装成byteBuf对象，并且byteBuf在离开管道通过协议发送给对方的时候都会默认转换成byte[]字节数组的形式在协议传送，服务端开发流程与客户端大致一样，不过服务端初始化管道时才会ChildHandler进行初始化而不是Handler</p>
+<h3 id="简单的服务端"><a href="#简单的服务端" class="headerlink" title="简单的服务端"></a>简单的服务端</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">package jichuyanz;</span><br><span class="line"></span><br><span class="line">import io.netty.bootstrap.ServerBootstrap;</span><br><span class="line">import io.netty.channel.ChannelFuture;</span><br><span class="line">import io.netty.channel.ChannelInitializer;</span><br><span class="line">import io.netty.channel.ChannelPipeline;</span><br><span class="line">import io.netty.channel.nio.NioEventLoopGroup;</span><br><span class="line">import io.netty.channel.socket.SocketChannel;</span><br><span class="line">import io.netty.channel.socket.nio.NioServerSocketChannel;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 基于netty框架的服务器编程模型</span><br><span class="line"> *</span><br><span class="line"> * 1. 初始化服务器的引导对象</span><br><span class="line"> * 2. 初始化请求转发和IO处理的线程池</span><br><span class="line"> * 3. 绑定线程池</span><br><span class="line"> * 4. 初始化服务通道</span><br><span class="line"> * 5. 初始化通讯管道（重点）</span><br><span class="line"> * 6. 绑定端口 并启动服务</span><br><span class="line"> * 7. 关闭服务</span><br><span class="line"> * 8. 释放线程池资源</span><br><span class="line"> *</span><br><span class="line"> */</span><br><span class="line">public class NettyServer &#123;</span><br><span class="line">    public static void main(String[] args) throws InterruptedException &#123;</span><br><span class="line">        //1. 初始化服务器的引导对象</span><br><span class="line">        ServerBootstrap serverBootstrap = new ServerBootstrap();</span><br><span class="line">        //2. 初始化请求转发和IO处理的线程池</span><br><span class="line">        NioEventLoopGroup bossGroup = new NioEventLoopGroup();</span><br><span class="line">        NioEventLoopGroup workerGroup = new NioEventLoopGroup();</span><br><span class="line">        //3. 绑定线程池</span><br><span class="line">        serverBootstrap.group(bossGroup,workerGroup);</span><br><span class="line">        //4. 初始化服务通道</span><br><span class="line">        serverBootstrap.channel(NioServerSocketChannel.class);</span><br><span class="line">        //5. 初始化通讯管道（重点）</span><br><span class="line">        serverBootstrap.childHandler(new ChannelInitializer&lt;SocketChannel&gt;() &#123;</span><br><span class="line">            /**</span><br><span class="line">             * 初始化通讯管道</span><br><span class="line">             * @param socketChannel</span><br><span class="line">             * @throws Exception</span><br><span class="line">             */</span><br><span class="line">            protected void initChannel(SocketChannel socketChannel) throws Exception &#123;</span><br><span class="line">                // 将自定义的Handler组装到管道上</span><br><span class="line">                ChannelPipeline channelPipeline = socketChannel.pipeline();</span><br><span class="line">                channelPipeline.addLast(new NettyServerChannelHandlerAdpater());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        //6. 绑定端口 并启动服务</span><br><span class="line">        ChannelFuture channelFuture = serverBootstrap.bind(8888).sync();</span><br><span class="line"></span><br><span class="line">        //7. 关闭服务</span><br><span class="line">        channelFuture.channel().closeFuture().sync();</span><br><span class="line"></span><br><span class="line">        //8. 释放线程池资源</span><br><span class="line">        workerGroup.shutdownGracefully();</span><br><span class="line">        bossGroup.shutdownGracefully();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>自定义的Handler添加事物</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">package jichuyanz;</span><br><span class="line"></span><br><span class="line">import io.netty.buffer.ByteBuf;</span><br><span class="line">import io.netty.channel.ChannelHandlerAdapter;</span><br><span class="line">import io.netty.channel.ChannelHandlerContext;</span><br><span class="line">import io.netty.util.CharsetUtil;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * You are SuperBoy!</span><br><span class="line"> * Description: netty server的通道处理器</span><br><span class="line"> * Created by caotian on 2017/9/30 18:30</span><br><span class="line"> * ❤❤❤❤❤</span><br><span class="line"> * ❤❤❤</span><br><span class="line"> * ❤</span><br><span class="line"> **/</span><br><span class="line">public class NettyServerChannelHandlerAdpater extends ChannelHandlerAdapter &#123; // extends ActionSupport</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 数据传输产生异常  的回调方法</span><br><span class="line">     *</span><br><span class="line">     * @param ctx   通道处理器的上下文对象 获取通道的上下文信息（通道信息+处理器的信息）</span><br><span class="line">     * @param cause Throwable=Error+Exception</span><br><span class="line">     * @throws Exception</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception &#123;</span><br><span class="line">        System.out.println(&quot;服务器异常！&quot;);</span><br><span class="line">        cause.printStackTrace();</span><br><span class="line">        ctx.close();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 通道的可读 的回调方法(请求数据的处理方法)</span><br><span class="line">     *</span><br><span class="line">     * @param ctx</span><br><span class="line">     * @param msg 请求数据 ByteBuf     字节缓冲区  读写状态无需切换(读：readIndex - writerIndex  写：writerIndex-capacity)  支持自动扩容</span><br><span class="line">     *            ByteBuffer  字节缓冲区</span><br><span class="line">     * @throws Exception</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception &#123;</span><br><span class="line">        ByteBuf byteBuf = (ByteBuf) msg;</span><br><span class="line">        System.out.println(&quot;获取&quot; +</span><br><span class="line">                &quot;到的请求数据：&quot;+byteBuf.toString(CharsetUtil.UTF_8));</span><br><span class="line">        byteBuf.clear();</span><br><span class="line"></span><br><span class="line">        byteBuf.writeBytes(&quot;土豆土豆，我是茄子！&quot;.getBytes());</span><br><span class="line">        ctx.writeAndFlush(byteBuf);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的案例只是简单的将字符转换成字节数组进行传送，那么，如果需要对象进行传送的话这样是不可以的，因为Netty默认不支持这种方式进行对象的协议传送，这时候就需要引入编解码器进行Object的传输了，流程：<br>   object  —- buteBuf   编码器  只负责处理出站    —-<br>                                                 —–对象传输协议{处理对象类型}<br>   byteBuf—    object   解码器  只负责处理入站    —-<br>   所以在客户端或者服务端单层并不会出现同时编码解码情况{因为编码只负责出站…..，各自分工}<br>   只要处理对象类型的传输协议就要用到编解码器同步使用<br>   编解码之前需要考虑到序列化方案，因为对象的传输需要支持序列化啊！可以用fastjson也可以用jdk原生的序列方式{记得导包}<br> 关于解码器编码器同样需要我们重写netty中封装好的类的方法，解码器需要继承MessageToMessageDecoder然后重写decode方法；编码器需要继承MessageToMessageEncoder重写encode方法，最后将重写的回调编码解码添加到管道中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">package anliyanshi;</span><br><span class="line"></span><br><span class="line">import com.alibaba.fastjson.JSON;</span><br><span class="line">import io.netty.buffer.ByteBuf;</span><br><span class="line">import io.netty.channel.ChannelHandlerContext;</span><br><span class="line">import io.netty.handler.codec.MessageToMessageDecoder;</span><br><span class="line">import io.netty.util.CharsetUtil;</span><br><span class="line"></span><br><span class="line">import java.util.Date;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 解码器</span><br><span class="line"> * byteBuf ---&gt; Object</span><br><span class="line"> */</span><br><span class="line">public class ByteBufToObjectDecoder extends MessageToMessageDecoder &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 解码方法</span><br><span class="line">     *</span><br><span class="line">     * @param channelHandlerContext</span><br><span class="line">     * @param o</span><br><span class="line">     * @param list</span><br><span class="line">     * @throws Exception</span><br><span class="line">     */</span><br><span class="line">    protected void decode(ChannelHandlerContext channelHandlerContext, Object o, List list) throws Exception &#123;</span><br><span class="line">        ByteBuf byteBuf = (ByteBuf) o;</span><br><span class="line">        String jsonString = byteBuf.toString(CharsetUtil.UTF_8);</span><br><span class="line">        Date date = JSON.parseObject(jsonString, Date.class);</span><br><span class="line">        list.add(date);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用JDK解码{引入commons-lang依赖}：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">package anliyanshi;</span><br><span class="line"></span><br><span class="line">import io.netty.buffer.ByteBuf;</span><br><span class="line">import io.netty.channel.ChannelHandlerContext;</span><br><span class="line">import io.netty.handler.codec.MessageToMessageDecoder;</span><br><span class="line">import org.apache.commons.lang.SerializationUtils;</span><br><span class="line"></span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">public class JdkDecoder extends MessageToMessageDecoder &#123;</span><br><span class="line"></span><br><span class="line">    protected void decode(ChannelHandlerContext channelHandlerContext, Object o, List list) throws Exception &#123;</span><br><span class="line">        ByteBuf byteBuf = (ByteBuf)o;</span><br><span class="line"></span><br><span class="line">        byte[] bytes = new byte[byteBuf.readableBytes()];</span><br><span class="line"></span><br><span class="line">        byteBuf.readBytes(bytes);</span><br><span class="line"></span><br><span class="line">        Object obj = SerializationUtils.deserialize(bytes);</span><br><span class="line"></span><br><span class="line">        list.add(obj);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">package anliyanshi;</span><br><span class="line"></span><br><span class="line">import com.alibaba.fastjson.JSON;</span><br><span class="line">import io.netty.buffer.ByteBuf;</span><br><span class="line">import io.netty.buffer.Unpooled;</span><br><span class="line">import io.netty.channel.ChannelHandlerContext;</span><br><span class="line">import io.netty.handler.codec.MessageToMessageEncoder;</span><br><span class="line"></span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> *</span><br><span class="line"> */</span><br><span class="line">/**</span><br><span class="line"> * You are SuperBoy!</span><br><span class="line"> * Description: 编码器</span><br><span class="line"> * 对象---&gt; byteBuf</span><br><span class="line"> * Created by caotian on 2017/9/30 20:50</span><br><span class="line"> * ❤❤❤❤❤</span><br><span class="line"> * ❤❤❤</span><br><span class="line"> * ❤</span><br><span class="line"> **/</span><br><span class="line">public class ObjectToByteBufEncoder extends MessageToMessageEncoder &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 编码方法</span><br><span class="line">     *</span><br><span class="line">     * @param ctx</span><br><span class="line">     * @param obj  object类型的对象</span><br><span class="line">     * @param out  输出的消息列表</span><br><span class="line">     * @throws Exception</span><br><span class="line">     */</span><br><span class="line">    protected void encode(ChannelHandlerContext ctx, Object obj, List out) throws Exception &#123;</span><br><span class="line"></span><br><span class="line">        String stringJson = JSON.toJSONString(obj);</span><br><span class="line"></span><br><span class="line">        ByteBuf byteBuf = Unpooled.buffer();</span><br><span class="line"></span><br><span class="line">        byteBuf.writeBytes(stringJson.getBytes());</span><br><span class="line"></span><br><span class="line">        out.add(byteBuf);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用JDK编码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">package anliyanshi;</span><br><span class="line"></span><br><span class="line">import io.netty.buffer.ByteBuf;</span><br><span class="line">import io.netty.channel.ChannelHandlerContext;</span><br><span class="line">import io.netty.handler.codec.MessageToMessageDecoder;</span><br><span class="line">import org.apache.commons.lang.SerializationUtils;</span><br><span class="line"></span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">public class JdkDecoder extends MessageToMessageDecoder &#123;</span><br><span class="line"></span><br><span class="line">    protected void decode(ChannelHandlerContext channelHandlerContext, Object o, List list) throws Exception &#123;</span><br><span class="line">        ByteBuf byteBuf = (ByteBuf)o;</span><br><span class="line"></span><br><span class="line">        byte[] bytes = new byte[byteBuf.readableBytes()];</span><br><span class="line"></span><br><span class="line">        byteBuf.readBytes(bytes);</span><br><span class="line"></span><br><span class="line">        Object obj = SerializationUtils.deserialize(bytes);</span><br><span class="line"></span><br><span class="line">        list.add(obj);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="粘包和拆包"><a href="#粘包和拆包" class="headerlink" title="粘包和拆包"></a>粘包和拆包</h3><p>我们常说tcpip协议在传输数据时会发生粘包拆包问题，即会导致数据的丢失和不一致。其实原因很简单，在我们使用协议传输数据的时候，都是以自己数组的形式进行传输，字节数组在我们宏观的思想应该是最小的单元了吧，也就是所谓的‘流’，就是没有分界线的一串数据，但是TCP底层并不知道我们业务数据的具体含义，他会根据缓冲区的实际情况进行包的划分，也就是存包，所以一个完整的数据包可能会被tcp拆分成多个包放在缓冲区进行传输也有可能把多个小的包装到一个缓冲区进行传输，因为数据包的大小随业务而定，但是缓冲区大小是固定的啊，tcp所知道的就是合理的将缓冲区装满，并不会在意你数据包的完整性，所以就发生了所谓的粘包和拆包。&lt;打个比方吧，因为在tcp传输是流的形式，我们已液体为例，当你需要将一些水和一些可口可乐送到外婆家，然后因为条件的限制负责传输的瓶子就一个可以装好这些水和可口可乐，你就会把这两件东西放在一个瓶子里，等你在到外婆家打算去单独和可口可乐的时候，你已经拆不开了，因为可乐里包含了水，水里也有了可乐，这就是粘包了；假如这些水和可乐还是需要送到外婆家，而你手里有两个小瓶子，两个小瓶子可以装下水和可乐，可是水一个瓶子装不下，可乐一个瓶子装完还有余，你会吧可乐装完之后再把一些水放在可乐瓶子里，然后剩下的水就可以装进第二个瓶子，这就是拆包了，不管怎样，因为协议的传输是最小单位的传输，如果将两个或者多个数据同时发送又不指定界限的情况下，就狠容易将数据打乱，就收到的数据就会丢失或者错误&gt;<br><strong>至于解决策略，有如下几种</strong>：<br>1.消息订场，例如每个报文的大小固定长度200字节，如果不够的话，空位补空格<br>2.在包尾增加回车换行符{/t  /n}进行分割，例如FTP协议{数据传输协议}<br>3.将消息分为消息头和消息体，消息中记录了消息体的长度<br>4.采用更复杂的应用层协议<br>至于Netty的传输，我认为使用第三种比较贴切实际还狠简单，思想：<br><img src="/images/nianbao.png" alt=""><br>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">channelPipeline.addLast(new LengthFieldPrepender(2)); //65535</span><br><span class="line">              // 解码器 根据消息头 解码消息体</span><br><span class="line">              // 参数⼀：消息包的最⼤长度 参数⼆：长度域的偏移量 参数三：长度字段所占字节⼤⼩ 参数四：长度补偿 参数五：从数据帧中跳过的字节数</span><br><span class="line">              channelPipeline.addLast(new</span><br><span class="line">                      LengthFieldBasedFrameDecoder(65535,0,2,0,2));</span><br><span class="line">              channelPipeline.addLast(new JdkDecoder());</span><br><span class="line">              channelPipeline.addLast(new JdkEncoder());</span><br><span class="line">              channelPipeline.addLast(new NettyClientChannelHandlerAdapter());</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 编码器 消息头+消息体</span><br><span class="line">            channelPipeline.addLast(new LengthFieldPrepender(2)); //65535</span><br><span class="line">            // 解码器 根据消息头 解码消息体</span><br><span class="line">            // 参数⼀：消息包的最⼤长度 参数⼆：长度域的偏移量 参数三：长度字段所占字节⼤⼩ 参数四：长度补偿 参数五：从数据帧中跳过的字节数</span><br><span class="line">            channelPipeline.addLast(new</span><br><span class="line">                    LengthFieldBasedFrameDecoder(65535,0,2,0,2));</span><br><span class="line">            channelPipeline.addLast(new JdkDecoder());</span><br><span class="line">            channelPipeline.addLast(new JdkEncoder());</span><br><span class="line">            channelPipeline.addLast(new NettyServerChannelHandlerAdpater());</span><br></pre></td></tr></table></figure>
+<p>添加hacdler回调时候注意事件顺序，总的思想流程图加代码实现如图：<br><img src="/image/nettysixiangtu.png" alt=""></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/24/TCP的三次握手和四次挥手/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1051,7 +1191,7 @@
 
       
         
-          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>关于虚拟机这一块，其实本来是不太懂的，但是后来网上都说身为一个编程人员，如果JVM的内存结构都不熟悉，那也太lou了，所以，刻意学习了下，下面的理解是查一些相关资料和百度百科得来的理解。</p>
+          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>关于虚拟机这一块，其实本来是不太懂的，但是后来网上都说身为一个编程人员，如果JVM的内存结构都不熟悉，那也太low了，所以，刻意学习了下，下面的理解是查一些相关资料和百度百科得来的理解。</p>
 <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>我们说<strong>JDK</strong>是编程的基础工具，想要做JAVA编程，就必须要有<strong>JDK</strong>和<strong>JRE</strong>环境，那为啥一定要需要这俩玩意呢？其实我们都知道JDK是一个工具包，JRE是编程环境，编程的起点就是一定要配置环境变量，告诉操作系统寻找我的工具类和环境。那么<strong>JVM</strong>在JDK里面就起到至关重要的作用了！</p>
 <h2 id="关于JVM"><a href="#关于JVM" class="headerlink" title="关于JVM"></a>关于JVM</h2><p>JVM是处于在整个jdk最底层中，他负责于操作系统之间的交互，用来屏蔽操作系统环境，从而提供一个完整的java的运行环境，因此我们也称为虚拟计算机(即虚拟机)，其实我们完全可以把它想象成一种虚拟的运行空间。 …  ok下面来具体了解下关于虚拟计算机的启动流程和内存结构，如图：</p>
 <h2 id="JVM启动流程"><a href="#JVM启动流程" class="headerlink" title="JVM启动流程"></a>JVM启动流程</h2><p><img src="/images/JVM.png" alt=""><br>通过java命令或者javam命令启动，然后装配，运行等等 bbooxx..感觉这东西没啥用,万一有新发明可能启动又换新花样了，重点来说下内存结构：</p>
@@ -1344,130 +1484,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/08/27/FastDFS理论/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/1.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/08/27/FastDFS理论/" itemprop="url">FastDFS理论</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-27T13:05:39+08:00">
-                2016-08-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="一-前言"><a href="#一-前言" class="headerlink" title="一.前言"></a>一.前言</h3><p>前面我们说到<strong>FastDFS</strong>是一款高性能分布式文件系统，他的服务端主要分为两种角色：<em>跟踪器</em>和<em>存储节点</em><br>其实<strong>FastDFS</strong>这么牛逼，被很多公司使用最主要的原因还是因为他的分布式特点，为啥这么说呢，我个人理解<br>就是他是分布式啊，分布式可以跨机器还能构建集群，这不就解决了很多内存啊效率的限制，主要还是用来解决海量<br>数据的存储问题，你想啊，只要我有钱，多搭点集群，啥不都解决了~.~，下面来说下这款系统的由来：*<em>FastDFS</em><br>据说是国内alibaba一个特别牛逼的架构师“余庆”开源的，是<em>C语言</em>编写的，并不是java，更多的就是适用于像我们<br>这种中小型的公司，他的主要使用于存储图片.视频.音频等这些小于100mb的小文件存储<br>具体流程思想呢，我是这样理解的：<br>首先，客户端发起文件上传的请求，然后先访问跟踪服务器集群(Tracker<br>cluster),跟踪服务器集群会选择真正存储文件的节点信息返回给客户端，客户端在发起真正的存储请求访问存储节<br>点Storage ，其实可以想象成跟踪器集群主要对存储节点起到一种监听作用<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/08/27/FastDFS理论/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1522,7 +1538,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

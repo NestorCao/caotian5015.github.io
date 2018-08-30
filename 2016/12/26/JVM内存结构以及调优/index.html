@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="前言关于虚拟机这一块，其实本来是不太懂的，但是后来网上都说身为一个编程人员，如果JVM的内存结构都不熟悉，那也太lou了，所以，刻意学习了下，下面的理解是查一些相关资料和百度百科得来的理解。 简介我们说JDK是编程的基础工具，想要做JAVA编程，就必须要有JDK和JRE环境，那为啥一定要需要这俩玩意呢？其实我们都知道JDK是一个工具包，JRE是编程环境，编程的起点就是一定要配置环境变量，告诉操作系">
+<meta name="description" content="前言关于虚拟机这一块，其实本来是不太懂的，但是后来网上都说身为一个编程人员，如果JVM的内存结构都不熟悉，那也太low了，所以，刻意学习了下，下面的理解是查一些相关资料和百度百科得来的理解。 简介我们说JDK是编程的基础工具，想要做JAVA编程，就必须要有JDK和JRE环境，那为啥一定要需要这俩玩意呢？其实我们都知道JDK是一个工具包，JRE是编程环境，编程的起点就是一定要配置环境变量，告诉操作系">
 <meta name="keywords" content="JAVA">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM内存结构以及调优">
 <meta property="og:url" content="http://yoursite.com/2016/12/26/JVM内存结构以及调优/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="前言关于虚拟机这一块，其实本来是不太懂的，但是后来网上都说身为一个编程人员，如果JVM的内存结构都不熟悉，那也太lou了，所以，刻意学习了下，下面的理解是查一些相关资料和百度百科得来的理解。 简介我们说JDK是编程的基础工具，想要做JAVA编程，就必须要有JDK和JRE环境，那为啥一定要需要这俩玩意呢？其实我们都知道JDK是一个工具包，JRE是编程环境，编程的起点就是一定要配置环境变量，告诉操作系">
+<meta property="og:description" content="前言关于虚拟机这一块，其实本来是不太懂的，但是后来网上都说身为一个编程人员，如果JVM的内存结构都不熟悉，那也太low了，所以，刻意学习了下，下面的理解是查一些相关资料和百度百科得来的理解。 简介我们说JDK是编程的基础工具，想要做JAVA编程，就必须要有JDK和JRE环境，那为啥一定要需要这俩玩意呢？其实我们都知道JDK是一个工具包，JRE是编程环境，编程的起点就是一定要配置环境变量，告诉操作系">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/JVM.png">
 <meta property="og:image" content="http://yoursite.com/images/jvmneicun.jpg">
@@ -93,10 +93,10 @@
 <meta property="og:image" content="http://yoursite.com/images/suanfa.png">
 <meta property="og:image" content="http://yoursite.com/images/fuzhi.png">
 <meta property="og:image" content="http://yoursite.com/images/zhengli.png">
-<meta property="og:updated_time" content="2018-08-26T09:15:32.144Z">
+<meta property="og:updated_time" content="2018-08-29T14:37:00.192Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM内存结构以及调优">
-<meta name="twitter:description" content="前言关于虚拟机这一块，其实本来是不太懂的，但是后来网上都说身为一个编程人员，如果JVM的内存结构都不熟悉，那也太lou了，所以，刻意学习了下，下面的理解是查一些相关资料和百度百科得来的理解。 简介我们说JDK是编程的基础工具，想要做JAVA编程，就必须要有JDK和JRE环境，那为啥一定要需要这俩玩意呢？其实我们都知道JDK是一个工具包，JRE是编程环境，编程的起点就是一定要配置环境变量，告诉操作系">
+<meta name="twitter:description" content="前言关于虚拟机这一块，其实本来是不太懂的，但是后来网上都说身为一个编程人员，如果JVM的内存结构都不熟悉，那也太low了，所以，刻意学习了下，下面的理解是查一些相关资料和百度百科得来的理解。 简介我们说JDK是编程的基础工具，想要做JAVA编程，就必须要有JDK和JRE环境，那为啥一定要需要这俩玩意呢？其实我们都知道JDK是一个工具包，JRE是编程环境，编程的起点就是一定要配置环境变量，告诉操作系">
 <meta name="twitter:image" content="http://yoursite.com/images/JVM.png">
 
 
@@ -316,7 +316,7 @@
       
 
       
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>关于虚拟机这一块，其实本来是不太懂的，但是后来网上都说身为一个编程人员，如果JVM的内存结构都不熟悉，那也太lou了，所以，刻意学习了下，下面的理解是查一些相关资料和百度百科得来的理解。</p>
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>关于虚拟机这一块，其实本来是不太懂的，但是后来网上都说身为一个编程人员，如果JVM的内存结构都不熟悉，那也太low了，所以，刻意学习了下，下面的理解是查一些相关资料和百度百科得来的理解。</p>
 <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>我们说<strong>JDK</strong>是编程的基础工具，想要做JAVA编程，就必须要有<strong>JDK</strong>和<strong>JRE</strong>环境，那为啥一定要需要这俩玩意呢？其实我们都知道JDK是一个工具包，JRE是编程环境，编程的起点就是一定要配置环境变量，告诉操作系统寻找我的工具类和环境。那么<strong>JVM</strong>在JDK里面就起到至关重要的作用了！</p>
 <h2 id="关于JVM"><a href="#关于JVM" class="headerlink" title="关于JVM"></a>关于JVM</h2><p>JVM是处于在整个jdk最底层中，他负责于操作系统之间的交互，用来屏蔽操作系统环境，从而提供一个完整的java的运行环境，因此我们也称为虚拟计算机(即虚拟机)，其实我们完全可以把它想象成一种虚拟的运行空间。 …  ok下面来具体了解下关于虚拟计算机的启动流程和内存结构，如图：</p>
 <h2 id="JVM启动流程"><a href="#JVM启动流程" class="headerlink" title="JVM启动流程"></a>JVM启动流程</h2><p><img src="/images/JVM.png" alt=""><br>通过java命令或者javam命令启动，然后装配，运行等等 bbooxx..感觉这东西没啥用,万一有新发明可能启动又换新花样了，重点来说下内存结构：</p>
@@ -453,7 +453,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
