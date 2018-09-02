@@ -79,20 +79,20 @@
 
 
 
-<meta name="description" content="���Zookeeper��һ�ֿ�Դ�ķֲ�ʽӦ��Э������ϵͳ����Ҫ�������ͳһ��������.״̬ͬ������.��Ⱥ����.�ֲ�ʽӦ��������Ĺ���ȹ���.����Ҫ���ɽڵ�ͼ�������ɡ� �ص�zookeeper��һ����λ������ƿռ䣬����һ���ֲ�ʽ�ļ�ϵͳ��ͼ��">
+<meta name="description" content="简介Zookeeper是一种开源的分布式应用协调服务系统，主要用来完成统一命名服务.状态同步服务.集群管理.分布式应用配置项的管理等工作.他主要是由节点和监视器组成。 特点zookeeper有一个层次化的名称空间，很想一个分布式文件系统如图：">
 <meta name="keywords" content="data">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ZooKeeper">
 <meta property="og:url" content="http://yoursite.com/2018/01/05/ZooKeeper/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="���Zookeeper��һ�ֿ�Դ�ķֲ�ʽӦ��Э������ϵͳ����Ҫ�������ͳһ��������.״̬ͬ������.��Ⱥ����.�ֲ�ʽӦ��������Ĺ���ȹ���.����Ҫ���ɽڵ�ͼ�������ɡ� �ص�zookeeper��һ����λ������ƿռ䣬����һ���ֲ�ʽ�ļ�ϵͳ��ͼ��">
+<meta property="og:description" content="简介Zookeeper是一种开源的分布式应用协调服务系统，主要用来完成统一命名服务.状态同步服务.集群管理.分布式应用配置项的管理等工作.他主要是由节点和监视器组成。 特点zookeeper有一个层次化的名称空间，很想一个分布式文件系统如图：">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/zookeeper1.jpg">
 <meta property="og:image" content="http://yoursite.com/images/zookeeperyingyong.png">
-<meta property="og:updated_time" content="2018-09-02T07:07:30.041Z">
+<meta property="og:updated_time" content="2018-09-02T07:11:54.305Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ZooKeeper">
-<meta name="twitter:description" content="���Zookeeper��һ�ֿ�Դ�ķֲ�ʽӦ��Э������ϵͳ����Ҫ�������ͳһ��������.״̬ͬ������.��Ⱥ����.�ֲ�ʽӦ��������Ĺ���ȹ���.����Ҫ���ɽڵ�ͼ�������ɡ� �ص�zookeeper��һ����λ������ƿռ䣬����һ���ֲ�ʽ�ļ�ϵͳ��ͼ��">
+<meta name="twitter:description" content="简介Zookeeper是一种开源的分布式应用协调服务系统，主要用来完成统一命名服务.状态同步服务.集群管理.分布式应用配置项的管理等工作.他主要是由节点和监视器组成。 特点zookeeper有一个层次化的名称空间，很想一个分布式文件系统如图：">
 <meta name="twitter:image" content="http://yoursite.com/images/zookeeper1.jpg">
 
 
@@ -312,10 +312,10 @@
       
 
       
-        <h3 id="���"><a href="#���" class="headerlink" title="���"></a>���</h3><p>Zookeeper��һ�ֿ�Դ�ķֲ�ʽӦ��Э������ϵͳ����Ҫ�������ͳһ��������.״̬ͬ������.��Ⱥ����.�ֲ�ʽӦ��������Ĺ���ȹ���.����Ҫ���ɽڵ�ͼ�������ɡ�</p>
-<h3 id="�ص�"><a href="#�ص�" class="headerlink" title="�ص�"></a>�ص�</h3><p>zookeeper��һ����λ������ƿռ䣬����һ���ֲ�ʽ�ļ�ϵͳ��ͼ��<br><img src="/images/zookeeper1.jpg" alt=""><br><a id="more"></a></p>
-<h3 id="����"><a href="#����" class="headerlink" title="����"></a>����</h3><p>Znode�еĽڵ��ֻᱻ��֮Ϊ<strong>��ʱ�ڵ�.���ýڵ�.˳��ڵ�</strong>���ڵ�������ڴ���ʱ�ͻᱻȷ�������Ҳ��ܱ��ı䣬���ڸ��ֽڵ������—–<br>1.<strong>��ʱ�ڵ�</strong>������ڵ���������������ڴ������ǵ��������˵�������ǵĻỰ��һ���Ự��������ʱ�ڵ㽫���Զ�ɾ��������ZooKeeper����ʱ�ڵ㲻����ӵ���ӽڵ㣻<br>2.<strong>���ýڵ�</strong>������ڵ���������ڲ��������ڻỰ������ֻ���ڿͻ���ִ��ɾ��������ʱ�򣬲Żᱻɾ����<br>3.<strong>˳��ڵ�</strong>��˳��ڵ����ʹ�־õĻ�����ʱ��.��һ���µ�Znode������Ϊ˳��ڵ��ǣ�ZooKeeperͨ����10λ�����кŸ��ӵ�ԭʼ����������Znode��·�����ͱ��磬������ǽ�·��Ϊ/caotian��znode����Ϊ˳��ڵ㣬��Zookeeper�Ὣ·������Ϊ/caotian0000000001�����ҽ���һ��·������Ϊ/*0000000002<br>�ͻ����ڽڵ�������<strong>������{watch}</strong>�����ڵ�״̬�����ı��ǣ�����Znode����.ɾ.�ģ��ͻᴥ������������Ӧ���¼�������������������ʱ��Zookeeper������ͻ��˷��Ͳ���ֻ����һ��֪ͨ��<br>���β�νṹ�е�ÿһ���ڵ㱻��ΪZnode<br><strong>Znode</strong>��ͬʱ���ļ���Ŀ¼�����ص㣬Ҳ����˵�ļ��кͺ�������ļ������Գ�ΪZnode</p>
-<h3 id="Ӧ��"><a href="#Ӧ��" class="headerlink" title="Ӧ��"></a>Ӧ��</h3><p>����Zookeeper��Ӧ�ã��������ڼ�Ⱥ�����ϱȽ϶࣬�Ƚ϶���԰��ʺ�٣�һ��ͼ��<br><img src="/images/zookeeperyingyong.png" alt=""></p>
+        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Zookeeper是一种开源的分布式应用协调服务系统，主要用来完成统一命名服务.状态同步服务.集群管理.分布式应用配置项的管理等工作.他主要是由节点和监视器组成。</p>
+<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><p>zookeeper有一个层次化的名称空间，很想一个分布式文件系统如图：<br><img src="/images/zookeeper1.jpg" alt=""><br><a id="more"></a></p>
+<h3 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h3><p>Znode中的节点又会被称之为<strong>临时节点.永久节点.顺序节点</strong>。节点的类型在创建时就会被确定，并且不能被改变，关于各种节点的作用—–<br>1.<strong>临时节点</strong>：这个节点的生命周期依赖于创建他们的请求或者说创建他们的会话，一旦会话结束，临时节点将被自动删除，而且ZooKeeper的临时节点不允许拥有子节点；<br>2.<strong>永久节点</strong>：这个节点的生命周期不会依赖于会话，并且只能在客户端执行删除操作的时候，才会被删除；<br>3.<strong>顺序节点</strong>：顺序节点可以使持久的或者临时的.当一个新的Znode被创建为顺序节点是，ZooKeeper通过将10位的序列号附加到原始名称来设置Znode的路径。就比如，如果我们将路径为/caotian的znode创建为顺序节点，则Zookeeper会将路径更改为/caotian0000000001，并且将下一个路径设置为/*0000000002<br>客户端在节点上设置<strong>监视器{watch}</strong>。当节点状态发生改变是，比如Znode的增.删.改，就会触发监视器所对应的事件操作，当监视器出发时，Zookeeper将会向客户端发送并且只发送一天通知。<br>树形层次结构中的每一个节点被称为Znode<br><strong>Znode</strong>，同时又文件和目录两种特点，也就是说文件夹和和里面的文件都可以成为Znode</p>
+<h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><p>关于Zookeeper的应用，还是用在集群管理上比较多，比较动物园铲屎官，一张图：<br><img src="/images/zookeeperyingyong.png" alt=""></p>
 
       
     </div>
@@ -494,7 +494,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#���"><span class="nav-number">1.</span> <span class="nav-text">���</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#�ص�"><span class="nav-number">2.</span> <span class="nav-text">�ص�</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#����"><span class="nav-number">3.</span> <span class="nav-text">����</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ӧ��"><span class="nav-number">4.</span> <span class="nav-text">Ӧ��</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#特点"><span class="nav-number">2.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类型"><span class="nav-number">3.</span> <span class="nav-text">类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应用"><span class="nav-number">4.</span> <span class="nav-text">应用</span></a></li></ol></div>
             
 
           </div>
