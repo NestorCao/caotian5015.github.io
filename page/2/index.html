@@ -238,6 +238,134 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/26/JVM内存结构以及调优/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/12/26/JVM内存结构以及调优/" itemprop="url">JVM内存结构以及调优</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-26T15:55:45+08:00">
+                2016-12-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>关于虚拟机这一块，其实本来是不太懂的，但是后来网上都说身为一个编程人员，如果JVM的内存结构都不熟悉，那也太low了，所以，刻意学习了下，下面的理解是查一些相关资料和百度百科得来的理解。</p>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>我们说<strong>JDK</strong>是编程的基础工具，想要做JAVA编程，就必须要有<strong>JDK</strong>和<strong>JRE</strong>环境，那为啥一定要需要这俩玩意呢？其实我们都知道JDK是一个工具包，JRE是编程环境，编程的起点就是一定要配置环境变量，告诉操作系统寻找我的工具类和环境。那么<strong>JVM</strong>在JDK里面就起到至关重要的作用了！</p>
+<h2 id="关于JVM"><a href="#关于JVM" class="headerlink" title="关于JVM"></a>关于JVM</h2><p>JVM是处于在整个jdk最底层中，他负责于操作系统之间的交互，用来屏蔽操作系统环境，从而提供一个完整的java的运行环境，因此我们也称为虚拟计算机(即虚拟机)，其实我们完全可以把它想象成一种虚拟的运行空间。 …  ok下面来具体了解下关于虚拟计算机的启动流程和内存结构，如图：</p>
+<h2 id="JVM启动流程"><a href="#JVM启动流程" class="headerlink" title="JVM启动流程"></a>JVM启动流程</h2><p><img src="/images/JVM.png" alt=""><br>通过java命令或者javam命令启动，然后装配，运行等等 bbooxx..感觉这东西没啥用,万一有新发明可能启动又换新花样了，重点来说下内存结构：</p>
+<h2 id="JVM内存结构"><a href="#JVM内存结构" class="headerlink" title="JVM内存结构"></a>JVM内存结构</h2><p><img src="/images/jvmneicun.jpg" alt=""><br>中间红色虚线里面的就是内存结构了<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/12/26/JVM内存结构以及调优/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/10/09/Memached-Mybatis缓存机制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -928,7 +1056,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
