@@ -309,7 +309,8 @@
       
         
           
-            <p>Welcome to My blog!<br><img src="/images/caotiantouxi.jpg" alt="1"> <img src="/images/IMG_5708.JPG" alt="2"></p>
+            <p>Even if the road is not flat also should make oneself of the sun<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">就算路不坦荡也要做自己的太阳</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/caotiantouxi.jpg" alt="1"></p>
 
           
         
@@ -553,7 +554,7 @@
       
         
           <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>我们说单个虚拟机中或者说单个进程中要实现线程安全会采用加锁机制，那分布式的情况下，一定会需要多台虚拟机或者多个进程协调服务，那么多个虚拟机同时操作一块临界资源也会产生线程的安全问题，这就是使用分布式锁的原因。即解决资源在同一时间只能有服务器中的一个线程处理这个资源。</p>
-<h3 id="分布式锁的解决方案"><a href="#分布式锁的解决方案" class="headerlink" title="分布式锁的解决方案"></a>分布式锁的解决方案</h3><p>1.通过<strong>关系型数据库</strong>来实现分布式锁，从而保证临界资源的线程安全问题。想象一下，可以在数据库中新增一条记录，谁先占用了这条记录就相当于操作了这块临界资源的锁标记，每个线程在操作时让他先查询数据库的记录，如果有线程存在了就放弃操作或者使用等待轮询的方式继续操作来保证效率，如果发现没有了就直接加锁。但是因为我们操作的是数据库，这相对其他几种方案来说<strong>缺点</strong>比较大，就比如：使用数据库查询免不了io的一系列操作，所以效率会相对比较低，另一方面一旦数据库当机了，所有的分布式锁就全部失去了效果，也就是说存在了单点故障的问题。<br>2.通过一些<strong>内存型的Nosql</strong>实现分布式锁，比如Redis中用setnx这块指令{这个指令的意思就是如果key value存在就会放弃操作，如果key value不存在就会set一个key value来进行保存} 非关系型的数据库相比已第一种方案效率相对较高，采用集群的情况下也不会存在单点故障的问题，并且key value也可以通过设置exprie{时长}从而避免死锁，这种方案相对比较牛逼了，其实相对一第三组方案只是在数据改变是没有通知回馈效果。基本第一种方案凭空想象的应该不会有太大的使用空间<br>3.通过<strong>ZooKeeper临时顺序节点</strong>来实现这种分布式锁；原理使用：注册临时节点就加锁 临时节点没了就解锁。<br>
+<h3 id="分布式锁的解决方案"><a href="#分布式锁的解决方案" class="headerlink" title="分布式锁的解决方案"></a>分布式锁的解决方案</h3><p>1.通过<strong>关系型数据库</strong>来实现分布式锁，从而保证临界资源的线程安全问题。想象一下，可以在数据库中新增一条记录，谁先占用了这条记录就相当于操作了这块临界资源的锁标记，每个线程在操作时让他先查询数据库的记录，如果有线程存在了就放弃操作或者使用等待轮询的方式继续操作来保证效率，如果发现没有了就直接加锁。但是因为我们操作的是数据库，这相对其他几种方案来说<strong>缺点</strong>比较大，就比如：使用数据库查询免不了io的一系列操作，所以效率会相对比较低，另一方面一旦数据库当机了，所有的分布式锁就全部失去了效果，也就是说存在了单点故障的问题。<br>2.通过一些<strong>内存型的Nosql</strong>实现分布式锁，比如Redis中用setnx这块指令{这个指令的意思就是如果key value存在就会放弃操作，如果key value不存在就会set一个key value来进行保存} 非关系型的数据库相比已第一种方案效率相对较高，采用集群的情况下也不会存在单点故障的问题，并且key value也可以通过设置exprie{时长}从而避免死锁，这种方案相对比较牛逼了，其实相对一第三组方案只是在数据改变是没有通知回馈效果。基本第一种方案凭空想象的应该不会有太大的使用空间<br>3.通过<strong>ZooKeeper临时顺序节点</strong>来实现这种分布式锁；原理使用：注册临时节点就加锁 临时节点没了就解锁。<br> <img src="/images/IMG_5708.JPG" alt="2"><br>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/01/08/分布式锁方案/#more" rel="contents">
