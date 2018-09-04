@@ -359,6 +359,132 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/24/自定义RPC框架/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/24/自定义RPC框架/" itemprop="url">自定义RPC框架</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-24T17:00:16+08:00">
+                2018-01-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>关于dubbo这样的rpc这样的框架真的不深入，最近在牛牛的领教下自定义了一个功能类似dubbo并且基础功能的小代码模型</p>
+<h3 id="涉及技术"><a href="#涉及技术" class="headerlink" title="涉及技术"></a>涉及技术</h3><p>zookeeper.xml的java反射弄对象和动态代理.spring式注解.序列化和反序列化.netty如图规模：<br><img src="/images/zidingyirpc2.0.png" alt=""></p>
+<h3 id="实现目的"><a href="#实现目的" class="headerlink" title="实现目的"></a>实现目的</h3><p>理解dubbo，走上坡路，离开北京，爬上富士山，走向人生巅峰！</p>
+<h3 id="定义起点"><a href="#定义起点" class="headerlink" title="定义起点"></a>定义起点</h3><p>导入所需要的依赖并且使用maven聚合，测试，搭建zookeeper{用的jdk1.8+zookeeper}整体框架如图：<br><img src="/images/rpcdaimaz.jpg" alt=""><br><img src="/images/daimarpca.png" alt=""></p>
+<h3 id="实现流程"><a href="#实现流程" class="headerlink" title="实现流程"></a>实现流程</h3><p>从接口到实现类，最后模拟服务器{接收}和客户端做rpc调用</p>
+<h3 id="实现开源"><a href="#实现开源" class="headerlink" title="实现开源"></a>实现开源</h3><p>先写哪个都可以，我是从注册中心开始写因为在之前需要配置zookeeper先完成一套流程，图：<br><img src="/images/shitichakan.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line">package com.caotian.rpc.impl;</span><br><span class="line"></span><br><span class="line">import com.caotian.rpc.HostAndPort;</span><br><span class="line">import com.caotian.rpc.Registry;</span><br><span class="line">import org.I0Itec.zkclient.IZkChildListener;</span><br><span class="line">import org.I0Itec.zkclient.ZkClient;</span><br><span class="line"></span><br><span class="line">import java.util.ArrayList;</span><br><span class="line">import java.util.List;</span><br><span class="line">/**</span><br><span class="line"> * You are SuperBoy!</span><br><span class="line"> * Description: 实现</span><br><span class="line"> * Created by caotian on 2018/1/21 17:50</span><br><span class="line"> **/</span><br><span class="line">public class ZKRegistry implements Registry &#123;</span><br><span class="line"></span><br><span class="line">    private ZkClient zkClient;</span><br><span class="line"></span><br><span class="line">    public ZKRegistry(String address)&#123;  // 构造注入</span><br><span class="line">        this.zkClient = new ZkClient(address);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 注册rpc服务的方法</span><br><span class="line">     * @param targetInterfaceName</span><br><span class="line">     * @param hostAndPort</span><br><span class="line">     */</span><br><span class="line">    public void registerService(String targetInterfaceName, HostAndPort hostAndPort) &#123;</span><br><span class="line">        // /rpc/com.caotian.service.DemoServcie/providers</span><br><span class="line">        String path = SERVICE_PREFIX + &quot;/&quot;+targetInterfaceName + SERVICE_SUFFIX;</span><br><span class="line">        if(!zkClient.exists(path))&#123;</span><br><span class="line">            zkClient.createPersistent(path,true);</span><br><span class="line">        &#125;</span><br><span class="line">        // // /rpc/com.caotian.service.DemoServcie/providers/192.168.0.3:20880</span><br><span class="line">        String nodePath = path + &quot;/&quot;+hostAndPort.getHost() +&quot;:&quot;+hostAndPort.getPort();</span><br><span class="line">        if (zkClient.exists(nodePath))&#123;</span><br><span class="line">            zkClient.delete(nodePath);</span><br><span class="line">        &#125;</span><br><span class="line">        zkClient.createEphemeral(nodePath);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 订阅服务方法</span><br><span class="line">     * @param targetInterfaceName</span><br><span class="line">     * @param existingHostAndPosts</span><br><span class="line">     */</span><br><span class="line">    public void subscribeService(String targetInterfaceName, final List&lt;HostAndPort&gt; existingHostAndPosts) &#123;</span><br><span class="line">        String path = SERVICE_PREFIX + &quot;/&quot;+targetInterfaceName + SERVICE_SUFFIX;</span><br><span class="line">        zkClient.subscribeChildChanges(path, new IZkChildListener() &#123;</span><br><span class="line">            public void handleChildChange(String s, List&lt;String&gt; list) throws Exception &#123;</span><br><span class="line">                // 将原有的节点列表 替换成新的节点列表</span><br><span class="line">                existingHostAndPosts.clear();</span><br><span class="line">                for (String node : list) &#123;</span><br><span class="line">                    existingHostAndPosts.add(new HostAndPort(node.split(&quot;:&quot;)[0],Integer.parseInt(node.split(&quot;:&quot;)[1])));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 获取服务节点列表</span><br><span class="line">     * @param targetInterfaceName</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    public List&lt;HostAndPort&gt; getServiceList(String targetInterfaceName) &#123;</span><br><span class="line">        String path = SERVICE_PREFIX + &quot;/&quot;+targetInterfaceName + SERVICE_SUFFIX;</span><br><span class="line">        List&lt;String&gt; list = zkClient.getChildren(path);</span><br><span class="line"></span><br><span class="line">        List&lt;HostAndPort&gt; hostAndPorts = new ArrayList&lt;HostAndPort&gt;();</span><br><span class="line">        for(String node : list)&#123;</span><br><span class="line">            hostAndPorts.add(new HostAndPort(node.split(&quot;:&quot;)[0],Integer.parseInt(node.split(&quot;:&quot;)[1])));</span><br><span class="line">        &#125;</span><br><span class="line">        return hostAndPorts;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/13/dubbo/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1345,130 +1471,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/13/Quartz/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/1.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/03/13/Quartz/" itemprop="url">Quartz</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-13T12:53:15+08:00">
-                2017-03-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p><img src="/images/biaoqingnnn.jpg" alt=""><br>quartz是一个由java编写的任务调度库，由OpenSymphony组织开源出来。绝大多数公司都会用到任务调度这个功能(感觉是个公司应该都会用到)， 比如公司需要定期执行任务调度生成报表， 或者比如博客什么的定时更新之类的，都可以靠Quartz来完成。<br>换言之他的任务场景：就比如定时的消息推送.定时抢购.定时发送邮件.定时发送博客.定时统计。（反正于定时相关就找他就行）<br><img src="/images/biaoqing.jpg" alt=""><br>任务调度：现在有N个任务（程序），要求在指定时间执行，比如每周二3点执行任务A、每天相隔5s执行任务B等等，这种多任务拥有多种执行策略就是任务调度。<br>而quartz的核心作用，是使任务调度变得丰富、高效、安全，开发者只需要调几个quartz接口并做简单配置，即可实现上述需求。<br>quartz号称能够同时对上万个任务进行调度，拥有丰富的功能特性，包括任务调度、任务持久化、可集群化、插件等<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/03/13/Quartz/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1523,7 +1525,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
