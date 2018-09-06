@@ -89,7 +89,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/caotiantouxi.jpg">
 <meta property="og:image" content="http://yoursite.com/images/dubbojiagou.png">
-<meta property="og:updated_time" content="2018-09-04T13:16:52.363Z">
+<meta property="og:updated_time" content="2018-09-06T13:24:18.300Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="dubbo">
 <meta name="twitter:description" content="简介Dubbo是一个分布式服务框架，致力于提供高性能和透明化的RPC远程服务调用方案，以及SOA服务治理方案。简单的说，dubbo就是个服务框架，如果没有分布式的需求，其实是不需要用的，只有在分布式的时候，才有dubbo这样的分布式服务框架的需求，并且本质上是个服务调用的东东，说白了就是个远程服务调用的分布式框架，他相对于webservice要简单一万呗！不过webservice具体怎么玩真记不清">
@@ -316,6 +316,7 @@
 <h3 id="流程思想"><a href="#流程思想" class="headerlink" title="流程思想"></a>流程思想</h3><p>1.暴露服务到本地<br>2.暴露服务到远程<br>3.启动netty服务<br>4.连接zookeeper<br>5.注册服务到zookeeper<br>6.监听zookeeper中的消费服务也就是监听zookeeper中的节点信息</p>
 <h3 id="dubbo"><a href="#dubbo" class="headerlink" title="dubbo"></a>dubbo</h3><p>dubbo缺省协议采用的是dubbo协议，采用单一长连接和NIO异步通讯，适合于小数据量大并发的服务调用<br>关于dubbo,实在不知道该怎么说怎么理解，用的时候参照官网照葫芦画瓢呗{<a href="http://dubbo.apache.org}，毕竟阿里开发的，中国人的产品也不至于看不懂,这是综合理解具体还是官网了解比较好" target="_blank" rel="noopener">http://dubbo.apache.org}，毕竟阿里开发的，中国人的产品也不至于看不懂,这是综合理解具体还是官网了解比较好</a><br><img src="/images/dubbojiagou.png" alt=""><br>引用zookeeper最大的好处 感知服务信息的改变<br>get 幂等性  post新增 非幂等性 put幂等性put是修改大多都是幂等性 支付也是<br>幂等性：请求一次和多次的操作结果都是一样的get查询 delete删除 put修改<br>restfull 实质是http协议 也就是可以跨编程语言调用</p>
 <h3 id="常识"><a href="#常识" class="headerlink" title="常识"></a>常识</h3><p><strong>默认使用的是什么通信框架，还有别的选择吗</strong><br>缺省协议采用dubbo协议，单一长连接和NIO的异步通讯，适合小数据量大并发的服务调用，还有JDK标准的RMI协议 hessian协议 http协议 webservice协议等<br><strong>服务调用是阻塞的吗</strong><br>采用NIO肯定不是阻塞的<br><strong>一般使用什么注册中心？还有别的选择吗</strong><br>zookeeper 还有可以使Redis Multicast等<br><strong>默认使用什么序列化框架，还有哪些</strong><br>默认使用Hessian序列化{采用二进制格式传输的服务框架} 还有jdk里的还有json序列化<br><strong>服务提供者能实现失效踢出是什么原理</strong><br>临时节点存储，基于会话存在<br><strong>服务上线怎么不影响旧版本</strong><br>当一个接口实现，出现不兼容升级时候，可以用版本号过度，版本号不同的服务相互间不引用，在低压力施加端，先升级一般提供者为新版本，在将所有消费者升级为新版本，在升级另一半的提供者<br><strong>服务调用超时问题怎么解决</strong><br>dubbo在调用服务不成功时，默认是会重试两次的。这样在服务端的处理时间超过了设定的超时时间时，就会有重复请求<br><strong>dubbo推荐用什么协议</strong><br>推荐dubbo协议还有rmi hessian http webservice等<br><strong>同一个服务多个注册的情况下可以直连某一个服务吗</strong><br>可以通过url的方式绕过注册中心直接连<br><strong>集群容错怎么做</strong><br>Dubbo的集群容错在这里想说说他是因为我们实际的项目中出现了此类的问题,因为依赖的第三方项目出现异常,导致dubbo调用超时,此时使用的是默认的集群容错方式,而配置的reties=’3’,这样前段系统连续掉用了三次服务<br>默认reties=”2”</p>
+<h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><p>dubbo高级特性：集群容错、负载均衡、直连提供者、隐式参数、路由规则、令牌验证、服务分组、多版本、多协议等<br>常用的dubbo服务的治理方案 qos    telnet</p>
 
       
     </div>
@@ -494,7 +495,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#流程思想"><span class="nav-number">2.</span> <span class="nav-text">流程思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dubbo"><span class="nav-number">3.</span> <span class="nav-text">dubbo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常识"><span class="nav-number">4.</span> <span class="nav-text">常识</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#流程思想"><span class="nav-number">2.</span> <span class="nav-text">流程思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dubbo"><span class="nav-number">3.</span> <span class="nav-text">dubbo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常识"><span class="nav-number">4.</span> <span class="nav-text">常识</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应用"><span class="nav-number">5.</span> <span class="nav-text">应用</span></a></li></ol></div>
             
 
           </div>
