@@ -88,8 +88,10 @@
 <meta property="og:description" content="前言HDFS是一个可以面向大规模数据使用的，并且可以进行扩展的文件存储与传递系统是一种同意文件通过网络在多台主机上分享的文件系统，可让多机器上的多用户分享文件和存储空间。让实际上是通过网络来訪问文件的动作。由程序与用户看来，就像是訪问本地的磁盘一般。即使系统中有某些节点脱机，总体来说系统仍然能够持续运作而不会有数据损失">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/hdfs.jpg">
+<meta property="og:image" content="http://yoursite.com/images/hdfsjiegou.jpeg">
+<meta property="og:image" content="http://yoursite.com/images/hdfsjiegou.jpeg">
 <meta property="og:image" content="http://yoursite.com/images/jsddd.jpg">
-<meta property="og:updated_time" content="2018-09-10T13:04:21.976Z">
+<meta property="og:updated_time" content="2018-09-10T13:07:27.847Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hadoop中的HDFS架构">
 <meta name="twitter:description" content="前言HDFS是一个可以面向大规模数据使用的，并且可以进行扩展的文件存储与传递系统是一种同意文件通过网络在多台主机上分享的文件系统，可让多机器上的多用户分享文件和存储空间。让实际上是通过网络来訪问文件的动作。由程序与用户看来，就像是訪问本地的磁盘一般。即使系统中有某些节点脱机，总体来说系统仍然能够持续运作而不会有数据损失">
@@ -348,7 +350,7 @@
 <li><p>block</p>
 <p>datanode最基本的存储单元</p>
 <p>对于文件内容而言，一个文件的长度大小是size。那么从文件的０偏移開始，依照固定的大小，顺序对文件进行划分并编号，划分好的每个块称一个Block。</p>
-<p>HDFS默认Block大小是128MB。 因此。一个256MB文件。共同拥有256/128=2个Block.<br>与普通文件系统不同的是，在 HDFS中，假设一个文件小于一个数据块的大小，并不占用整个数据块存储空间。 </p>
+<p>HDFS默认Block大小是128MB。 因此。一个256MB文件。共同拥有256/128=2个Block.<br>与普通文件系统不同的是，在 HDFS中，假设一个文件小于一个数据块的大小，并不占用整个数据块存储空间。<br>  <img src="/images/hdfsjiegou.jpeg" alt=""><br>  <img src="/images/hdfsjiegou.jpeg" alt=""></p>
 </li>
 <li><p>Replication</p>
 <p>多复本。默认是三个。通过hdfs-site.xml的dfs.replication属性进行设置 </p>
