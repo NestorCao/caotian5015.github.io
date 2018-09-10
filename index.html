@@ -360,6 +360,198 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/15/Hadoop安装以及环境搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/15/Hadoop安装以及环境搭建/" itemprop="url">Hadoop安装以及环境搭建</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-15T18:40:42+08:00">
+                2018-05-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/bigdata/" itemprop="url" rel="index">
+                    <span itemprop="name">bigdata</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>##hadoop 安装</p>
+<p>###hadoop安装环境</p>
+<ul>
+<li><p>安装JDK&amp;配置JAVA_HOME环境变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@centos ~]# rpm -ivh jdk-7u79-linux-x64.rpm </span><br><span class="line">[root@centos ~]# vi .bashrc </span><br><span class="line">JAVA_HOME=/usr/java/latest</span><br><span class="line">CLASSPATH=.</span><br><span class="line">PATH=$PATH:$JAVA_HOME/bin</span><br><span class="line">export JAVA_HOME</span><br><span class="line">export CLASSPATH</span><br><span class="line">export PATH</span><br><span class="line">[root@centos ~]# source .bashrc</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置主机名和IP映射关系</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@centos ~]# vi /etc/hosts</span><br><span class="line"></span><br><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br><span class="line">192.168.128.128 centos</span><br></pre></td></tr></table></figure>
+<ul>
+<li>关闭防火墙</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@centos ~]<span class="comment"># service iptables stop</span></span><br><span class="line">iptables: Setting chains to policy ACCEPT: filter          [  OK  ]</span><br><span class="line">iptables: Flushing firewall rules:                         [  OK  ]</span><br><span class="line">iptables: Unloading modules:                               [  OK  ]</span><br><span class="line">[root@centos ~]<span class="comment"># chkconfig iptables off</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>配置主机SSH免密码登录(<strong>基于密匙的安全验证</strong> )</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">[root@centos ~]<span class="comment"># ssh-keygen -t rsa</span></span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file <span class="keyword">in</span> <span class="built_in">which</span> to save the key (/root/.ssh/id_rsa): </span><br><span class="line">Created directory <span class="string">'/root/.ssh'</span>.</span><br><span class="line">Enter passphrase (empty <span class="keyword">for</span> no passphrase): </span><br><span class="line">Enter same passphrase again: </span><br><span class="line">Your identification has been saved <span class="keyword">in</span> /root/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved <span class="keyword">in</span> /root/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">ae:e6:fa:bd:c6:66:82:a9:d1:97:99:48:4c:d5:1f:cf root@centos</span><br><span class="line">The key<span class="string">'s randomart image is:</span></span><br><span class="line"><span class="string">+--[ RSA 2048]----+</span></span><br><span class="line"><span class="string">|      ..         |</span></span><br><span class="line"><span class="string">|     .  . .      |</span></span><br><span class="line"><span class="string">|    .    . +     |</span></span><br><span class="line"><span class="string">|   o      . E    |</span></span><br><span class="line"><span class="string">|    o   S        |</span></span><br><span class="line"><span class="string">|   o . =         |</span></span><br><span class="line"><span class="string">|  . oo=..        |</span></span><br><span class="line"><span class="string">|   .o.oo=        |</span></span><br><span class="line"><span class="string">|  ...=+=o.       |</span></span><br><span class="line"><span class="string">+-----------------+</span></span><br><span class="line"><span class="string">[root@centos ~]# ssh-copy-id centos</span></span><br><span class="line"><span class="string">The authenticity of host '</span>centos (192.168.128.128)<span class="string">' can'</span>t be established.</span><br><span class="line">RSA key fingerprint is 35:a8:db:4d:51:51:75:15:15:57:49:a8:3d:25:88:fa.</span><br><span class="line">Are you sure you want to <span class="built_in">continue</span> connecting (yes/no)? yes</span><br><span class="line">Warning: Permanently added <span class="string">'centos,192.168.128.128'</span> (RSA) to the list of known hosts.</span><br><span class="line">root@centos<span class="string">'s password: </span></span><br><span class="line"><span class="string">Now try logging into the machine, with "ssh '</span>centos<span class="string">'", and check in:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  .ssh/authorized_keys</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">to make sure we haven'</span>t added extra keys that you weren<span class="string">'t expecting.</span></span><br><span class="line"><span class="string">[root@centos ~]# ssh CentOS</span></span><br><span class="line"><span class="string">Last login: Mon Sep 10 11:54:38 2018 from 192.168.128.1</span></span><br><span class="line"><span class="string">[root@centos ~]# exit</span></span><br><span class="line"><span class="string">logout</span></span><br><span class="line"><span class="string">Connection to CentOS closed.</span></span><br></pre></td></tr></table></figure>
+<h3 id="配置hadoop"><a href="#配置hadoop" class="headerlink" title="配置hadoop"></a>配置hadoop</h3><ul>
+<li>解压hadoop并且配置HADOOP_HOME环境变量</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">[root@centos ~]<span class="comment"># tar -zxf hadoop-2.6.0_x64.tar.gz -C /usr/</span></span><br><span class="line">[root@centos ~]<span class="comment"># yum install -y tree</span></span><br><span class="line">[root@centos ~]<span class="comment"># tree -L 1 /usr/hadoop-2.6.0/</span></span><br><span class="line">/usr/hadoop-2.6.0/</span><br><span class="line">├── bin      -- 系统指令 hadoop、hdfs指令</span><br><span class="line">├── etc      -- 配置目录</span><br><span class="line">├── include</span><br><span class="line">├── lib      </span><br><span class="line">├── libexec</span><br><span class="line">├── LICENSE.txt</span><br><span class="line">├── NOTICE.txt</span><br><span class="line">├── README.txt</span><br><span class="line">├── sbin     -- 用户命令 start|stop-dfs|yarn.sh、hadoop-daemon.sh</span><br><span class="line">└── share    -- hadoop依赖jar文件</span><br><span class="line"></span><br><span class="line">7 directories, 3 files</span><br><span class="line">[root@centos ~]<span class="comment">#  vi .bashrc </span></span><br><span class="line">HADOOP_HOME=/usr/hadoop-2.6.0</span><br><span class="line">JAVA_HOME=/usr/java/latest</span><br><span class="line">CLASSPATH=.</span><br><span class="line">PATH=<span class="variable">$PATH</span>:<span class="variable">$JAVA_HOME</span>/bin:<span class="variable">$HADOOP_HOME</span>/bin:<span class="variable">$HADOOP_HOME</span>/sbin</span><br><span class="line"><span class="built_in">export</span> JAVA_HOME</span><br><span class="line"><span class="built_in">export</span> CLASSPATH</span><br><span class="line"><span class="built_in">export</span> PATH</span><br><span class="line"><span class="built_in">export</span> HADOOP_HOME</span><br><span class="line">[root@centos ~]<span class="comment"># source .bashrc </span></span><br><span class="line">[root@centos ~]<span class="comment"># hadoop classpath</span></span><br><span class="line">/usr/hadoop-2.6.0/etc/hadoop:/usr/hadoop-2.6.0/share/hadoop/common/lib/*:/usr/hadoop-2.6.0/share/hadoop/common/*:/usr/hadoop-2.6.0/share/hadoop/hdfs:/usr/hadoop-2.6.0/share/hadoop/hdfs/lib/*:/usr/hadoop-2.6.0/share/hadoop/hdfs/*:/usr/hadoop-2.6.0/share/hadoop/yarn/lib/*:/usr/hadoop-2.6.0/share/hadoop/yarn/*:/usr/hadoop-2.6.0/share/hadoop/mapreduce/lib/*:/usr/hadoop-2.6.0/share/hadoop/mapreduce/*:/usr/hadoop-2.6.0/contrib/capacity-scheduler/*.jar</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Hbase、Hive、Spark On Yarn都需要识别系统的HADOOP_HOME</p>
+</blockquote>
+<ul>
+<li>修改etc/hadoop/core-site.xml </li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.defaultFS<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://centos:9000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.tmp.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">value</span>&gt;</span>/usr/hadoop-2.6.0/hadoop-$&#123;user.name&#125;<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>修改hdfs-site.xml</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>1<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>修改slaves文本</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">centos</span><br></pre></td></tr></table></figure>
+<h3 id="启动hadoop"><a href="#启动hadoop" class="headerlink" title="启动hadoop"></a>启动hadoop</h3><ul>
+<li>格式化namenode</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@centos ~]# hdfs namenode -format</span><br><span class="line">18/09/10 12:12:49 INFO namenode.NNConf: Maximum size of an xattr: 16384</span><br><span class="line">18/09/10 12:12:49 INFO namenode.FSImage: Allocated new BlockPoolId: BP-1855312329-192.168.128.128-1536552769089</span><br><span class="line">18/09/10 12:12:49 INFO common.Storage: Storage directory /usr/hadoop-2.6.0/hadoop-root/dfs/name has been successfully formatted.</span><br><span class="line">18/09/10 12:12:49 INFO namenode.NNStorageRetentionManager: Going to retain 1 images with txid &gt;= 0</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>namenode格式化只需要在初次使用hadoop的时候执行，以后无需每次启动执行</p>
+</blockquote>
+<ul>
+<li>启动hdfs</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@centos ~]# start-dfs.sh </span><br><span class="line">Starting namenodes on [centos]</span><br><span class="line">centos: starting namenode, logging to /usr/hadoop-2.6.0/logs/hadoop-root-namenode-centos.out</span><br><span class="line">centos: starting datanode, logging to /usr/hadoop-2.6.0/logs/hadoop-root-datanode-centos.out</span><br><span class="line">Starting secondary namenodes [0.0.0.0]</span><br><span class="line">The authenticity of host &apos;0.0.0.0 (0.0.0.0)&apos; can&apos;t be established.</span><br><span class="line">RSA key fingerprint is 35:a8:db:4d:51:51:75:15:15:57:49:a8:3d:25:88:fa.</span><br><span class="line">Are you sure you want to continue connecting (yes/no)? yes</span><br><span class="line">0.0.0.0: Warning: Permanently added &apos;0.0.0.0&apos; (RSA) to the list of known hosts.</span><br><span class="line">0.0.0.0: starting secondarynamenode, logging to /usr/hadoop-2.6.0/logs/hadoop-root-secondarynamenode-centos.out</span><br><span class="line">[root@centos ~]# jps</span><br><span class="line">2151 Jps</span><br><span class="line">2049 SecondaryNameNode</span><br><span class="line">1915 DataNode</span><br><span class="line">1809 NameNode</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>用户可以访问<a href="http://ip:50070访问namenode的web-ui" target="_blank" rel="noopener">http://ip:50070访问namenode的web-ui</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/09/深入浅出数据库索引原理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1485,154 +1677,6 @@ table
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/30/Netty网络通信框架/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/1.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/30/Netty网络通信框架/" itemprop="url">Netty网络通信框架</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-30T19:37:31+08:00">
-                2017-09-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/web/" itemprop="url" rel="index">
-                    <span itemprop="name">web</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Netty是一种异步通讯的网络框架，是用来快速开发可维护行的高性能.搞扩展的协议服务器和客户端，他是封装NIO模型最热门也是最搞笑的网络框架；在Netty里所有的io处理都是异步操作完成的，NIO呢，是JDK1.2版本开始推出的一款同步非阻塞IO模型，而Netty是基于JDK1.7以上开源的封装nio的框架，所以使用Netty的时候JDK版本一定要高于1.6版。</p>
-<h3 id="Netty思想"><a href="#Netty思想" class="headerlink" title="Netty思想"></a>Netty思想</h3><p>个人感觉Netty这中网络框架相比入Spring Servlet Mybatis等这些在思想上相对复杂抽象些，但是从开发角度讲，基础步骤虽然很墨迹但是完全不需要怎样更改，作为一个开发来说，只需要根据业务有一个完整的业务框架内的一些相关逻辑然后在代码实现上只需对<strong>初始化客户端</strong>和<strong>初始化服务端</strong>这两种步骤进行业务更改就可以了{记得导入netty包}；下面从客户端开始说下锁理解的编程步骤。</p>
-<h3 id="简单的客户端"><a href="#简单的客户端" class="headerlink" title="简单的客户端"></a>简单的客户端</h3><p>在了解这门框架的时候，参照着官网{netty.io}进行开发开源，你会发现基础的步骤不会想差太多，只需要更改里面一个业务逻辑就可以了；说下我理解的客户端netty编程步骤：<br>1.初始化客户端引导程序，创建客户端的引导对象<br>2.创建IO处理的线程池，主要进行客户端数据的读写<br>3.绑定线程池<br>4.初始化服务通道<br>5.初始化客户端通道{开发主要在这个位置编写编程}<br>6.连接服务器，以同步方式等待连接成功<br>7.同步等待客户端关闭连接<br>8.释放资源<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/09/30/Netty网络通信框架/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1687,7 +1731,7 @@ table
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1698,7 +1742,7 @@ table
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
@@ -1709,7 +1753,7 @@ table
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

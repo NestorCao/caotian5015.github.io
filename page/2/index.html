@@ -239,6 +239,154 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/30/Netty网络通信框架/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/30/Netty网络通信框架/" itemprop="url">Netty网络通信框架</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-30T19:37:31+08:00">
+                2017-09-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web/" itemprop="url" rel="index">
+                    <span itemprop="name">web</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Netty是一种异步通讯的网络框架，是用来快速开发可维护行的高性能.搞扩展的协议服务器和客户端，他是封装NIO模型最热门也是最搞笑的网络框架；在Netty里所有的io处理都是异步操作完成的，NIO呢，是JDK1.2版本开始推出的一款同步非阻塞IO模型，而Netty是基于JDK1.7以上开源的封装nio的框架，所以使用Netty的时候JDK版本一定要高于1.6版。</p>
+<h3 id="Netty思想"><a href="#Netty思想" class="headerlink" title="Netty思想"></a>Netty思想</h3><p>个人感觉Netty这中网络框架相比入Spring Servlet Mybatis等这些在思想上相对复杂抽象些，但是从开发角度讲，基础步骤虽然很墨迹但是完全不需要怎样更改，作为一个开发来说，只需要根据业务有一个完整的业务框架内的一些相关逻辑然后在代码实现上只需对<strong>初始化客户端</strong>和<strong>初始化服务端</strong>这两种步骤进行业务更改就可以了{记得导入netty包}；下面从客户端开始说下锁理解的编程步骤。</p>
+<h3 id="简单的客户端"><a href="#简单的客户端" class="headerlink" title="简单的客户端"></a>简单的客户端</h3><p>在了解这门框架的时候，参照着官网{netty.io}进行开发开源，你会发现基础的步骤不会想差太多，只需要更改里面一个业务逻辑就可以了；说下我理解的客户端netty编程步骤：<br>1.初始化客户端引导程序，创建客户端的引导对象<br>2.创建IO处理的线程池，主要进行客户端数据的读写<br>3.绑定线程池<br>4.初始化服务通道<br>5.初始化客户端通道{开发主要在这个位置编写编程}<br>6.连接服务器，以同步方式等待连接成功<br>7.同步等待客户端关闭连接<br>8.释放资源<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/09/30/Netty网络通信框架/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/24/TCP的三次握手和四次挥手/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1437,141 +1585,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/08/26/FastDFS心得/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/1.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/08/26/FastDFS心得/" itemprop="url">FastDFS心得</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-26T12:08:24+08:00">
-                2016-08-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h3><p><strong>FastDFS</strong>高性能的分布式文件系统，主要功能包含文件的存储、同步、访问（上传和下载），特别适用于以文件为主体的网络站点（图片分享和视频分享）</p>
-<p><strong>FastDFS</strong>包含两个角色  </p>
-<ul>
-<li><strong>Tracker</strong>(追踪器 调度服务器)：调度和文件访问的负载均衡</li>
-<li><strong>Storage</strong>(存储器 存储服务器)：文件的管理（存储、同步、访问接口）和文件的元数据</li>
-</ul>
-<p>支持水平扩展，不会对在线服务造成任何影响</p>
-<p>存储服务器通过<strong>卷/组</strong>组织管理，不同的卷管理不同的文件，一个卷管理一台或者多台存储服务器，并且这些存储服务器之间互相备份</p>
-<p>存储容量=所有卷容量之和</p>
-<p>文件在集群中标示=卷名+文件名</p>
-<p>架构图：</p>
-<p><img src="/images/fastdfs_main.png" alt=""></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/08/26/FastDFS心得/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1626,7 +1639,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1637,7 +1650,7 @@
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
@@ -1648,7 +1661,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
