@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="bigdata," />
 
 
 
@@ -79,19 +79,21 @@
 
 
 
-<meta name="description" content="Even if the road is not flat also should make oneself of the sun1就算路不坦荡也要做自己的太阳">
+<meta name="description" content="前言HDFS是一个可以面向大规模数据使用的，并且可以进行扩展的文件存储与传递系统是一种同意文件通过网络在多台主机上分享的文件系统，可让多机器上的多用户分享文件和存储空间。让实际上是通过网络来訪问文件的动作。由程序与用户看来，就像是訪问本地的磁盘一般。即使系统中有某些节点脱机，总体来说系统仍然能够持续运作而不会有数据损失">
+<meta name="keywords" content="bigdata">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://yoursite.com/2018/08/25/hello-world/index.html">
+<meta property="og:title" content="Hadoop中的HDFS架构">
+<meta property="og:url" content="http://yoursite.com/2018/05/10/Hadoop中的HDFS架构/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Even if the road is not flat also should make oneself of the sun1就算路不坦荡也要做自己的太阳">
+<meta property="og:description" content="前言HDFS是一个可以面向大规模数据使用的，并且可以进行扩展的文件存储与传递系统是一种同意文件通过网络在多台主机上分享的文件系统，可让多机器上的多用户分享文件和存储空间。让实际上是通过网络来訪问文件的动作。由程序与用户看来，就像是訪问本地的磁盘一般。即使系统中有某些节点脱机，总体来说系统仍然能够持续运作而不会有数据损失">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/images/caotiantouxi.jpg">
-<meta property="og:updated_time" content="2018-09-03T14:12:31.420Z">
+<meta property="og:image" content="http://yoursite.com/images/hdfs.jpg">
+<meta property="og:image" content="http://yoursite.com/images/jsddd.jpg">
+<meta property="og:updated_time" content="2018-09-10T13:04:21.976Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Even if the road is not flat also should make oneself of the sun1就算路不坦荡也要做自己的太阳">
-<meta name="twitter:image" content="http://yoursite.com/images/caotiantouxi.jpg">
+<meta name="twitter:title" content="Hadoop中的HDFS架构">
+<meta name="twitter:description" content="前言HDFS是一个可以面向大规模数据使用的，并且可以进行扩展的文件存储与传递系统是一种同意文件通过网络在多台主机上分享的文件系统，可让多机器上的多用户分享文件和存储空间。让实际上是通过网络来訪问文件的动作。由程序与用户看来，就像是訪问本地的磁盘一般。即使系统中有某些节点脱机，总体来说系统仍然能够持续运作而不会有数据损失">
+<meta name="twitter:image" content="http://yoursite.com/images/hdfs.jpg">
 
 
 
@@ -121,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/08/25/hello-world/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/05/10/Hadoop中的HDFS架构/"/>
 
 
 
 
 
-  <title>Hello World | Hexo</title>
+  <title>Hadoop中的HDFS架构 | Hexo</title>
   
 
 
@@ -244,7 +246,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/25/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/10/Hadoop中的HDFS架构/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -261,7 +263,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hello World</h1>
+          <h1 class="post-title" itemprop="name headline">Hadoop中的HDFS架构</h1>
         
 
         <div class="post-meta">
@@ -273,8 +275,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-25T16:51:23+08:00">
-                2018-08-25
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-10T19:22:47+08:00">
+                2018-05-10
               </time>
             
 
@@ -283,6 +285,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/bigdata/" itemprop="url" rel="index">
+                    <span itemprop="name">bigdata</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -311,8 +335,29 @@
       
 
       
-        <p>Even if the road is not flat also should make oneself of the sun<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">就算路不坦荡也要做自己的太阳</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/caotiantouxi.jpg" alt="1"></p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>HDFS是一个可以面向大规模数据使用的，并且可以进行扩展的文件存储与传递系统是一种同意文件通过网络在多台主机上分享的文件系统，可让多机器上的多用户分享文件和存储空间。让实际上是通过网络来訪问文件的动作。由程序与用户看来，就像是訪问本地的磁盘一般。即使系统中有某些节点脱机，总体来说系统仍然能够持续运作而不会有数据损失 </p>
+<a id="more"></a>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p><img src="/images/hdfs.jpg" alt=""></p>
+<ul>
+<li><p>Namenode</p>
+<p>Namenode是整个文件系统的管理节点。它维护着整个文件系统的文件文件夹树，文件/文件夹的元信息和每个文件相应的数据块列表, 接收用户的操作请求。  文件包含：  ①fsimage:元数据镜像文件。存储某一时段NameNode内存元数据信息。  ②edits:操作日志文件。  ③fstime:保存近期一次checkpoint的时间  以上这些文件是保存在linux的文件系统中。通过hdfs-site.xml的dfs.namenode.name.dir属性进行设置。 </p>
+</li>
+<li><p>Datanode</p>
+<p>提供真实文件数据的存储服务</p>
+</li>
+<li><p>block</p>
+<p>datanode最基本的存储单元</p>
+<p>对于文件内容而言，一个文件的长度大小是size。那么从文件的０偏移開始，依照固定的大小，顺序对文件进行划分并编号，划分好的每个块称一个Block。</p>
+<p>HDFS默认Block大小是128MB。 因此。一个256MB文件。共同拥有256/128=2个Block.<br>与普通文件系统不同的是，在 HDFS中，假设一个文件小于一个数据块的大小，并不占用整个数据块存储空间。 </p>
+</li>
+<li><p>Replication</p>
+<p>多复本。默认是三个。通过hdfs-site.xml的dfs.replication属性进行设置 </p>
+<p><img src="/images/jsddd.jpg" alt=""></p>
+<h3 id="思想流程"><a href="#思想流程" class="headerlink" title="思想流程"></a>思想流程</h3><p>HDFS客户端上传数据到HDFS时，首先会在本地缓存数据，当数据达到了一个block大小时，会请求Namenode在分配一个block。NameNode此时会把block所在的DataNode地址告诉HDFS客户端。这时候客户端在直接和DataNode通信，然后把数据写到DataNode节点的一个block文件中</p>
+<hr>
+<h3 id="写思想流程"><a href="#写思想流程" class="headerlink" title="写思想流程"></a>写思想流程</h3><p>客户端通过调用DistributeFileSystem的create方法创建新文件，DistributeFileSystem在通过RPC调用Namenode去创建一个没有blocks关联的新闻界，创建前，namenode会做各种教研，比如文件是否之前就存在，客户端有没有权限创建等，如果校验成功。Namenode就会记录新文件，否则的话就会抛出io异常。然后将数据切成块询问Namenode这个块适合放在哪个block节点或者说那个datanode中…</p>
+</li>
+</ul>
 
       
     </div>
@@ -328,6 +373,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/bigdata/" rel="tag"># bigdata</a>
+          
+        </div>
+      
 
       
       
@@ -337,8 +388,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/15/Hadoop安装以及环境搭建/" rel="next" title="Hadoop安装以及环境搭建">
-                <i class="fa fa-chevron-left"></i> Hadoop安装以及环境搭建
+              <a href="/2018/04/09/深入浅出数据库索引原理/" rel="next" title="深入浅出数据库索引原理">
+                <i class="fa fa-chevron-left"></i> 深入浅出数据库索引原理
               </a>
             
           </div>
@@ -346,6 +397,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/15/Hadoop安装以及环境搭建/" rel="prev" title="Hadoop安装以及环境搭建">
+                Hadoop安装以及环境搭建 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -397,8 +452,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -462,6 +526,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">2.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#思想流程"><span class="nav-number">2.1.</span> <span class="nav-text">思想流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写思想流程"><span class="nav-number">2.2.</span> <span class="nav-text">写思想流程</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

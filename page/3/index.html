@@ -239,6 +239,130 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/08/27/FastDFS理论/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/08/27/FastDFS理论/" itemprop="url">FastDFS理论</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-27T13:05:39+08:00">
+                2016-08-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="一-前言"><a href="#一-前言" class="headerlink" title="一.前言"></a>一.前言</h3><p>前面我们说到<strong>FastDFS</strong>是一款高性能分布式文件系统，他的服务端主要分为两种角色：<em>跟踪器</em>和<em>存储节点</em><br>其实<strong>FastDFS</strong>这么牛逼，被很多公司使用最主要的原因还是因为他的分布式特点，为啥这么说呢，我个人理解<br>就是他是分布式啊，分布式可以跨机器还能构建集群，这不就解决了很多内存啊效率的限制，主要还是用来解决海量<br>数据的存储问题，你想啊，只要我有钱，多搭点集群，啥不都解决了~.~，下面来说下这款系统的由来：*<em>FastDFS</em><br>据说是国内alibaba一个特别牛逼的架构师“余庆”开源的，是<em>C语言</em>编写的，并不是java，更多的就是适用于像我们<br>这种中小型的公司，他的主要使用于存储图片.视频.音频等这些小于100mb的小文件存储<br>具体流程思想呢，我是这样理解的：<br>首先，客户端发起文件上传的请求，然后先访问跟踪服务器集群(Tracker<br>cluster),跟踪服务器集群会选择真正存储文件的节点信息返回给客户端，客户端在发起真正的存储请求访问存储节<br>点Storage ，其实可以想象成跟踪器集群主要对存储节点起到一种监听作用<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/08/27/FastDFS理论/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/08/26/FastDFS心得/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -557,7 +681,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

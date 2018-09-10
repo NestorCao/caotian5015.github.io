@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="##hadoop 安装 ###hadoop安装环境  安装JDK&amp;amp;配置JAVA_HOME环境变量 123456789[root@centos ~]# rpm -ivh jdk-7u79-linux-x64.rpm [root@centos ~]# vi .bashrc JAVA_HOME=/usr/java/latestCLASSPATH=.PATH=$PATH:$JAVA_HOME/bi">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-10T10:42:42.614Z">
+<meta property="og:updated_time" content="2018-09-10T10:51:19.646Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hadoop安装以及环境搭建">
 <meta name="twitter:description" content="##hadoop 安装 ###hadoop安装环境  安装JDK&amp;amp;配置JAVA_HOME环境变量 123456789[root@centos ~]# rpm -ivh jdk-7u79-linux-x64.rpm [root@centos ~]# vi .bashrc JAVA_HOME=/usr/java/latestCLASSPATH=.PATH=$PATH:$JAVA_HOME/bi">
@@ -338,8 +338,10 @@
 <li><p>安装JDK&amp;配置JAVA_HOME环境变量</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@centos ~]# rpm -ivh jdk-7u79-linux-x64.rpm </span><br><span class="line">[root@centos ~]# vi .bashrc </span><br><span class="line">JAVA_HOME=/usr/java/latest</span><br><span class="line">CLASSPATH=.</span><br><span class="line">PATH=$PATH:$JAVA_HOME/bin</span><br><span class="line">export JAVA_HOME</span><br><span class="line">export CLASSPATH</span><br><span class="line">export PATH</span><br><span class="line">[root@centos ~]# source .bashrc</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>配置主机名和IP映射关系</p>
-</li>
+</ul>
+<a id="more"></a>
+<ul>
+<li>配置主机名和IP映射关系</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@centos ~]# vi /etc/hosts</span><br><span class="line"></span><br><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br><span class="line">192.168.128.128 centos</span><br></pre></td></tr></table></figure>
 <ul>
@@ -380,6 +382,7 @@
 <li>启动hdfs</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@centos ~]# start-dfs.sh </span><br><span class="line">Starting namenodes on [centos]</span><br><span class="line">centos: starting namenode, logging to /usr/hadoop-2.6.0/logs/hadoop-root-namenode-centos.out</span><br><span class="line">centos: starting datanode, logging to /usr/hadoop-2.6.0/logs/hadoop-root-datanode-centos.out</span><br><span class="line">Starting secondary namenodes [0.0.0.0]</span><br><span class="line">The authenticity of host &apos;0.0.0.0 (0.0.0.0)&apos; can&apos;t be established.</span><br><span class="line">RSA key fingerprint is 35:a8:db:4d:51:51:75:15:15:57:49:a8:3d:25:88:fa.</span><br><span class="line">Are you sure you want to continue connecting (yes/no)? yes</span><br><span class="line">0.0.0.0: Warning: Permanently added &apos;0.0.0.0&apos; (RSA) to the list of known hosts.</span><br><span class="line">0.0.0.0: starting secondarynamenode, logging to /usr/hadoop-2.6.0/logs/hadoop-root-secondarynamenode-centos.out</span><br><span class="line">[root@centos ~]# jps</span><br><span class="line">2151 Jps</span><br><span class="line">2049 SecondaryNameNode</span><br><span class="line">1915 DataNode</span><br><span class="line">1809 NameNode</span><br></pre></td></tr></table></figure>
+<p>官网：<a href="http://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/HDFSCommands.html#dfss" target="_blank" rel="noopener">link</a></p>
 <blockquote>
 <p>用户可以访问<a href="http://ip:50070访问namenode的web-ui" target="_blank" rel="noopener">http://ip:50070访问namenode的web-ui</a></p>
 </blockquote>
@@ -413,8 +416,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/04/09/深入浅出数据库索引原理/" rel="next" title="深入浅出数据库索引原理">
-                <i class="fa fa-chevron-left"></i> 深入浅出数据库索引原理
+              <a href="/2018/05/10/Hadoop中的HDFS架构/" rel="next" title="Hadoop中的HDFS架构">
+                <i class="fa fa-chevron-left"></i> Hadoop中的HDFS架构
               </a>
             
           </div>
@@ -506,7 +509,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
