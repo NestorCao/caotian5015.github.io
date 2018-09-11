@@ -360,6 +360,152 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/03/Hadoop之MapReduce/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/03/Hadoop之MapReduce/" itemprop="url">Hadoop之MapReduce</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-03T22:35:36+08:00">
+                2018-06-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/bigdata/" itemprop="url" rel="index">
+                    <span itemprop="name">bigdata</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>MapReduce是Hadoop中一个通用并行计算框架，这个框架实现思想是利用hadoop的存储节点（datanode）的CPU.内存.网络和少许磁盘{作临时存储结构}完成大数据的统计和汇总任务。该任务一般分为两个节点，即<strong>Map阶段</strong>和<strong>Reduce阶段</strong>；<strong>Map阶段</strong>：在任务计算初期，框架会首先对数据做分片处理–split,系统会给每一个切片分配一个Map任务，用来对切片数据的局部处理，并将切片的数据转换为key.value，并且将key-value数据存储在对应任务所在机器的物理磁盘上；<strong>Reduce阶段</strong>：任务初期框架会将所有的运行Map节点的计算的中间结果，通过网络下载到汇总节点上，然后对下载过来的数据做一次洗牌-shuffile,最终将map段输出key-value转换为数组形式即key-values,然后在启动ReduceTask做最终的汇总。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/03/Hadoop之MapReduce/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/15/Hadoop安装以及环境搭建/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -605,6 +751,7 @@
       
         
           <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>HDFS是一个可以面向大规模数据使用的，并且可以进行扩展的文件存储与传递系统是一种同意文件通过网络在多台主机上分享的文件系统，可让多机器上的多用户分享文件和存储空间。让实际上是通过网络来訪问文件的动作。由程序与用户看来，就像是訪问本地的磁盘一般。即使系统中有某些节点脱机，总体来说系统仍然能够持续运作而不会有数据损失 </p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Hadoop Distributed File System (HDFS) is a distributed file system designed to run on commodity hardware.  Hardware failure is the norm rather than the exception.   detection of faults and quick, automatic recovery from them is a core architectural goal of HDFS.<br>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/05/10/Hadoop中的HDFS架构/#more" rel="contents">
@@ -1459,171 +1606,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/10/MongoDB-Mysql命令记录和索引/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/1.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/10/MongoDB-Mysql命令记录和索引/" itemprop="url">MongoDB+Mysql命令记录和索引</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-10T19:04:49+08:00">
-                2017-11-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>对于mysql和MongoDB做命令笔记，<a href="https://docs.mongodb.com/v3.6/aggregation/" target="_blank" rel="noopener">来自官网,点击</a></p>
-<h3 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h3><p>RDBMS<br>    mysql oracle</p>
-<pre><code>缺点：mysql 单张表数据容量 2000w，超过分库分表（垂直拆分、水平拆分） 片键（分片规则）
-      复杂性高   通过数据库中间件  mycat  myfox 
-
-table
-
-强事务  加锁  ACID
-</code></pre><p>NOSQL</p>
-<pre><code>1. 高可扩展型 支持大数据量存储 并且支持集群
-2. 分布式计算
-3. 数据结构灵活
-4. 效率比较高   TPS   弱化事务
-5. ......
-</code></pre><p>MongoDB NOSQL 基于document(文档)</p>
-<pre><code>1. document 类似于之前学习过json的数据结构（bson）
-   {
-       &quot;id&quot;:1,
-       &quot;name&quot;:&quot;zs&quot;
-       &quot;users&quot;:[{
-               &quot;id&quot;:2,
-               &quot;name&quot;:&quot;zs&quot;
-       },{
-               &quot;id&quot;:3,
-               &quot;name&quot;:&quot;zs&quot;
-       }]
-   }
-2. mongodb产品特别类似于关系型数据的nosql产品 介于关系型数据和内存型数据库之间
-   使用mongodb可以完全替换掉mysql
-
-   mongodb 和 mysql的关键词的对比
-
-   数据库：database   database
-   表：    table      collection
-   行：    row        document
-   列：    column     field
-   主键：  pk         pk   &quot;_id&quot;: xxx
-   外键：  fk         没有 内嵌文档
-
-3. 搭建mongodb的环境
-   注意：mongodb-linux-x86_64-3.6.2.tgz  linux 64位  开启bios的虚拟化支持
-</code></pre>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/11/10/MongoDB-Mysql命令记录和索引/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1678,7 +1660,7 @@ table
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-count">24</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

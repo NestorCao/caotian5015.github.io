@@ -79,22 +79,23 @@
 
 
 
-<meta name="description" content="前言HDFS是一个可以面向大规模数据使用的，并且可以进行扩展的文件存储与传递系统是一种同意文件通过网络在多台主机上分享的文件系统，可让多机器上的多用户分享文件和存储空间。让实际上是通过网络来訪问文件的动作。由程序与用户看来，就像是訪问本地的磁盘一般。即使系统中有某些节点脱机，总体来说系统仍然能够持续运作而不会有数据损失">
+<meta name="description" content="前言HDFS是一个可以面向大规模数据使用的，并且可以进行扩展的文件存储与传递系统是一种同意文件通过网络在多台主机上分享的文件系统，可让多机器上的多用户分享文件和存储空间。让实际上是通过网络来訪问文件的动作。由程序与用户看来，就像是訪问本地的磁盘一般。即使系统中有某些节点脱机，总体来说系统仍然能够持续运作而不会有数据损失  简介Hadoop Distributed File System (HDFS">
 <meta name="keywords" content="bigdata">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hadoop中的HDFS架构">
 <meta property="og:url" content="http://yoursite.com/2018/05/10/Hadoop中的HDFS架构/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="前言HDFS是一个可以面向大规模数据使用的，并且可以进行扩展的文件存储与传递系统是一种同意文件通过网络在多台主机上分享的文件系统，可让多机器上的多用户分享文件和存储空间。让实际上是通过网络来訪问文件的动作。由程序与用户看来，就像是訪问本地的磁盘一般。即使系统中有某些节点脱机，总体来说系统仍然能够持续运作而不会有数据损失">
+<meta property="og:description" content="前言HDFS是一个可以面向大规模数据使用的，并且可以进行扩展的文件存储与传递系统是一种同意文件通过网络在多台主机上分享的文件系统，可让多机器上的多用户分享文件和存储空间。让实际上是通过网络来訪问文件的动作。由程序与用户看来，就像是訪问本地的磁盘一般。即使系统中有某些节点脱机，总体来说系统仍然能够持续运作而不会有数据损失  简介Hadoop Distributed File System (HDFS">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/hdfs.jpg">
 <meta property="og:image" content="http://yoursite.com/images/hdfsjiegou.jpeg">
-<meta property="og:image" content="http://yoursite.com/images/hdfsjiegou.jpeg">
 <meta property="og:image" content="http://yoursite.com/images/jsddd.jpg">
-<meta property="og:updated_time" content="2018-09-10T13:07:27.847Z">
+<meta property="og:image" content="http://yoursite.com/images/naemnode.png">
+<meta property="og:image" content="http://yoursite.com/images/idd.png">
+<meta property="og:updated_time" content="2018-09-11T11:30:11.602Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hadoop中的HDFS架构">
-<meta name="twitter:description" content="前言HDFS是一个可以面向大规模数据使用的，并且可以进行扩展的文件存储与传递系统是一种同意文件通过网络在多台主机上分享的文件系统，可让多机器上的多用户分享文件和存储空间。让实际上是通过网络来訪问文件的动作。由程序与用户看来，就像是訪问本地的磁盘一般。即使系统中有某些节点脱机，总体来说系统仍然能够持续运作而不会有数据损失">
+<meta name="twitter:description" content="前言HDFS是一个可以面向大规模数据使用的，并且可以进行扩展的文件存储与传递系统是一种同意文件通过网络在多台主机上分享的文件系统，可让多机器上的多用户分享文件和存储空间。让实际上是通过网络来訪问文件的动作。由程序与用户看来，就像是訪问本地的磁盘一般。即使系统中有某些节点脱机，总体来说系统仍然能够持续运作而不会有数据损失  简介Hadoop Distributed File System (HDFS">
 <meta name="twitter:image" content="http://yoursite.com/images/hdfs.jpg">
 
 
@@ -338,28 +339,95 @@
 
       
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>HDFS是一个可以面向大规模数据使用的，并且可以进行扩展的文件存储与传递系统是一种同意文件通过网络在多台主机上分享的文件系统，可让多机器上的多用户分享文件和存储空间。让实际上是通过网络来訪问文件的动作。由程序与用户看来，就像是訪问本地的磁盘一般。即使系统中有某些节点脱机，总体来说系统仍然能够持续运作而不会有数据损失 </p>
-<a id="more"></a>
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p><img src="/images/hdfs.jpg" alt=""></p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Hadoop Distributed File System (HDFS) is a distributed file system designed to run on commodity hardware.  Hardware failure is the norm rather than the exception.   detection of faults and quick, automatic recovery from them is a core architectural goal of HDFS.<br><a id="more"></a><br>HDFS has a master/slave architecture. An HDFS cluster consists of a single NameNode, a master server that manages the file system namespace and regulates access to files by clients. In addition, there are a number of DataNodes, usually one per node in the cluster, which manage storage attached to the nodes that they run on. HDFS exposes a file system namespace and allows user data to be stored in files. Internally, a file is split into one or more blocks and these blocks are stored in a set of DataNodes. The NameNode executes file system namespace operations like opening, closing, and renaming files and directories. It also determines the mapping of blocks to DataNodes. The DataNodes are responsible for serving read and write requests from the file system’s clients. The DataNodes also perform block creation, deletion, and replication upon instruction from the NameNode.<br><img src="/images/hdfs.jpg" alt=""></p>
 <ul>
 <li><p>Namenode</p>
-<p>Namenode是整个文件系统的管理节点。它维护着整个文件系统的文件文件夹树，文件/文件夹的元信息和每个文件相应的数据块列表, 接收用户的操作请求。  文件包含：  ①fsimage:元数据镜像文件。存储某一时段NameNode内存元数据信息。  ②edits:操作日志文件。  ③fstime:保存近期一次checkpoint的时间  以上这些文件是保存在linux的文件系统中。通过hdfs-site.xml的dfs.namenode.name.dir属性进行设置。 </p>
+<p>Namenode是整个文件系统的管理节点。它维护着整个文件系统的文件文件夹树，文件/文件夹的元信息和每个文件相应的数据块列表, 接收用户的操作请求。  文件包含：  ①fsimage:元数据镜像文件。存储某一时段NameNode内存元数据信息。  ②edits:操作日志文件。  ③fstime:保存近期一次checkpoint的时间  以上这些文件是保存在linux的文件系统中。通过hdfs-site.xml的dfs.namenode.name.dir属性进行设置。<br>总结：存储系统元数据、namespace、管理datanode、接受datanode状态汇报</p>
 </li>
 <li><p>Datanode</p>
-<p>提供真实文件数据的存储服务</p>
+<p>提供真实文件数据的存储服务<br>存储块数据，响应客户端的块的读写，接收namenode的块管理指令、</p>
+</li>
+<li><p>rack<br>机架，对datanode所在主机的物理标识，标识主机的位置，优化存储和计算</p>
 </li>
 <li><p>block</p>
-<p>datanode最基本的存储单元</p>
+<p>datanode最基本的存储单元，默认值是128MB，实际块大小0~128MB</p>
 <p>对于文件内容而言，一个文件的长度大小是size。那么从文件的０偏移開始，依照固定的大小，顺序对文件进行划分并编号，划分好的每个块称一个Block。</p>
-<p>HDFS默认Block大小是128MB。 因此。一个256MB文件。共同拥有256/128=2个Block.<br>与普通文件系统不同的是，在 HDFS中，假设一个文件小于一个数据块的大小，并不占用整个数据块存储空间。<br>  <img src="/images/hdfsjiegou.jpeg" alt=""><br>  <img src="/images/hdfsjiegou.jpeg" alt=""></p>
+<p>HDFS默认Block大小是128MB。 因此。一个256MB文件。共同拥有256/128=2个Block.<br>与普通文件系统不同的是，在 HDFS中，假设一个文件小于一个数据块的大小，并不占用整个数据块存储空间。<br>  <img src="/images/hdfsjiegou.jpeg" alt=""></p>
 </li>
 <li><p>Replication</p>
 <p>多复本。默认是三个。通过hdfs-site.xml的dfs.replication属性进行设置 </p>
 <p><img src="/images/jsddd.jpg" alt=""></p>
 <h3 id="思想流程"><a href="#思想流程" class="headerlink" title="思想流程"></a>思想流程</h3><p>HDFS客户端上传数据到HDFS时，首先会在本地缓存数据，当数据达到了一个block大小时，会请求Namenode在分配一个block。NameNode此时会把block所在的DataNode地址告诉HDFS客户端。这时候客户端在直接和DataNode通信，然后把数据写到DataNode节点的一个block文件中</p>
 <hr>
-<h3 id="写思想流程"><a href="#写思想流程" class="headerlink" title="写思想流程"></a>写思想流程</h3><p>客户端通过调用DistributeFileSystem的create方法创建新文件，DistributeFileSystem在通过RPC调用Namenode去创建一个没有blocks关联的新闻界，创建前，namenode会做各种教研，比如文件是否之前就存在，客户端有没有权限创建等，如果校验成功。Namenode就会记录新文件，否则的话就会抛出io异常。然后将数据切成块询问Namenode这个块适合放在哪个block节点或者说那个datanode中…</p>
+<h3 id="写思想流程"><a href="#写思想流程" class="headerlink" title="写思想流程"></a>写思想流程</h3><p>客户端通过调用DistributeFileSystem的create方法创建新文件，DistributeFileSystem在通过RPC调用Namenode去创建一个没有blocks关联的新闻界，创建前，namenode会做各种教研，比如文件是否之前就存在，客户端有没有权限创建等，如果校验成功。Namenode就会记录新文件，否则的话就会抛出io异常。然后将数据切成块询问Namenode这个块适合放在哪个block节点或者说那个datanode中…<br><strong>HDFS为何不擅长存储小文件</strong></p>
 </li>
 </ul>
+<table>
+<thead>
+<tr>
+<th>情况</th>
+<th>namenode占用</th>
+<th>datanode占用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1个128MB文件</td>
+<td>1块个元数据</td>
+<td>128MB</td>
+</tr>
+<tr>
+<td>10000个文件总共128MB</td>
+<td>10000块元数据</td>
+<td>128MB</td>
+</tr>
+</tbody>
+</table>
+<p> <strong>Namenode和SecondaryNamenode区别？</strong></p>
+<p><img src="\images\naemnode.png" alt="naemnode"></p>
+<p>NameNode 是master</p>
+<p>Datanode是slave</p>
+<p>SecondaryNamenode 是master的助理：辅助namenode完成元数据的整理工作，辅助namenode完成元数据的持久化。</p>
+<p><strong>hdfs shell</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">[root@centos ~]<span class="comment"># hdfs dfs -help | hadoop fs -help</span></span><br><span class="line">Usage: hadoop fs [generic options]</span><br><span class="line">	[-appendToFile &lt;localsrc&gt; ... &lt;dst&gt;]</span><br><span class="line">	[-cat [-ignoreCrc] &lt;src&gt; ...]</span><br><span class="line">	[-chmod [-R] &lt;MODE[,MODE]... | OCTALMODE&gt; PATH...]</span><br><span class="line">	[-copyFromLocal [-f] [-p] [-l] &lt;localsrc&gt; ... &lt;dst&gt;]</span><br><span class="line">	[-copyToLocal [-p] [-ignoreCrc] [-crc] &lt;src&gt; ... &lt;localdst&gt;]</span><br><span class="line">	[-cp [-f] [-p | -p[topax]] &lt;src&gt; ... &lt;dst&gt;]</span><br><span class="line">	[-get [-p] [-ignoreCrc] [-crc] &lt;src&gt; ... &lt;localdst&gt;]</span><br><span class="line">	[-<span class="built_in">help</span> [cmd ...]]</span><br><span class="line">	[-ls [-d] [-h] [-R] [&lt;path&gt; ...]]</span><br><span class="line">	[-mkdir [-p] &lt;path&gt; ...]</span><br><span class="line">	[-moveFromLocal &lt;localsrc&gt; ... &lt;dst&gt;]</span><br><span class="line">	[-moveToLocal &lt;src&gt; &lt;localdst&gt;]</span><br><span class="line">	[-mv &lt;src&gt; ... &lt;dst&gt;]</span><br><span class="line">	[-put [-f] [-p] [-l] &lt;localsrc&gt; ... &lt;dst&gt;]</span><br><span class="line">	[-rm [-f] [-r|-R] [-skipTrash] &lt;src&gt; ...]</span><br><span class="line">	[-rmdir [--ignore-fail-on-non-empty] &lt;dir&gt; ...]</span><br><span class="line">	[-tail [-f] &lt;file&gt;]</span><br><span class="line">	[-text [-ignoreCrc] &lt;src&gt; ...]</span><br><span class="line">	[-touchz &lt;path&gt; ...]</span><br><span class="line">	[-usage [cmd ...]]</span><br><span class="line">	</span><br><span class="line">[root@centos ~]<span class="comment"># hdfs dfs -mkdir /dir</span></span><br><span class="line">[root@centos ~]<span class="comment"># hdfs dfs -mkdir -p /aa/bb</span></span><br><span class="line">[root@centos ~]<span class="comment"># hdfs dfs -ls -R /aa/bb</span></span><br><span class="line">[root@centos ~]<span class="comment"># hdfs dfs -ls -R /</span></span><br><span class="line">drwxr-xr-x   - root supergroup          0 2018-09-10 16:48 /aa</span><br><span class="line">drwxr-xr-x   - root supergroup          0 2018-09-10 16:48 /aa/bb</span><br><span class="line">drwxr-xr-x   - root supergroup          0 2018-09-10 16:47 /dir</span><br><span class="line">[root@centos ~]<span class="comment"># hdfs dfs -ls /</span></span><br><span class="line">Found 2 items</span><br><span class="line">drwxr-xr-x   - root supergroup          0 2018-09-10 16:48 /aa</span><br><span class="line">drwxr-xr-x   - root supergroup          0 2018-09-10 16:47 /dir</span><br><span class="line">[root@centos ~]<span class="comment"># hdfs dfs -copyFromLocal hadoop-2.6.0_x64.tar.gz /</span></span><br><span class="line">[root@centos ~]<span class="comment"># rm -rf hadoop-2.6.0_x64.tar.gz </span></span><br><span class="line">[root@centos ~]<span class="comment"># hdfs dfs -copyToLocal /hadoop-2.6.0_x64.tar.gz ~/</span></span><br><span class="line">[root@centos ~]<span class="comment"># hdfs dfs -touchz /aa.txt</span></span><br><span class="line">[root@centos ~]<span class="comment"># hdfs dfs -appendToFile install.log /aa.txt</span></span><br><span class="line">[root@centos ~]<span class="comment"># hadoop fs -rm -r -f /aa.txt</span></span><br><span class="line">18/09/10 16:54:09 INFO fs.TrashPolicyDefault: Namenode trash configuration: Deletion interval = 0 minutes, Emptier interval = 0 minutes.</span><br><span class="line">Deleted /aa.txt</span><br></pre></td></tr></table></figure>
+<p><strong>Java API HDFS</strong></p>
+<ul>
+<li><p>windows开发环境</p>
+<p>1.解压hadoop安装包到C:/</p>
+<p> 2.配置HADOOP_HOME环境变量</p>
+<p> 3.拷贝winutil.exe和hadoop.dll文件到hadoop的安装bin目录下</p>
+<p>4.在windows上配置CentOS主机名和IP的映射关系</p>
+<p>5.重启开发工具(一定要重启)</p>
+</li>
+<li><p>映入开发依赖</p>
+</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.hadoop<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hadoop-common<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.6.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.hadoop<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hadoop-hdfs<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.6.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>如何关闭HDFS权限检查？</strong></p>
+<ul>
+<li>修改hdfs-site.xml(关闭权限检查-不推荐)</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.permissions.enabled<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">value</span>&gt;</span>false<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>欺骗hadoop，以为是root用户上传数据</li>
+</ul>
+<p>在启动java虚拟机的时候指定参数-DHADOOP_USER_NAME=root</p>
+<p><img src="/images/idd.png" alt="1536632773707"></p>
+<p><strong>创建FileSystem</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> FileSystem fileSystem;</span><br><span class="line"><span class="meta">@Before</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    Configuration conf = <span class="keyword">new</span> Configuration();</span><br><span class="line">    conf.set(<span class="string">"fs.defaultFS"</span>,<span class="string">"hdfs://centos:9000"</span>);</span><br><span class="line">    <span class="comment">//conf.set("dfs.replication","1");</span></span><br><span class="line">    fileSystem=FileSystem.get(conf);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>文件上传 1</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">InputStream is=<span class="keyword">new</span> FileInputStream(<span class="string">"路径"</span>);</span><br><span class="line">Path path = <span class="keyword">new</span> Path(<span class="string">"/lp.exe"</span>);</span><br><span class="line">OutputStream os=fileSystem.create(path);</span><br><span class="line">IOUtils.copyBytes(is,os,<span class="number">1024</span>,<span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
+<p><strong>文件上传 2</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Path src=<span class="keyword">new</span> Path(<span class="string">"file:///C:\\Users\\Administrator\\Desktop\\Typora.exe"</span>);</span><br><span class="line">Path dst = <span class="keyword">new</span> Path(<span class="string">"/lp3.exe"</span>);</span><br><span class="line">fileSystem.copyFromLocalFile(src,dst);</span><br></pre></td></tr></table></figure>
+<p><strong>文件下载</strong>1</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> Path path =<span class="keyword">new</span> Path(<span class="string">"/lp.exe"</span>);</span><br><span class="line">InputStream is=fileSystem.open(path);</span><br><span class="line">OutputStream os=<span class="keyword">new</span> FileOutputStream(<span class="string">"C:\\Users\\Administrator\\Desktop\\aa.exe"</span>);</span><br><span class="line">IOUtils.copyBytes(is,os,<span class="number">1024</span>,<span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
+<p><strong>文件下载</strong>2</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Path dst=<span class="keyword">new</span> Path(<span class="string">"file:///C:\\Users\\Administrator\\Desktop\\bb.exe"</span>);</span><br><span class="line">Path src = <span class="keyword">new</span> Path(<span class="string">"/lp3.exe"</span>);</span><br><span class="line">fileSystem.copyToLocalFile(<span class="keyword">false</span>,src,dst,<span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
+<p><strong>回收站</strong></p>
+<p>修改core-site.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.trash.interval<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>2<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> FileSystem fileSystem;</span><br><span class="line">    <span class="meta">@Before</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        Configuration conf = <span class="keyword">new</span> Configuration();</span><br><span class="line">        conf.set(<span class="string">"fs.defaultFS"</span>,<span class="string">"hdfs://centos:9000"</span>);</span><br><span class="line">        conf.set(<span class="string">"dfs.replication"</span>,<span class="string">"1"</span>);</span><br><span class="line">        conf.set(<span class="string">"fs.trash.interval"</span>,<span class="string">"2"</span>);</span><br><span class="line">        fileSystem=FileSystem.get(conf);</span><br><span class="line">    &#125;</span><br><span class="line">   <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testDeleteWithTrash</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        Configuration conf = fileSystem.getConf();</span><br><span class="line">        Trash trash=<span class="keyword">new</span> Trash(fileSystem,conf);</span><br><span class="line">        Path src = <span class="keyword">new</span> Path(<span class="string">"/lp3.exe"</span>);</span><br><span class="line">        trash.moveToTrash(src);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@centos ~]<span class="comment"># hadoop fs -rm -r -f /lp.exe</span></span><br><span class="line">18/09/10 20:37:08 INFO fs.TrashPolicyDefault: Namenode trash configuration: Deletion interval = 2 minutes, Emptier interval = 0 minutes.</span><br><span class="line">Moved: <span class="string">'hdfs://centos:9000/lp.exe'</span> to trash at: hdfs://centos:9000/user/root/.Trash/Current</span><br><span class="line">[root@centos ~]<span class="comment"># hadoop fs -ls hdfs://centos:9000/user/root/.Trash/Current</span></span><br><span class="line">Found 1 items</span><br><span class="line">-rw-r--r--   3 root supergroup     647168 2018-09-10 20:06 hdfs://centos:9000/user/root/.Trash/Current/lp.exe</span><br><span class="line">[root@centos ~]<span class="comment"># hadoop fs -mv hdfs://centos:9000/user/root/.Trash/Current/lp.exe /</span></span><br><span class="line">[root@centos ~]<span class="comment"># hadoop fs -rm -r -f  -skipTrash  /lp.exe</span></span><br><span class="line">Deleted /lp.exe</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -483,7 +551,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-count">24</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
