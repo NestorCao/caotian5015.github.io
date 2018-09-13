@@ -360,6 +360,202 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/15/深入解析hadoop中的小黑盒shuffle/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/15/深入解析hadoop中的小黑盒shuffle/" itemprop="url">深入解析hadoop中的小黑盒shuffle</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-15T14:10:58+08:00">
+                2018-07-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/bigdata/" itemprop="url" rel="index">
+                    <span itemprop="name">bigdata</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>小黑盒shuffle是用来将数据转换成key-values数组形式，具体思想流程加源码透析如图：</p>
+<p><img src="/images/shuffle.png" alt=""></p>
+<p>##图形解析</p>
+<p>首先我们知道①InputFormat接口子类&lt;FileInputFormat,TextInputFormat&gt;进行读取数据，然后将数据转换成key-value形式交给②Mapper的map()方法进行处理，默认的情况是key=行偏移量，value=行数据</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">jdk1.8源码： <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">map</span><span class="params">(KEYIN key, VALUEIN value, Mapper&lt;KEYIN, VALUEIN, KEYOUT, VALUEOUT&gt;.Context context)</span> <span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</span><br><span class="line">        context.write(key, value);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>###MapShuffle⑩</p>
+<p>图中可以看到多个Mapper并行执行map（）方法，多个map并行工作而且相互不影响，每个map工作结束后就会将输出的key-value对先存储在内存的缓存区中，这个③缓存区是环状类似于Hash中的链表&lt;只不过链表首尾呼应而这个环状是上下呼应那种&gt;一样对数据进行放置，但是缓存区是有默认内存的，这时候程序会多开辟一条线程SpillThread对缓存区&lt;默认100M，可以调节&gt;进行实时监控，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//源码MapTask类</span></span><br><span class="line">        <span class="keyword">protected</span> <span class="class"><span class="keyword">class</span> <span class="title">SpillThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">            <span class="function"><span class="keyword">protected</span> <span class="title">SpillThread</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
+<p>当数据存储过大就会将内存缓存区中的数据溢写到spill到本地磁盘中去&lt;hadoop默认缓存区达到80%会发生溢写，可以调节，百度知道&gt;，每次溢写都会将数据进行分区和排序&lt;图中3行 灰黄绿并排 就表示假设缓存区内存达到默认数据发生的3次溢写&gt;，然后将内存中这3块内存中的数据进行合并④，但是这里的合并只是把相同的数据或者说临近的数据进行上下排序合并而并不是将所有的单个数据聚合在一起。直到此为止MapShuffle阶段执行完毕;</p>
+<p>###ReduceShuffle⑪</p>
+<p>然后开始执行ReduceShuffle,直到这里MapShuffle阶段完成后会出现临近的和相同的key⑤排序着，而且每个key会对应多种多样的value，而ReduceShuffle阶段的目的就是为了让相同的key的所有value合并到一起然后进行上下排序的过程。图中可以看出这是一个MapShuffle的执行原理，当4个Mapper并行执行map（）方法的时候，会出现每个map（）在执行的过程时⑥，就可能会有相同的key，这个key可能对应相同的value也可能对应不同的value,ReduceShuffle执行会将相同的key就行归并，归并的方式可能是2个或者3个等不定&lt;可以在配置中调节&gt;不同的进行数据合并也就是说key中会对应2个或者多个不同的value⑦，然后在次排序，用同样的方法进行排序，⑧最后的到的就是key-values的数组形式，每个过程排序+合并，最终的结构就是key—values的数组形式并且每个key上下排序着；<br> 排序后生成的大文件放在map程序本机的本地磁盘，⑨并且等待reduce()来拷贝数据；<br> <strong><em>!!</em></strong>当执行到MapShuffle结束，可以进行以下两个可设置的操作： ❶</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-1- Combiner（map端的reduce），文件合并的时候，可以执行reduce端操作（将相同key的value合并在一起），这种操作不是每个reduce程序都可以进行，只有不影响最终结果的情况下，才能够进行Combiner操作。</span><br></pre></td></tr></table></figure>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-2- 压缩：在此处可以将合并后的大文件进行压缩，压缩后可以减少磁盘的占用量，当reduce copy时也可以减少网络IO</span><br></pre></td></tr></table></figure>
+<p>##系统推荐</p>
+<p>hadoop提供数据清洗，采用Mahout的算法分析，不太会用</p>
+<h3 id="数据倾斜"><a href="#数据倾斜" class="headerlink" title="数据倾斜"></a>数据倾斜</h3><p>打个比方：每个区会对应多个values数组的形式，当我们使用国家作为key使用人口作为value的方式做数据存储，会发现中国的values对应14亿以上的人口 而梵蒂冈的values只有短短的几万，这就是数据倾斜问题了；这样就会导致中国单个Spark运行特别慢甚至会因为处理数据量太大导致内存溢出；有几种策略：</p>
+<p><strong>-1-</strong>因为选择hash存储，干脆不用他用别的；</p>
+<p><strong>-2-</strong>提高并行度</p>
+<p><strong>-3-</strong>对中国进行单独的分省分市处理</p>
+<p>我觉得这种还是比较好的，就是我们对数据倾斜的在的key进行打散，然后在打算的key后加上1~N个标记表示多个不同的key，如果需要和另一份数据关联的话，就重写比较类和分发的类；这样每个新的key&lt;key1.key2~keyN&gt;就分散到了不同dereduce节点上；如果需要和其他的数据关联，为了保证每个Reduce节点上都有关联的key，就对Reduce里那个单一的key的数据进行处理，比如循环从1到N将数字加载key后作为新Key,这样做既省钱也高效！</p>
+<p><strong>-4-</strong>增加Reduce的JVM内存或者增加Reduce个数，但是感觉指标不治本，而且也治标应该也不出色</p>
+<p><strong>-5-</strong>实现分区策略。</p>
+<p>-将不同的或者说数据倾斜严重的数据打出文本形式然后用的时候在提令读</p>
+<p>必须保证key相同的记录，落在同一个分区，因此无论如何实现Partitioner都无法解决数据倾斜。需要合理的定制用户的Key，使得分区数据相对均匀。</p>
+<h3 id="如何干预Hadoop的分区"><a href="#如何干预Hadoop的分区" class="headerlink" title="如何干预Hadoop的分区"></a>如何干预Hadoop的分区</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//覆盖源码中的getPartition()方法</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">XxxPartitioner</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">Partitioner</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">  <span class="comment">/** Use &#123;<span class="doctag">@link</span> Object#hashCode()&#125; to partition. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getPartition</span><span class="params">(K key, V value,</span></span></span><br><span class="line"><span class="function"><span class="params">                          <span class="keyword">int</span> numReduceTasks)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (key.hashCode() &amp; Integer.MAX_VALUE) % numReduceTasks;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">--------------</span><br><span class="line">job.setPartitionerClass(XxxPartitioner.class);<span class="comment">//老规矩</span></span><br></pre></td></tr></table></figure>
+<h3 id="Hadoop的MapReduce如何实现全局排序"><a href="#Hadoop的MapReduce如何实现全局排序" class="headerlink" title="Hadoop的MapReduce如何实现全局排序"></a>Hadoop的MapReduce如何实现全局排序</h3><p>分析源码会发现hadoop默认是让每个分区中的排序是有序的，如果要实现全局排序的话！…</p>
+<p><strong>-1-</strong>把所有的数据都放到一个Reduce中进行排序&lt;这种想法其实是有点傻逼的，全放到一个Reduce还要hadoop干啥用，大数据全放一个里面不爆炸了&gt;</p>
+<p><strong>-2-</strong>MapReduce默认的分区函数是<code>HashPartitioner</code>，其实现的原理是计算map输出key的 <code>hashCode</code> ，然后对Reduce个数求模，这样只要求模结果一样的Key都会发送到同一个Reduce。如果我们能够实现一个分区函数，使得</p>
+<ul>
+<li>所有 Key &lt; 10000 的数据都发送到Reduce 0；</li>
+<li>所有 10000 &lt; Key &lt; 20000 的数据都发送到Reduce 1；</li>
+<li>其余的Key都发送到Reduce 2；</li>
+</ul>
+<p>这就实现了Reduce 0的数据一定全部小于Reduce 1，且Reduce 1的数据全部小于Reduce 2，再加上同一个Reduce里面的数据局部有序，这样就实现了数据的全局有序。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">customPartitioner</span> <span class="keyword">extends</span> <span class="title">Partitioner</span>&lt;<span class="title">IntWritable</span>, <span class="title">IntWritable</span>&gt; </span>&#123;</span><br><span class="line">      <span class="meta">@Override</span></span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getPartition</span><span class="params">(IntWritable key, IntWritable value, <span class="keyword">int</span> numPartitions)</span> </span>&#123;</span><br><span class="line">          <span class="keyword">int</span> keyInt = Integer.parseInt(key.toString());</span><br><span class="line">          <span class="keyword">if</span> (keyInt &lt; <span class="number">10000</span>) &#123;</span><br><span class="line">              <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">          &#125; <span class="keyword">else</span> <span class="keyword">if</span> (keyInt &lt; <span class="number">20000</span>) &#123;</span><br><span class="line">              <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">          &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">              <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">终究一点就是保证分区策略有序，但是结果可能会发生实现全局有序的一系列缺点，就比如：区间设置不合理会导致数据的倾斜；hadoop提供了一个类可以实现TotalOrderPartitioner可实现全局排序也就是第二种策略，第一种是想不出还有啥方法了，但是感觉还有很多</span><br></pre></td></tr></table></figure>
+<p>###如何自定义Writable或者W日tableComparable接口</p>
+<blockquote>
+<p>如果是Map端输出的key类型必须实现WritableComparable&lt;key需要有序排列&gt;</p>
+<p>如果是Map端输出的value类型只须实现Writable&lt;value不需要&gt;</p>
+</blockquote>
+<ul>
+<li><p>附注：Reduce端<code>输出</code>的类型取决于OutputFormat的RecordWriter</p>
+<h3 id="关于hadoop的调优–-gt-上面的❶❷"><a href="#关于hadoop的调优–-gt-上面的❶❷" class="headerlink" title="关于hadoop的调优–&gt;上面的❶❷"></a>关于hadoop的调优–&gt;上面的❶❷</h3></li>
+</ul>
+<p>###❶Combiner（不通用）</p>
+<p>在Map端发生溢写的时候或者是合并溢写文件的时候，对Map端的输出结果执行Reduce逻辑，但是这种执行后的结果格式必须不改变原有Map端输出的格式类型，并且该预处理的结果不影响ReduceShuffle以及Reducer逻辑。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">job.setCombinerClass(AccessReducer.class);</span><br></pre></td></tr></table></figure>
+<p>为啥说不通用呢，首先Combiner输入的ke-value和输出的key-value类型必须<strong>一致</strong>；<strong>其二</strong>value的值，必须具备可迭代计算特点。</p>
+<p>-因为执行Combiner的reduce()方法也就是在ReduceSuffle之前进行key-value的整合，也就是在这里执行了ReduceSuffle中values数组的形式，从而代替了ReduceSuffle在网络下载浪费的时间消耗，换句话说也就是减少了溢写文件的大小，减少了后续key的排序数量，这样使性能更加快速，但是整合过的key-value终究还是要经过ReduceSuffle的，当整合后出现了上面这两种情况也就会导致RedeceSuffle整合出现数据类型的不一致和数据混乱的现象，这也必将导致小黑盒处理数据的问题。</p>
+<p>这样一个完整的小黑盒shuffle处理就结束了.</p>
+<p>###❷Gzip压缩</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conf.setBoolean(<span class="string">"mapreduce.map.output.compress"</span>, <span class="keyword">true</span>); </span><br><span class="line">conf.setClass(<span class="string">"mapreduce.map.output.compress.codec"</span>, </span><br><span class="line">	             GzipCodec.class, CompressionCodec.class);<span class="comment">//负责黏贴就能压缩</span></span><br></pre></td></tr></table></figure>
+<p>在实际的运行环境下将其文件进行压缩，当在ReduceSuffle执行时进行解压，用以此来减少本地磁盘空间降低单节点的磁盘IO；在就是由于压缩后的数据占用的带宽更少，因此可以加快数据在Hadoop集群流动的速度。例如在不同节点创建3个replica的阶段，或是shuffle阶段。 </p>
+<p><img src="/images/caocaocao.png" alt=""></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/12/MapTask和ReduceTask执行流程描述源码透析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1482,131 +1678,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/05/ZooKeeper/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/1.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/05/ZooKeeper/" itemprop="url">ZooKeeper</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-05T13:57:56+08:00">
-                2018-01-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Zookeeper是一种开源的分布式应用协调服务系统，主要用来完成统一命名服务.状态同步服务.集群管理.分布式应用配置项的管理等工作.他主要是由节点和监视器组成。</p>
-<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><p>zookeeper有一个层次化的名称空间，很想一个分布式文件系统如图：<br><img src="/images/zookeeper1.jpg" alt=""><br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/01/05/ZooKeeper/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1661,7 +1732,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-count">26</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1683,7 +1754,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
