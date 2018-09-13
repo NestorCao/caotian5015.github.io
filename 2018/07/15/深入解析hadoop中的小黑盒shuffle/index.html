@@ -79,20 +79,20 @@
 
 
 
-<meta name="description" content="简介小黑盒shuffle是用来将数据转换成key-values数组形式，具体思想流程加源码透析如图：  ##图形解析 首先我们知道①InputFormat接口子类&amp;lt;FileInputFormat,TextInputFormat&amp;gt;进行读取数据，然后将数据转换成key-value形式交给②Mapper的map()方法进行处理，默认的情况是key=行偏移量，value=行数据 123jdk1">
+<meta name="description" content="简介小黑盒shuffle是用来将数据转换成key-values数组形式，具体思想流程加源码透析如图：  ##图形解析">
 <meta name="keywords" content="biadata">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入解析hadoop中的小黑盒shuffle">
 <meta property="og:url" content="http://yoursite.com/2018/07/15/深入解析hadoop中的小黑盒shuffle/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="简介小黑盒shuffle是用来将数据转换成key-values数组形式，具体思想流程加源码透析如图：  ##图形解析 首先我们知道①InputFormat接口子类&amp;lt;FileInputFormat,TextInputFormat&amp;gt;进行读取数据，然后将数据转换成key-value形式交给②Mapper的map()方法进行处理，默认的情况是key=行偏移量，value=行数据 123jdk1">
+<meta property="og:description" content="简介小黑盒shuffle是用来将数据转换成key-values数组形式，具体思想流程加源码透析如图：  ##图形解析">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/shuffle.png">
 <meta property="og:image" content="http://yoursite.com/images/caocaocao.png">
-<meta property="og:updated_time" content="2018-09-13T12:43:22.155Z">
+<meta property="og:updated_time" content="2018-09-13T12:49:16.576Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入解析hadoop中的小黑盒shuffle">
-<meta name="twitter:description" content="简介小黑盒shuffle是用来将数据转换成key-values数组形式，具体思想流程加源码透析如图：  ##图形解析 首先我们知道①InputFormat接口子类&amp;lt;FileInputFormat,TextInputFormat&amp;gt;进行读取数据，然后将数据转换成key-value形式交给②Mapper的map()方法进行处理，默认的情况是key=行偏移量，value=行数据 123jdk1">
+<meta name="twitter:description" content="简介小黑盒shuffle是用来将数据转换成key-values数组形式，具体思想流程加源码透析如图：  ##图形解析">
 <meta name="twitter:image" content="http://yoursite.com/images/shuffle.png">
 
 
@@ -338,6 +338,7 @@
         <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>小黑盒shuffle是用来将数据转换成key-values数组形式，具体思想流程加源码透析如图：</p>
 <p><img src="/images/shuffle.png" alt=""></p>
 <p>##图形解析</p>
+<a id="more"></a>
 <p>首先我们知道①InputFormat接口子类&lt;FileInputFormat,TextInputFormat&gt;进行读取数据，然后将数据转换成key-value形式交给②Mapper的map()方法进行处理，默认的情况是key=行偏移量，value=行数据</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">jdk1.8源码： <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">map</span><span class="params">(KEYIN key, VALUEIN value, Mapper&lt;KEYIN, VALUEIN, KEYOUT, VALUEOUT&gt;.Context context)</span> <span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</span><br><span class="line">        context.write(key, value);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <p>###MapShuffle⑩</p>
