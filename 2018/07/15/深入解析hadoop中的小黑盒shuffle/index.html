@@ -89,7 +89,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/shuffle.png">
 <meta property="og:image" content="http://yoursite.com/images/caocaocao.png">
-<meta property="og:updated_time" content="2018-09-13T12:49:16.576Z">
+<meta property="og:updated_time" content="2018-09-14T01:34:35.737Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入解析hadoop中的小黑盒shuffle">
 <meta name="twitter:description" content="简介小黑盒shuffle是用来将数据转换成key-values数组形式，具体思想流程加源码透析如图：  ##图形解析">
@@ -381,14 +381,12 @@
 <li><p>附注：Reduce端<code>输出</code>的类型取决于OutputFormat的RecordWriter</p>
 <h3 id="关于hadoop的调优–-gt-上面的❶❷"><a href="#关于hadoop的调优–-gt-上面的❶❷" class="headerlink" title="关于hadoop的调优–&gt;上面的❶❷"></a>关于hadoop的调优–&gt;上面的❶❷</h3></li>
 </ul>
-<p>###❶Combiner（不通用）</p>
-<p>在Map端发生溢写的时候或者是合并溢写文件的时候，对Map端的输出结果执行Reduce逻辑，但是这种执行后的结果格式必须不改变原有Map端输出的格式类型，并且该预处理的结果不影响ReduceShuffle以及Reducer逻辑。</p>
+<h3 id="Combiner（不通用）❶"><a href="#Combiner（不通用）❶" class="headerlink" title="Combiner（不通用）❶"></a>Combiner（不通用）❶</h3><p>在Map端发生溢写的时候或者是合并溢写文件的时候，对Map端的输出结果执行Reduce逻辑，但是这种执行后的结果格式必须不改变原有Map端输出的格式类型，并且该预处理的结果不影响ReduceShuffle以及Reducer逻辑。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">job.setCombinerClass(AccessReducer.class);</span><br></pre></td></tr></table></figure>
 <p>为啥说不通用呢，首先Combiner输入的ke-value和输出的key-value类型必须<strong>一致</strong>；<strong>其二</strong>value的值，必须具备可迭代计算特点。</p>
 <p>-因为执行Combiner的reduce()方法也就是在ReduceSuffle之前进行key-value的整合，也就是在这里执行了ReduceSuffle中values数组的形式，从而代替了ReduceSuffle在网络下载浪费的时间消耗，换句话说也就是减少了溢写文件的大小，减少了后续key的排序数量，这样使性能更加快速，但是整合过的key-value终究还是要经过ReduceSuffle的，当整合后出现了上面这两种情况也就会导致RedeceSuffle整合出现数据类型的不一致和数据混乱的现象，这也必将导致小黑盒处理数据的问题。</p>
 <p>这样一个完整的小黑盒shuffle处理就结束了.</p>
-<p>###❷Gzip压缩</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conf.setBoolean(<span class="string">"mapreduce.map.output.compress"</span>, <span class="keyword">true</span>); </span><br><span class="line">conf.setClass(<span class="string">"mapreduce.map.output.compress.codec"</span>, </span><br><span class="line">	             GzipCodec.class, CompressionCodec.class);<span class="comment">//负责黏贴就能压缩</span></span><br></pre></td></tr></table></figure>
+<h3 id="Gzip压缩❷"><a href="#Gzip压缩❷" class="headerlink" title="Gzip压缩❷"></a>Gzip压缩❷</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conf.setBoolean(<span class="string">"mapreduce.map.output.compress"</span>, <span class="keyword">true</span>); </span><br><span class="line">conf.setClass(<span class="string">"mapreduce.map.output.compress.codec"</span>, </span><br><span class="line">	             GzipCodec.class, CompressionCodec.class);<span class="comment">//负责黏贴就能压缩</span></span><br></pre></td></tr></table></figure>
 <p>在实际的运行环境下将其文件进行压缩，当在ReduceSuffle执行时进行解压，用以此来减少本地磁盘空间降低单节点的磁盘IO；在就是由于压缩后的数据占用的带宽更少，因此可以加快数据在Hadoop集群流动的速度。例如在不同节点创建3个replica的阶段，或是shuffle阶段。 </p>
 <p><img src="/images/caocaocao.png" alt=""></p>
 
@@ -514,7 +512,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -569,7 +567,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据倾斜"><span class="nav-number">1.1.</span> <span class="nav-text">数据倾斜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何干预Hadoop的分区"><span class="nav-number">1.2.</span> <span class="nav-text">如何干预Hadoop的分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hadoop的MapReduce如何实现全局排序"><span class="nav-number">1.3.</span> <span class="nav-text">Hadoop的MapReduce如何实现全局排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于hadoop的调优–-gt-上面的❶❷"><span class="nav-number">1.4.</span> <span class="nav-text">关于hadoop的调优–&gt;上面的❶❷</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据倾斜"><span class="nav-number">1.1.</span> <span class="nav-text">数据倾斜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何干预Hadoop的分区"><span class="nav-number">1.2.</span> <span class="nav-text">如何干预Hadoop的分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hadoop的MapReduce如何实现全局排序"><span class="nav-number">1.3.</span> <span class="nav-text">Hadoop的MapReduce如何实现全局排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于hadoop的调优–-gt-上面的❶❷"><span class="nav-number">1.4.</span> <span class="nav-text">关于hadoop的调优–&gt;上面的❶❷</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Combiner（不通用）❶"><span class="nav-number">1.5.</span> <span class="nav-text">Combiner（不通用）❶</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gzip压缩❷"><span class="nav-number">1.6.</span> <span class="nav-text">Gzip压缩❷</span></a></li></ol></li></ol></div>
             
 
           </div>
