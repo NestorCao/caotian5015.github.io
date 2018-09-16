@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="bigdata," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="简介HBase是一个分布式的面向列的开源数据库，HBase是一款适合非结构化数据存储的nosql，另一个不同的地方就在于，HBase是依托于Hadoop的HDFS作为最基本存储的基础单元，并且还可以根据Map/Reduce的算法对Hadoop进行操作，客观的来说有了HBase使得Hadoop更加的清晰和结构化更强了，他体现了一种调度或者说更多的是陪衬的体现。">
+<meta name="keywords" content="bigdata">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HBase">
+<meta property="og:url" content="http://yoursite.com/2018/08/02/HBase/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="简介HBase是一个分布式的面向列的开源数据库，HBase是一款适合非结构化数据存储的nosql，另一个不同的地方就在于，HBase是依托于Hadoop的HDFS作为最基本存储的基础单元，并且还可以根据Map/Reduce的算法对Hadoop进行操作，客观的来说有了HBase使得Hadoop更加的清晰和结构化更强了，他体现了一种调度或者说更多的是陪衬的体现。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/habsemaster-slave.png">
+<meta property="og:image" content="http://yoursite.com/images/habsse.png">
+<meta property="og:image" content="http://yoursite.com/images/regionsever.png">
+<meta property="og:updated_time" content="2018-09-16T11:34:50.954Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HBase">
+<meta name="twitter:description" content="简介HBase是一个分布式的面向列的开源数据库，HBase是一款适合非结构化数据存储的nosql，另一个不同的地方就在于，HBase是依托于Hadoop的HDFS作为最基本存储的基础单元，并且还可以根据Map/Reduce的算法对Hadoop进行操作，客观的来说有了HBase使得Hadoop更加的清晰和结构化更强了，他体现了一种调度或者说更多的是陪衬的体现。">
+<meta name="twitter:image" content="http://yoursite.com/images/habsemaster-slave.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/02/HBase/"/>
+
+
+
+
+
+  <title>HBase | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/caotian5015/caotian5015.github.io"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png" alt="Fork me on GitHub"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-something">
+          <a href="/something" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            something
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/02/HBase/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">HBase</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-02T18:26:57+08:00">
+                2018-08-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/bigdata/" itemprop="url" rel="index">
+                    <span itemprop="name">bigdata</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>HBase是一个分布式的面向列的开源数据库，HBase是一款适合非结构化数据存储的nosql，另一个不同的地方就在于，HBase是依托于Hadoop的HDFS作为最基本存储的基础单元，并且还可以根据Map/Reduce的算法对Hadoop进行操作，客观的来说有了HBase使得Hadoop更加的清晰和结构化更强了，他体现了一种调度或者说更多的是陪衬的体现。</p>
+<a id="more"></a>
+<h2 id="HBase"><a href="#HBase" class="headerlink" title="HBase"></a>HBase</h2><h3 id="HBase特点"><a href="#HBase特点" class="headerlink" title="HBase特点"></a>HBase特点</h3><ul>
+<li>数据量大：对nosql而言，HBase才算的上真正的大数据库，一个表可以有上亿行，上百万列，而且更好的适用于大数据的存储；</li>
+<li>面向列：区别于其他数据库而言，最明显的特点就是面向列存储，即列簇</li>
+<li>稀疏性：并不占用null的存储空间，不需要考虑控制情况下是否占用内存的情况</li>
+<li>数据类型简单：HBase中的数据都是字符串（byte数组），没有类型，不需要考虑类型结构，开发情况下api都会有各种类型的转换。</li>
+</ul>
+<h3 id="数据架构"><a href="#数据架构" class="headerlink" title="数据架构"></a>数据架构</h3><p><img src="/images/habsemaster-slave.png" alt=""></p>
+<p>客户端通过zookeeper实现整体的数据管理掌控的核心调度；</p>
+<p><code>HMaster</code>节点用于：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-1- 管理HRegionServer，集群环境下实现负载均衡&lt;上篇HBase配置中就是一个master2geregionserver&gt;</span><br><span class="line">-2- 管理和分配HRegion，比如在HRegion split时分配新的HRegion；HRegionServer退出时迁移其内的HRegion到其他HRegionServer上。</span><br><span class="line">-3- 管理实际存储在HDFS的元数据，也就是namespace和表的元数据</span><br><span class="line">也就是说HMaster相对于HRegionServer是总管理的存在，而HRegionServer属于区域管理没HMaster官大</span><br></pre></td></tr></table></figure>
+<p><code>HRegionServer</code>节点用于：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-1- 存放和管理本地HRegion</span><br><span class="line">-2- 读写HDFS管理region中的数据</span><br></pre></td></tr></table></figure>
+<p>也就是说客户端直接在zookeeper调度的情况下，直接通过HRegionServer读写数据；在这里面先从HMaster中，HMaster又通过RegionServer找到rowkey所在的region，初始情况下表中是只有一个region的这时候的rowkey的范围是无穷小到无穷大的，但是没增加数据的情况下就会出现如图中的情况，也就是增加region，每个region都位于一个startkey和endkey的范围内，通过key找到region</p>
+<hr>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HMaster没有单点故障问题，可以启动多个HMaster，在集群环境下HMaster只有一个HMaster处于Active状态，其他的HMaster就会处于热备份状态，也就是说只有一个Hmaster是运行的，其他与之随时心跳反应，啥时候当机了啥时候用上。但是HMaster不应该太多，可以吧HMaster想象成一个皇帝，皇帝有一个储君就差不多了，如果储君多了就会出问题的，Hmaster的太子多了，皇上也就总会担心这些傻儿子的问题。</span><br><span class="line">另外，HMaster通过监听ZooKeeper中的Ephemeral节点(默认：/hbase/rs/*)来监控HRegionServer的加入和宕机。在第一个HMaster连接到ZooKeeper时会创建Ephemeral节点(默认：/hbasae/master)来表示Active的HMaster，其后加进来的HMaster则监听该Ephemeral节点，如果当前Active的HMaster宕机，则该节点消失，因而其他HMaster得到通知而将自身转换成Active的HMaster，在变为Active的HMaster之前，它会创建在/hbase/back-masters/下创建自己的Ephemeral节点。</span><br></pre></td></tr></table></figure>
+<p><img src="/images/habsse.png" alt=""></p>
+<h3 id="RegionService"><a href="#RegionService" class="headerlink" title="RegionService"></a>RegionService</h3><p>HRegionServer一般和DataNode在同一台机器上运行，实现数据的本地性。HRegionServer包含多个HRegion，由WAL(HLog)、BlockCache、MemStore、HFile组成。 </p>
+<p><img src="/images/regionsever.png" alt=""></p>
+<h4 id="HLog"><a href="#HLog" class="headerlink" title="HLog"></a>HLog</h4><p>一个日志文件，所有的写操作都会先保证将数据写入这个日志中，然后在更新memstore,最后写入hfile,一方面保证regionserver当机后，依然可以在log文件中读取数据，这也保证了数据的安全，并且日志文件会定期删除</p>
+<p>####HRegion</p>
+<p>一个表中可以有多个region，他们可以在一个相同的HRegionServer上，也可以在不同的HRegionServer中&lt;相当于多个下属和多个领导的关系&gt;，并且一个HRegionServer可以有多个region，他们分别属于不同的表。HRegion由多个Store(HStore)构成，每个HStore对应了一个Table在这个HRegion中的一个Column Family，即每个Column Family就是一个集中的存储单元，因而最好将具有相近IO特性的Column存储在一个Column Family，以实现高效读取(数据局部性原理，可以提高缓存的命中率)。HStore是HBase中存储的核心，它实现了读写HDFS功能，一个HStore由一个MemStore 和0个或多个StoreFile组成。 </p>
+<h4 id="写数据流程"><a href="#写数据流程" class="headerlink" title="写数据流程"></a>写数据流程</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">客户端发起一个Put请求时，首先它从hbase:meta表中查出该Put数据最终需要去的HRegionServer。然后客户端将Put请求发送给相应的HRegionServer，在HRegionServer中它首先会将该Put操作写入WAL日志文件中(Flush到磁盘中)。</span><br><span class="line">写完WAL日志文件后，HRegionServer根据Put中的TableName和RowKey找到对应的HRegion，并根据Column Family找到对应的Store，并将Put写入到该Store的MemStore中。此时写成功，并返回通知客户端。</span><br></pre></td></tr></table></figure>
+<h4 id="读数据流程"><a href="#读数据流程" class="headerlink" title="读数据流程"></a>读数据流程</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HBase中扫瞄的顺序依次是：BlockCache、MemStore、StoreFile(HFile)。其中StoreFile的扫瞄先会使用Bloom Filter过滤那些不可能符合条件的HFile，然后使用Block Index快速定位Cell，并将其加载到BlockCache中，然后从BlockCache中读取。我们知道一个HStore可能存在多个StoreFile(HFile)，此时需要扫瞄多个HFile，如果HFile过多又是会引起性能问题。</span><br></pre></td></tr></table></figure>
+<h2 id="总结架构优点"><a href="#总结架构优点" class="headerlink" title="总结架构优点"></a>总结架构优点</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">HBase采用强一致性模型，在一个写返回后，保证所有的读都读到相同的数据。</span><br><span class="line">通过HRegion动态Split和Merge实现自动扩展，并使用HDFS提供的多个数据备份功能，实现高可用性。</span><br><span class="line">采用HRegionServer和DataNode运行在相同的服务器上实现数据的本地化，提升读写性能，并减少网络压力。</span><br><span class="line">内建HRegionServer的宕机自动恢复。采用WAL来Replay还未持久化到HDFS的数据。</span><br><span class="line">可以无缝的和Hadoop/MapReduce集成。</span><br></pre></td></tr></table></figure>
+<p><a href="http://www.blogjava.net/DLevin/archive/2015/08/22/426877.html" target="_blank" rel="noopener">参考文档1</a></p>
+<p><a href="http://www.blogjava.net/DLevin/archive/2015/08/22/426950.html" target="_blank" rel="noopener">参考文档2</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/bigdata/" rel="tag"># bigdata</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/30/HBase集群搭建/" rel="next" title="HBase集群搭建">
+                <i class="fa fa-chevron-left"></i> HBase集群搭建
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/25/hello-world/" rel="prev" title="Hello World">
+                Hello World <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/1.jpg"
+                alt="John Doe" />
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase"><span class="nav-number">2.</span> <span class="nav-text">HBase</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HBase特点"><span class="nav-number">2.1.</span> <span class="nav-text">HBase特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据架构"><span class="nav-number">2.2.</span> <span class="nav-text">数据架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RegionService"><span class="nav-number">2.3.</span> <span class="nav-text">RegionService</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#HLog"><span class="nav-number">2.3.1.</span> <span class="nav-text">HLog</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#写数据流程"><span class="nav-number">2.3.2.</span> <span class="nav-text">写数据流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#读数据流程"><span class="nav-number">2.3.3.</span> <span class="nav-text">读数据流程</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结架构优点"><span class="nav-number">3.</span> <span class="nav-text">总结架构优点</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  访客:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Caotian</a> 驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<script type="text/javascript" src="/js/src/love.js"></script>
