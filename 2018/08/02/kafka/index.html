@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="bigdata," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言传统MQ所解决的异步通讯，削峰填谷，系统间解耦 异步通讯 1解决数据串行化，客户端发起的请求可短时间响应的同时，也解决的数据安全的问题。 削峰填谷 123456避免常见开发雪崩问题，也就是上游&amp;lt;即客户端&amp;gt;发起请求推送给MQ的信息，下游&amp;lt;MQ&amp;gt;负责消息队列的存储；上游操作频繁导致下游消息接收无法控制流量的传输，如果不能合理控制就会导致下游坍塌也就是雪崩现象。常见以秒杀为例">
+<meta name="keywords" content="bigdata">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kafka">
+<meta property="og:url" content="http://yoursite.com/2018/08/02/kafka/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言传统MQ所解决的异步通讯，削峰填谷，系统间解耦 异步通讯 1解决数据串行化，客户端发起的请求可短时间响应的同时，也解决的数据安全的问题。 削峰填谷 123456避免常见开发雪崩问题，也就是上游&amp;lt;即客户端&amp;gt;发起请求推送给MQ的信息，下游&amp;lt;MQ&amp;gt;负责消息队列的存储；上游操作频繁导致下游消息接收无法控制流量的传输，如果不能合理控制就会导致下游坍塌也就是雪崩现象。常见以秒杀为例">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/async.png">
+<meta property="og:image" content="http://yoursite.com/images/xuefengtiangu.png">
+<meta property="og:image" content="http://yoursite.com/images/mqjieou.png">
+<meta property="og:image" content="http://yoursite.com/images/kafkacluster.png">
+<meta property="og:image" content="http://yoursite.com/images/log&topic.png">
+<meta property="og:image" content="http://yoursite.com/images/consumer&consumer.png">
+<meta property="og:updated_time" content="2018-09-17T13:51:53.574Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kafka">
+<meta name="twitter:description" content="前言传统MQ所解决的异步通讯，削峰填谷，系统间解耦 异步通讯 1解决数据串行化，客户端发起的请求可短时间响应的同时，也解决的数据安全的问题。 削峰填谷 123456避免常见开发雪崩问题，也就是上游&amp;lt;即客户端&amp;gt;发起请求推送给MQ的信息，下游&amp;lt;MQ&amp;gt;负责消息队列的存储；上游操作频繁导致下游消息接收无法控制流量的传输，如果不能合理控制就会导致下游坍塌也就是雪崩现象。常见以秒杀为例">
+<meta name="twitter:image" content="http://yoursite.com/images/async.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/02/kafka/"/>
+
+
+
+
+
+  <title>kafka | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/caotian5015/caotian5015.github.io"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png" alt="Fork me on GitHub"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-something">
+          <a href="/something" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            something
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/02/kafka/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">kafka</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-02T20:31:18+08:00">
+                2018-08-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/bigdata/" itemprop="url" rel="index">
+                    <span itemprop="name">bigdata</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>传统MQ所解决的异步通讯，削峰填谷，系统间解耦</p>
+<h3 id="异步通讯"><a href="#异步通讯" class="headerlink" title="异步通讯"></a>异步通讯</h3><p><img src="/images/async.png" alt=""></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">解决数据串行化，客户端发起的请求可短时间响应的同时，也解决的数据安全的问题。</span><br></pre></td></tr></table></figure>
+<h3 id="削峰填谷"><a href="#削峰填谷" class="headerlink" title="削峰填谷"></a>削峰填谷</h3><p><img src="/images/xuefengtiangu.png" alt=""></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">避免常见开发雪崩问题，也就是上游&lt;即客户端&gt;发起请求推送给MQ的信息，下游&lt;MQ&gt;负责消息队列的存储；上游操作频繁导致下游消息接收无法控制流量的传输，如果不能合理控制就会导致下游坍塌也就是雪崩现象。</span><br><span class="line">常见以秒杀为例：上游客户端发送的请求即下单，下游会相对做库存检查，库存冻结，余额检查，余额冻结，订单生成，余额扣减，库存扣减，生成流水，余额解冻，库存解冻等一系列复杂业务；这样也就是说上游操作流程简单，假设每秒发送过大的数据量，而下游存储当机。</span><br><span class="line">解决思路：-1- 业务上游队列缓存，限速发送&lt;这样直接影响了客户端操作，不推荐&gt;</span><br><span class="line">		-2- 业务下游队列缓存，限速执行</span><br><span class="line">		-3- MQ-client根据自己的处理能力，每隔一定时间，或者每次拉取若干条消息，实施流控，达到保护自身的效果。并且这是MQ提供的通用功能，无需上下游修改代码。</span><br><span class="line">结论：MQ-client提供拉模式，定时或者批量拉取，可以起到削平流量，下游自我保护的作用（MQ需要做的） 要想提升整体吞吐量，需要下游优化，例如批量处理等方式</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h3 id="系统间解耦"><a href="#系统间解耦" class="headerlink" title="系统间解耦"></a>系统间解耦</h3><p><img src="/images/mqjieou.png" alt=""></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">客户端发送服务直到库存系统，假设一方出现问题整体即坍塌，在假设服务入库这个操作如果出现实质性问题就不会返回给客户端正常的信息，而通过MQ形式与库交互，一方面不影响客户端响应信息，另一方面也做到了数据的相对安全。</span><br><span class="line">以邮箱为例，假设caotian想要发送纸质邮件给zhouxu，假设直接发给zhouxu但是发送过程中出现了问题，caotian不知道问题当然也不会得到响应；但如果caotian将邮件放在邮箱里，caotian确定邮件小哥一定会把信息传递给zhouxu所以就这样子完成了解耦，假设邮件小哥出现了问题，也自然会有后台方式做出来，caotian只知道发过去就可以了。</span><br></pre></td></tr></table></figure>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>kafka是一个分布式，可分区。可复制的消息系统。一方面提供了普通MQ所具有的消息中间件的功能，另一方面也有自己独特的一些设计。</p>
+<p>##Kafka</p>
+<p>###特点</p>
+<p>支持异步通信.系统解耦.削峰填谷.日志采集等多种功效</p>
+<h3 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h3><p><img src="/images/kafkacluster.png" alt="kafkajiagou"></p>
+<p>kafka将消息以若干个topic为单位进行归纳，将向kafka topic发布消息的程序称为producers,将预定topics并消费消息的程序称为consumer,并以集群的方式运行，可以由一个或者若干个服务组成，每个服务叫做一个broker，producers通过网络将消息发送到kafka集群，集群向消费者提供消息。也就是说kafka以topic为单位管理producers一个producers即一个消息，包含&lt;key,value,timestamp&gt;</p>
+<h3 id="topic-amp-日志关系"><a href="#topic-amp-日志关系" class="headerlink" title="topic &amp; 日志关系"></a>topic &amp; 日志关系</h3><p><img src="/images/log&amp;topic.png" alt=""></p>
+<p>每一个分区中的record都已一个不可变的id序列，从0~n，值大小表示数据进入分区的顺序。也通常将id称为该Record在分区中的位置<code>offset</code>;Kafka不同于其他传统消息队列（消息一旦消费后，立即删除，传统MQ消息无法重复消费），是通过日志的过期时间<code>log.retention.hours=168</code>参数配置服务器存储消息的时间，一旦数据过期，无论该Record是否被消费，该记录都会被清除。</p>
+<h3 id="每个分区-amp-消费者"><a href="#每个分区-amp-消费者" class="headerlink" title="每个分区 &amp; 消费者"></a>每个分区 &amp; 消费者</h3><p><img src="/images/consumer&amp;consumer.png" alt="consumer&amp;consumer"></p>
+<p>Consumers可以加入一个consumer 组，共同竞争一个topic，topic中的消息将被分发到组中的一个成员中。同一组中的consumer可以在不同的程序中，也可以在不同的机器上。如果所有的consumer都在一个组中，这就成为了传统的队列模式，在各consumer中实现负载均衡。如果所有的consumer都不在不同的组中，这就成为了发布-订阅模式，所有的消息都被分发到所有的consumer中。更常见的是，每个topic都有若干数量的consumer组，每个组都是一个逻辑上的“订阅者”，为了容错和更好的稳定性，每个组由若干consumer组成。这其实就是一个发布-订阅模式，只不过订阅者是个组而不是单个consumer。 </p>
+<h2 id="kafka环境搭建"><a href="#kafka环境搭建" class="headerlink" title="kafka环境搭建"></a>kafka环境搭建</h2><p><strong>kafka安装</strong></p>
+<ul>
+<li><p>安装JDK，并且配置JAVA_HOME</p>
+</li>
+<li><p>必须配置主机名和IP映射关系</p>
+</li>
+<li><p>同步时钟</p>
+</li>
+<li><p>安装zookeeper集群（并且正常启动）</p>
+</li>
+<li><p>安装配置kafka</p>
+<blockquote>
+<p>基于之前hadoop环境之间搭建</p>
+</blockquote>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@CentOSX ~]<span class="comment"># /usr/zookeeper-3.4.6/bin/zkServer.sh start zoo.cfg   启动zookeeper调度</span></span><br><span class="line">[root@CentOSX ~]<span class="comment"># /usr/zookeeper-3.4.6/bin/zkServer.sh status zoo.cfg</span></span><br><span class="line">[root@CentOSX ~]<span class="comment"># date -s '2018-08-22 13:13:00'             查看二维时间</span></span><br><span class="line">[root@CentOSX ~]<span class="comment"># clock -w</span></span><br><span class="line">[root@CentOSA ~]<span class="comment"># scp kafka_2.11-0.11.0.0.tgz CentOSC:~/</span></span><br><span class="line">[root@CentOSA ~]<span class="comment"># scp kafka_2.11-0.11.0.0.tgz CentOSB:~/</span></span><br><span class="line">[root@CentOSX ~]<span class="comment"># tar -zxf kafka_2.11-0.11.0.0.tgz -C /usr/</span></span><br><span class="line">[root@CentOSX ~]<span class="comment"># vi /usr/kafka_2.11-0.11.0.0/config/server.properties </span></span><br><span class="line"></span><br><span class="line"><span class="comment">############################# Server Basics #############################</span></span><br><span class="line">broker.id=0|1|2							集群id不可重复</span><br><span class="line">delete.topic.enable=<span class="literal">true</span>		执行不删除操作仅仅在zookeeper上标记topic要删除而已</span><br><span class="line"><span class="comment">############################# Socket Server Settings #############################</span></span><br><span class="line">listeners=PLAINTEXT://CentOSA|B|C:9092</span><br><span class="line"><span class="comment">############################# Log Basics #############################</span></span><br><span class="line">log.dirs=/usr/kafka-logs				日志存放位置默认临时文件tmp下</span><br><span class="line"><span class="comment">############################# Log Retention Policy #############################</span></span><br><span class="line">log.retention.hours=168					日志文件默认一周之内有效</span><br><span class="line"><span class="comment">############################# Zookeeper #############################</span></span><br><span class="line">zookeeper.connect=CentOSA:2181,CentOSB:2181,CentOSC:2181</span><br></pre></td></tr></table></figure>
+<p><strong>启动&amp;停止Kafka集群</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@CentOSX ~]<span class="comment"># cd /usr/kafka_2.11-0.11.0.0/</span></span><br><span class="line">[root@CentOSX kafka_2.11-0.11.0.0]<span class="comment"># ./bin/kafka-server-start.sh -daemon  config/server.properties </span></span><br><span class="line">[root@CentOSA kafka_2.11-0.11.0.0]<span class="comment"># vi bin/kafka-server-stop.sh </span></span><br><span class="line">PIDS=$(jps | grep Kafka | awk <span class="string">'&#123;print $1&#125;'</span>)</span><br><span class="line"><span class="keyword">if</span> [ -z <span class="string">"<span class="variable">$PIDS</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"No kafka server to stop"</span></span><br><span class="line">  <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">else</span> </span><br><span class="line">  <span class="built_in">kill</span> -s TERM <span class="variable">$PIDS</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<p><strong>Kafka测试</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//创建分区</span><br><span class="line">[root@CentOSA kafka_2.11-0.11.0.0]<span class="comment"># ./bin/kafka-topics.sh --create --zookeeper CentOSA:2181,CentOSB:2181,CentOSC:2181 --topic topic01 --partitions 3 --replication-factor 3 </span></span><br><span class="line">//启动消费者</span><br><span class="line">[root@CentOSB kafka_2.11-0.11.0.0]<span class="comment"># ./bin/kafka-console-consumer.sh --bootstrap-server CentOSA:9092,CentOSB:9092,CentOSC:9092 --topic topic01 --from-beginning</span></span><br><span class="line">//启动生产者</span><br><span class="line">[root@CentOSC kafka_2.11-0.11.0.0]<span class="comment"># ./bin/kafka-console-producer.sh --broker-list CentOSA:9092,CentOSB:9092,CentOSC:9092 --topic topic01 </span></span><br><span class="line">&gt; hello kafka</span><br></pre></td></tr></table></figure>
+<h2 id="Kafka-API-开发"><a href="#Kafka-API-开发" class="headerlink" title="Kafka API 开发"></a>Kafka API 开发</h2><ul>
+<li>导入Maven依赖</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.kafka<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>kafka-clients<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.11.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.17<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>slf4j-log4j12<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.7.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>生产者</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Properties config=<span class="keyword">new</span> Properties() ;</span><br><span class="line">config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,<span class="string">"CentOSA:9092,CentOSB:9092,CentOSC:9092"</span>);</span><br><span class="line">config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);</span><br><span class="line">config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,StringSerializer.class);</span><br><span class="line"><span class="comment">//创建生产者</span></span><br><span class="line">KafkaProducer&lt;String,String&gt; producer=<span class="keyword">new</span> KafkaProducer&lt;String, String&gt;(config);</span><br><span class="line"><span class="comment">//创建ProducerRecord</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">5</span>;i++)&#123;</span><br><span class="line">    ProducerRecord&lt;String, String&gt; record =</span><br><span class="line">        <span class="keyword">new</span> ProducerRecord&lt;String, String&gt;(<span class="string">"topic01"</span>, <span class="string">"00"</span> + i + <span class="string">"0"</span>, <span class="string">"user"</span> + i);</span><br><span class="line">    producer.send(record);</span><br><span class="line">&#125;</span><br><span class="line">producer.flush();</span><br><span class="line">producer.close();</span><br></pre></td></tr></table></figure>
+<p><strong>消费者</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">Properties config=<span class="keyword">new</span> Properties() ;</span><br><span class="line">        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,<span class="string">"CentOSA:9092,CentOSB:9092,CentOSC:9092"</span>);</span><br><span class="line">config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);</span><br><span class="line">config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,StringDeserializer.class);</span><br><span class="line">config.put(ConsumerConfig.GROUP_ID_CONFIG,<span class="string">"g1"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建消费者者</span></span><br><span class="line">KafkaConsumer&lt;String,String&gt; consumer=<span class="keyword">new</span> KafkaConsumer&lt;String, String&gt;(config);</span><br><span class="line"><span class="comment">//订阅topic</span></span><br><span class="line">consumer.subscribe(Arrays.asList(<span class="string">"topic01"</span>));</span><br><span class="line"><span class="comment">//遍历队列</span></span><br><span class="line"><span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</span><br><span class="line">    ConsumerRecords&lt;String, String&gt; records = consumer.poll(<span class="number">1000</span>);</span><br><span class="line">    <span class="keyword">if</span>(records!=<span class="keyword">null</span> &amp;&amp; !records.isEmpty())&#123;</span><br><span class="line">        <span class="keyword">for</span> (ConsumerRecord&lt;String, String&gt; record : records) &#123;</span><br><span class="line">            String key=record.key();</span><br><span class="line">            String value=record.value();</span><br><span class="line">            <span class="keyword">long</span> ts=record.timestamp();</span><br><span class="line">            <span class="keyword">int</span> par = record.partition();</span><br><span class="line">            <span class="keyword">long</span> offset = record.offset();</span><br><span class="line">            System.out.println(key+<span class="string">" -&gt; "</span>+value+<span class="string">"p： "</span>+par+<span class="string">", "</span>+offset +<span class="string">"\t"</span>+ts);</span><br><span class="line">        &#125;   </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>kafka传送对象</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ObjectDeserializer</span> <span class="keyword">implements</span> <span class="title">Deserializer</span>&lt;<span class="title">Object</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(Map&lt;String, ?&gt; configs, <span class="keyword">boolean</span> isKey)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">deserialize</span><span class="params">(String topic, <span class="keyword">byte</span>[] data)</span> </span>&#123;</span><br><span class="line">        ByteArrayInputStream bais=<span class="keyword">new</span> ByteArrayInputStream(data);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ObjectInputStream ois=<span class="keyword">new</span> ObjectInputStream(bais);</span><br><span class="line">            Object res=ois.readObject();</span><br><span class="line">            ois.close();</span><br><span class="line">            <span class="keyword">return</span> res;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ObjectSerializer</span> <span class="keyword">implements</span> <span class="title">Serializer</span>&lt;<span class="title">Object</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(Map&lt;String, ?&gt; configs, <span class="keyword">boolean</span> isKey)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">byte</span>[] serialize(String topic, Object data) &#123;</span><br><span class="line">        ByteArrayOutputStream baos=<span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ObjectOutputStream oos=<span class="keyword">new</span> ObjectOutputStream(baos);</span><br><span class="line">            oos.writeObject(data);</span><br><span class="line">            oos.flush();</span><br><span class="line">            oos.close();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> baos.toByteArray();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>消费订阅两种形式</strong></p>
+<ul>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">KafkaConsumer&lt;String,User&gt; consumer=new KafkaConsumer&lt;String, User&gt;(config);</span><br><span class="line">//订阅topic</span><br><span class="line">consumer.subscribe(Arrays.asList(&quot;topic02&quot;));</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p>必须设置<code>消费组</code>,可以实现组内消费者的rebalance</p>
+</blockquote>
+<ul>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">TopicPartition p1 = new TopicPartition(&quot;topic02&quot;, 0);</span><br><span class="line">List&lt;TopicPartition&gt; topicPartitions = Arrays.asList(p1);</span><br><span class="line">consumer.assign(topicPartitions);</span><br><span class="line">consumer.seek(p1,2);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p>手动设置offset偏移量</p>
+</blockquote>
+<p><strong>Kafka Stream </strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.kafka<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>kafka-streams<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.11.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Properties config = <span class="keyword">new</span> Properties();</span><br><span class="line">config.put(StreamsConfig.APPLICATION_ID_CONFIG, <span class="string">"wordcount-application"</span>);</span><br><span class="line">config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, <span class="string">"CentOSA:9092,CentOSB:9092,CentOSC:9092"</span>);</span><br><span class="line">config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());</span><br><span class="line">config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());</span><br><span class="line"></span><br><span class="line">KStreamBuilder builder = <span class="keyword">new</span> KStreamBuilder();</span><br><span class="line">KStream&lt;String, String&gt; textLines = builder.stream(<span class="string">"TextLinesTopic"</span>);</span><br><span class="line">KTable&lt;String, Long&gt; wordCounts = textLines</span><br><span class="line">                .flatMapValues(textLine -&gt; Arrays.asList(textLine.toLowerCase().split(<span class="string">" "</span>)))</span><br><span class="line">    .groupBy((key, word) -&gt; word)</span><br><span class="line">    .count(<span class="string">"Counts"</span>);</span><br><span class="line">wordCounts.to(Serdes.String(), Serdes.Long(), <span class="string">"WordsWithCountsTopic"</span>);</span><br><span class="line"></span><br><span class="line">KafkaStreams streams = <span class="keyword">new</span> KafkaStreams(builder, config);</span><br><span class="line">streams.start();</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/bigdata/" rel="tag"># bigdata</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/02/HBase/" rel="next" title="HBase">
+                <i class="fa fa-chevron-left"></i> HBase
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/25/hello-world/" rel="prev" title="Hello World">
+                Hello World <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/1.jpg"
+                alt="John Doe" />
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#异步通讯"><span class="nav-number">1.1.</span> <span class="nav-text">异步通讯</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#削峰填谷"><span class="nav-number">1.2.</span> <span class="nav-text">削峰填谷</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#系统间解耦"><span class="nav-number">1.3.</span> <span class="nav-text">系统间解耦</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">2.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#架构图"><span class="nav-number">2.1.</span> <span class="nav-text">架构图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#topic-amp-日志关系"><span class="nav-number">2.2.</span> <span class="nav-text">topic &amp; 日志关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#每个分区-amp-消费者"><span class="nav-number">2.3.</span> <span class="nav-text">每个分区 &amp; 消费者</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kafka环境搭建"><span class="nav-number">3.</span> <span class="nav-text">kafka环境搭建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka-API-开发"><span class="nav-number">4.</span> <span class="nav-text">Kafka API 开发</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  访客:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Caotian</a> 驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<script type="text/javascript" src="/js/src/love.js"></script>
