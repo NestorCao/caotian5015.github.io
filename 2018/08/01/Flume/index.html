@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="bigdata," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="简介Flume是Cloudera提供的一个高可用的，高可靠的，分布式的海量日志采集、聚合和传输的系统，Flume支持在日志系统中定制各类数据发送方，用于收集数据；同时，Flume提供对数据进行简单处理，并写到各种数据接受方（可定制）的能力。 Flume架构  agent: 是flume最小的日志采集单元，通常涵盖着source.channel.sink组件  rawdata:元数据  source">
+<meta name="keywords" content="bigdata">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flume">
+<meta property="og:url" content="http://yoursite.com/2018/08/01/Flume/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="简介Flume是Cloudera提供的一个高可用的，高可靠的，分布式的海量日志采集、聚合和传输的系统，Flume支持在日志系统中定制各类数据发送方，用于收集数据；同时，Flume提供对数据进行简单处理，并写到各种数据接受方（可定制）的能力。 Flume架构  agent: 是flume最小的日志采集单元，通常涵盖着source.channel.sink组件  rawdata:元数据  source">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/flumejiagou.png">
+<meta property="og:updated_time" content="2018-09-18T11:33:50.909Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flume">
+<meta name="twitter:description" content="简介Flume是Cloudera提供的一个高可用的，高可靠的，分布式的海量日志采集、聚合和传输的系统，Flume支持在日志系统中定制各类数据发送方，用于收集数据；同时，Flume提供对数据进行简单处理，并写到各种数据接受方（可定制）的能力。 Flume架构  agent: 是flume最小的日志采集单元，通常涵盖着source.channel.sink组件  rawdata:元数据  source">
+<meta name="twitter:image" content="http://yoursite.com/images/flumejiagou.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/01/Flume/"/>
+
+
+
+
+
+  <title>Flume | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/caotian5015/caotian5015.github.io"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png" alt="Fork me on GitHub"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-something">
+          <a href="/something" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            something
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/Flume/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Flume</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-01T11:11:11+08:00">
+                2018-08-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/bigdata/" itemprop="url" rel="index">
+                    <span itemprop="name">bigdata</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Flume是Cloudera提供的一个高可用的，高可靠的，分布式的海量日志采集、聚合和传输的系统，Flume支持在日志系统中定制各类数据发送方，用于收集数据；同时，Flume提供对数据进行简单处理，并写到各种数据接受方（可定制）的能力。</p>
+<h2 id="Flume架构"><a href="#Flume架构" class="headerlink" title="Flume架构"></a>Flume架构</h2><p><img src="/images/flumejiagou.png" alt="flume"></p>
+<ul>
+<li><p>agent: 是flume最小的日志采集单元，通常涵盖着source.channel.sink组件</p>
+</li>
+<li><p>rawdata:元数据</p>
+</li>
+<li><p>source:负责读取日志源存储在管道中</p>
+</li>
+<li><p>sink：负责从管道中读取数据到目的地</p>
+</li>
+<li><p>event:是flume中数据传输的最小单元，通常有event header和event body组成。header存储的是一些key-value的一些无序集合键值对，eventbody存储的是rawdata的原始数据。Event在Agent传输是高可靠的，只有当Event被Sink完整消费，Channel才会删除event对象。</p>
+<a id="more"></a>
+<h2 id="思想"><a href="#思想" class="headerlink" title="思想"></a>思想</h2><p>把数据从数据元中收集过来，在将收集到的数据送到指定的目的地。为了保证输送的过程一定成功，在送到目的地(sink)之前，会先缓存数据(channel),待数据真正到达目的地(sink)后，flume在删除自己缓存的数据。  flume提供了对数据采集单元agment的配置.监控.生命州区的管理。</p>
+</li>
+</ul>
+<h2 id="安装Flume"><a href="#安装Flume" class="headerlink" title="安装Flume"></a>安装Flume</h2><ul>
+<li>Java Runtime Environment - Java 1.7 or later<code>apache-flume-1.7.0-bin.tar.gz</code></li>
+<li>Memory - Sufficient memory for configurations used by sources, channels or sinks</li>
+<li>Disk Space - Sufficient disk space for configurations used by channels or sinks</li>
+<li>Directory Permissions - Read/Write permissions for directories used by agent<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">```bash</span><br><span class="line">[root@centos ~]# tar -zxf apache-flume-1.7.0-bin.tar.gz -C /usr/</span><br><span class="line">[root@centos ~]# cd /usr/apache-flume-1.7.0-bin/</span><br><span class="line">[root@centos apache-flume-1.7.0-bin]# ./bin/flume-ng version</span><br><span class="line">Flume 1.7.0</span><br><span class="line">Source code repository: https://git-wip-us.apache.org/repos/asf/flume.git</span><br><span class="line">Revision: 511d868555dd4d16e6ce4fedc72c2d1454546707</span><br><span class="line">Compiled by bessbd on Wed Oct 12 20:51:10 CEST 2016</span><br><span class="line">From source with checksum 0d21b3ffdc55a07e1d08875872c00523</span><br><span class="line">[root@centos apache-flume-1.7.0-bin]# tree -L 1 /usr/apache-flume-1.7.0-bin/</span><br><span class="line">/usr/apache-flume-1.7.0-bin/</span><br><span class="line">├── bin      flume运行的目录</span><br><span class="line">├── CHANGELOG</span><br><span class="line">├── conf     flume配置目录agent、log4j</span><br><span class="line">├── DEVNOTES</span><br><span class="line">├── doap_Flume.rdf</span><br><span class="line">├── docs</span><br><span class="line">├── lib      jar目录</span><br><span class="line">├── LICENSE</span><br><span class="line">├── NOTICE</span><br><span class="line">├── README.md</span><br><span class="line">├── RELEASE-NOTES</span><br><span class="line">└── tools</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="Agent组件配置文件语法"><a href="#Agent组件配置文件语法" class="headerlink" title="Agent组件配置文件语法"></a>Agent组件配置文件语法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># 命名组件</span><br><span class="line">&lt;Agent&gt;.sources = &lt;Source1&gt; &lt;Source2&gt;</span><br><span class="line">&lt;Agent&gt;.sinks = &lt;Sink1&gt; &lt;Sink2&gt;</span><br><span class="line">&lt;Agent&gt;.channels = &lt;Channel1&gt; &lt;Channel2&gt;</span><br><span class="line"></span><br><span class="line"># 配置source组件</span><br><span class="line">&lt;Agent&gt;.sources.&lt;Source&gt;.&lt;someProperty&gt; = &lt;someValue&gt;</span><br><span class="line"></span><br><span class="line"># 配置Channel组件</span><br><span class="line">&lt;Agent&gt;.channels.&lt;Channel&gt;.&lt;someProperty&gt; = &lt;someValue&gt;</span><br><span class="line"></span><br><span class="line"># 配置sink组件</span><br><span class="line">&lt;Agent&gt;.sinks.&lt;Sink&gt;.&lt;someProperty&gt; = &lt;someValue&gt;</span><br><span class="line"></span><br><span class="line"># 对接 source和channel组件</span><br><span class="line">&lt;Agent&gt;.sources.&lt;Source&gt;.channels = &lt;Channel1&gt; &lt;Channel2&gt; ...</span><br><span class="line"># 对接 sink和channel组件</span><br><span class="line">&lt;Agent&gt;.sinks.&lt;Sink&gt;.channel = &lt;Channel1&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="Agent配置实战"><a href="#Agent配置实战" class="headerlink" title="Agent配置实战"></a>Agent配置实战</h2><ul>
+<li>netcat source、memory channel、Log Sink</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[root@centos apache-flume-1.7.0-bin]<span class="comment"># vi conf/demo01.properties</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 命名组件</span></span><br><span class="line">a1.sources = s1</span><br><span class="line">a1.sinks = sk1</span><br><span class="line">a1.channels = c1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置source组件</span></span><br><span class="line">a1.sources.s1.type= netcat</span><br><span class="line">a1.sources.s1.bind= CentOS</span><br><span class="line">a1.sources.s1.port= 44444</span><br><span class="line"><span class="comment"># 配置channel组件</span></span><br><span class="line">a1.channels.c1.type = memory</span><br><span class="line"><span class="comment"># 配置sink组件</span></span><br><span class="line">a1.sinks.sk1.type = logger</span><br><span class="line"></span><br><span class="line"><span class="comment"># 对接source和channel组件</span></span><br><span class="line">a1.sources.s1.channels = c1</span><br><span class="line"><span class="comment"># 对接sink和channel组件</span></span><br><span class="line">a1.sinks.sk1.channel = c1</span><br><span class="line"></span><br><span class="line">[root@centos apache-flume-1.7.0-bin]<span class="comment"># yum install telnet -y</span></span><br><span class="line">[root@centos apache-flume-1.7.0-bin]<span class="comment"># ./bin/flume-ng agent --conf conf/ --conf-file conf/demo01.properties --name a1 -Dflume.root.logger=INFO,console</span></span><br><span class="line">[root@centos ~]<span class="comment"># telnet centos 44444</span></span><br><span class="line">Trying 192.168.128.128...</span><br><span class="line">Connected to centos.</span><br><span class="line">Escape character is <span class="string">'^]'</span>.</span><br><span class="line">hello world</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+<h2 id="配置常见组件"><a href="#配置常见组件" class="headerlink" title="配置常见组件"></a>配置常见组件</h2><ul>
+<li><p>source</p>
+<p><a href="http://flume.apache.org/FlumeUserGuide.html#avro-source" target="_blank" rel="noopener">Avro Source</a>、<a href="http://flume.apache.org/FlumeUserGuide.html#exec-source" target="_blank" rel="noopener">Exec Source</a>、<a href="http://flume.apache.org/FlumeUserGuide.html#spooling-directory-source" target="_blank" rel="noopener">Spooling Directory Source</a> 、<a href="http://flume.apache.org/FlumeUserGuide.html#taildir-source" target="_blank" rel="noopener">Taildir Source</a>、<a href="http://flume.apache.org/FlumeUserGuide.html#kafka-source" target="_blank" rel="noopener">Kafka Source</a></p>
+</li>
+<li><p>sink</p>
+<p><a href="http://flume.apache.org/FlumeUserGuide.html#hdfs-sink" target="_blank" rel="noopener">HDFS Sink</a>、<a href="http://flume.apache.org/FlumeUserGuide.html#avro-sink" target="_blank" rel="noopener">Avro Sink</a>、<a href="http://flume.apache.org/FlumeUserGuide.html#file-roll-sink" target="_blank" rel="noopener">File Roll Sink</a>、<a href="http://flume.apache.org/FlumeUserGuide.html#hbasesinks" target="_blank" rel="noopener">HBaseSinks</a> 、<a href="http://flume.apache.org/FlumeUserGuide.html#kafka-sink" target="_blank" rel="noopener">Kafka Sink</a></p>
+</li>
+<li><p>channel</p>
+<p><a href="http://flume.apache.org/FlumeUserGuide.html#memory-channel" target="_blank" rel="noopener">Memory Channel</a>、<a href="http://flume.apache.org/FlumeUserGuide.html#jdbc-channel" target="_blank" rel="noopener">JDBC Channel</a>、<a href="http://flume.apache.org/FlumeUserGuide.html#kafka-channel" target="_blank" rel="noopener">Kafka Channel</a>、<a href="http://flume.apache.org/FlumeUserGuide.html#file-channel" target="_blank" rel="noopener">File Channel</a></p>
+</li>
+</ul>
+<p><strong>Spooling Directory Source、HDFS Sink 、 JDBC Channel</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[root@centos apache-flume-1.7.0-bin]<span class="comment"># vi conf/demo02.properties</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 命名组件</span></span><br><span class="line">a1.sources = s1</span><br><span class="line">a1.sinks = sk1</span><br><span class="line">a1.channels = c1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置source组件</span></span><br><span class="line">a1.sources.s1.type = spooldir</span><br><span class="line">a1.sources.s1.spoolDir = /root/spooldir</span><br><span class="line">a1.sources.s1.includePattern = ^.*\.<span class="built_in">log</span>$</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置channel组件</span></span><br><span class="line">a1.channels.c1.type = jdbc</span><br><span class="line"><span class="comment"># 配置sink组件</span></span><br><span class="line">a1.sinks.sk1.type = hdfs</span><br><span class="line">a1.sinks.sk1.hdfs.path = /flume/logs</span><br><span class="line">a1.sinks.sk1.hdfs.rollInterval = 0</span><br><span class="line">a1.sinks.sk1.hdfs.fileType = DataStream</span><br><span class="line"></span><br><span class="line"><span class="comment"># 对接source和channel组件</span></span><br><span class="line">a1.sources.s1.channels = c1</span><br><span class="line"><span class="comment"># 对接sink和channel组件</span></span><br><span class="line">a1.sinks.sk1.channel = c1</span><br><span class="line"></span><br><span class="line">[root@centos apache-flume-1.7.0-bin]<span class="comment"># yum install telnet -y</span></span><br><span class="line">[root@centos apache-flume-1.7.0-bin]<span class="comment"># ./bin/flume-ng agent --conf conf/ --conf-file conf/demo02.properties --name a1</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>采集/root/spooldir目录下的以log结尾的数据，并将采集的数据写入hdfs的/flume/logs目录下。</p>
+</blockquote>
+<p><strong>Taildir Source 、File Channel 、File Roll Sink</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[root@centos apache-flume-1.7.0-bin]<span class="comment"># vi conf/demo03.properties</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 命名组件</span></span><br><span class="line">a1.sources = s1</span><br><span class="line">a1.sinks = sk1</span><br><span class="line">a1.channels = c1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置source组件</span></span><br><span class="line">a1.sources.s1.type = TAILDIR</span><br><span class="line">a1.sources.s1.filegroups = f1 f2</span><br><span class="line">a1.sources.s1.filegroups.f1 = /root/taildir/dir1/^.*\.<span class="built_in">log</span>$</span><br><span class="line">a1.sources.s1.filegroups.f2 = /root/taildir/dir2/^.*\.<span class="built_in">log</span>$</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置channel组件</span></span><br><span class="line">a1.channels.c1.type = file</span><br><span class="line"><span class="comment"># 配置sink组件</span></span><br><span class="line">a1.sinks.sk1.type = file_roll</span><br><span class="line">a1.sinks.sk1.sink.directory = /root/file_roll/</span><br><span class="line">a1.sinks.sk1.sink.rollInterval = 0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 对接source和channel组件</span></span><br><span class="line">a1.sources.s1.channels = c1</span><br><span class="line"><span class="comment"># 对接sink和channel组件</span></span><br><span class="line">a1.sinks.sk1.channel = c1</span><br><span class="line"></span><br><span class="line">[root@centos apache-flume-1.7.0-bin]<span class="comment"># yum install telnet -y</span></span><br><span class="line">[root@centos apache-flume-1.7.0-bin]<span class="comment"># ./bin/flume-ng agent --conf conf/ --conf-file conf/demo03.properties --name a1</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>采集dir1、dir2的以log结尾的文件,可以检测实时行数据的追加，支持增量式采集。将采集到的结果输出到本地/root/file_roll目录下</p>
+</blockquote>
+<p><strong>AVRO Source 、Memory Channel、Kafka Sink</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[root@centos apache-flume-1.7.0-bin]<span class="comment"># vi conf/demo04.properties</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 命名组件</span></span><br><span class="line">a1.sources = s1</span><br><span class="line">a1.sinks = sk1</span><br><span class="line">a1.channels = c1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置source组件</span></span><br><span class="line">a1.sources.s1.type = avro</span><br><span class="line">a1.sources.s1.bind = CentOS</span><br><span class="line">a1.sources.s1.port = 44144</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置channel组件</span></span><br><span class="line">a1.channels.c1.type = memory</span><br><span class="line"><span class="comment"># 配置sink组件</span></span><br><span class="line">a1.sinks.sk1.type = org.apache.flume.sink.kafka.KafkaSink</span><br><span class="line">a1.sinks.sk1.kafka.bootstrap.servers = CentOSA:9092,CentOSB:9092,CentOSC:9092</span><br><span class="line">a1.sinks.sk1.kafka.topic = topic01</span><br><span class="line"></span><br><span class="line"><span class="comment"># 对接source和channel组件</span></span><br><span class="line">a1.sources.s1.channels = c1</span><br><span class="line"><span class="comment"># 对接sink和channel组件</span></span><br><span class="line">a1.sinks.sk1.channel = c1</span><br><span class="line"></span><br><span class="line">[root@centos apache-flume-1.7.0-bin]<span class="comment"># ./bin/flume-ng agent --conf conf/ --conf-file conf/demo03.properties --name a1 </span></span><br><span class="line">[root@centos apache-flume-1.7.0-bin]<span class="comment"># ./bin/flume-ng avro-client --host CentOS --port 44144 --dirname /root/dir1</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>采集远程目录下的/root/dir1数据，并且将数据发送给Kafka消息队列。</p>
+</blockquote>
+<h2 id="Java-对接-AVRO-Source"><a href="#Java-对接-AVRO-Source" class="headerlink" title="Java 对接 AVRO Source"></a>Java 对接 AVRO Source</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.flume<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flume-ng-sdk<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">version</span>&gt;</span>1.7.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>单机</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">RpcClient client= RpcClientFactory.getDefaultInstance(<span class="string">"CentOS"</span>,<span class="number">44144</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">100</span>;i++)&#123;</span><br><span class="line">    Event event= EventBuilder.withBody(<span class="string">"hello how are you ?"</span>.getBytes());</span><br><span class="line">    event.getHeaders().put(<span class="string">"key"</span>,<span class="string">"value"</span>);</span><br><span class="line">    client.append(event);</span><br><span class="line">&#125;</span><br><span class="line">client.close();</span><br></pre></td></tr></table></figure>
+<p><strong>故障转移</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Properties props = <span class="keyword">new</span> Properties();</span><br><span class="line">props.put(<span class="string">"client.type"</span>, <span class="string">"default_failover"</span>);</span><br><span class="line">props.put(<span class="string">"hosts"</span>, <span class="string">"h1 h2 h3"</span>);</span><br><span class="line">String host1 = <span class="string">"CentOS:44144"</span>;</span><br><span class="line">String host2 = <span class="string">"CentOS:44144"</span>;</span><br><span class="line">String host3 = <span class="string">"CentOS:44144"</span>;</span><br><span class="line">props.put(<span class="string">"hosts.h1"</span>, host1);</span><br><span class="line">props.put(<span class="string">"hosts.h2"</span>, host2);</span><br><span class="line">props.put(<span class="string">"hosts.h3"</span>, host3);</span><br><span class="line">RpcClient client= RpcClientFactory.getInstance(props);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">100</span>;i++)&#123;</span><br><span class="line">    Event event= EventBuilder.withBody(<span class="string">"hello how are you ?"</span>.getBytes());</span><br><span class="line">    event.getHeaders().put(<span class="string">"key"</span>,<span class="string">"value"</span>);</span><br><span class="line">    client.append(event);</span><br><span class="line">&#125;</span><br><span class="line">client.close();</span><br></pre></td></tr></table></figure>
+<p><strong>负载均衡</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Properties props = <span class="keyword">new</span> Properties();</span><br><span class="line">props.put(<span class="string">"client.type"</span>, <span class="string">"default_loadbalance"</span>);</span><br><span class="line">props.put(<span class="string">"hosts"</span>, <span class="string">"h1 h2 h3"</span>);</span><br><span class="line">String host1 = <span class="string">"CentOS:44144"</span>;</span><br><span class="line">String host2 = <span class="string">"CentOS:44144"</span>;</span><br><span class="line">String host3 = <span class="string">"CentOS:44144"</span>;</span><br><span class="line">props.put(<span class="string">"hosts.h1"</span>, host1);</span><br><span class="line">props.put(<span class="string">"hosts.h2"</span>, host2);</span><br><span class="line">props.put(<span class="string">"hosts.h3"</span>, host3);</span><br><span class="line"></span><br><span class="line">props.put(<span class="string">"host-selector"</span>, <span class="string">"random"</span>);</span><br><span class="line"><span class="comment">// props.put("host-selector", "round_robin");</span></span><br><span class="line"></span><br><span class="line">RpcClient client = RpcClientFactory.getInstance(props);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">100</span>;i++)&#123;</span><br><span class="line">    Event event= EventBuilder.withBody(<span class="string">"hello how are you !"</span>.getBytes());</span><br><span class="line">    event.getHeaders().put(<span class="string">"key"</span>,<span class="string">"value"</span>);</span><br><span class="line">    client.append(event);</span><br><span class="line">&#125;</span><br><span class="line">        client.close();</span><br></pre></td></tr></table></figure>
+<p><strong>集成sl4j日志</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.flume<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flume-ng-sdk<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.7.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.flume.flume-ng-clients<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flume-ng-log4jappender<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.7.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>slf4j-log4j12<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.7.5<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>单机</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">log4j.appender.flume = org.apache.flume.clients.log4jappender.Log4jAppender</span><br><span class="line">log4j.appender.flume.Hostname=CentOS</span><br><span class="line">log4j.appender.flume.Port=44144</span><br><span class="line">log4j.appender.flume.UnsafeMode = true</span><br><span class="line"></span><br><span class="line"># configure a class&apos;s logger to output to the flume appender</span><br><span class="line">log4j.logger.com.baizhi.demo =debug,flume</span><br><span class="line">log4j.appender.flume.layout=org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.flume.layout.ConversionPattern=%p %d&#123;yyyy-MM-dd HH:mm:ss&#125; %c [ %m ]%n</span><br></pre></td></tr></table></figure>
+<p><strong>负载均衡</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">log4j.appender.flume = org.apache.flume.clients.log4jappender.LoadBalancingLog4jAppender</span><br><span class="line">log4j.appender.flume.Hosts = CentOS:44144 CentOS:44144</span><br><span class="line">log4j.appender.flume.Selector = ROUND_ROBIN</span><br><span class="line"># configure a class&apos;s logger to output to the flume appender</span><br><span class="line">log4j.logger.com.baizhi.demo =debug,flume</span><br><span class="line">log4j.appender.flume.layout=org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.flume.layout.ConversionPattern=%p %d&#123;yyyy-MM-dd HH:mm:ss&#125; %c [ %m ]%n</span><br></pre></td></tr></table></figure>
+<p><strong>正则提取子串</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">100.109.195.91 - - [17/Feb/2017:00:08:11 +0800] &quot;GET /data/upload/shop/common/loading.gif HTTP/1.0&quot; 200 134 &quot;http://www.mall121.com/&quot; &quot;Mozilla/4.0 (compatible; MSIE 8.0; Trident/4.0; Windows NT 6.1; SLCC2 2.5.5231; .NET CLR 2.0.50727; .NET CLR 4.1.23457; .NET CLR 4.0.23457; Media Center PC 6.0; MS-WK 8)&quot; &quot;140.205.201.12&quot;</span><br><span class="line">-------</span><br><span class="line">String regex=&quot;^((25[0-5]|2[0-4]\\d|[0-1]\\d&#123;2&#125;|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d&#123;2&#125;|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d&#123;2&#125;|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d&#123;2&#125;|[1-9]?\\d))\\s-\\s-\\s\\[(.+)\\]\\s\&quot;(.*)\&quot;\\s(\\d&#123;3&#125;)\\s(\\d+)\\s\&quot;(.*)\&quot;\\s\&quot;(.*)\&quot;\\s\&quot;((25[0-5]|2[0-4]\\d|[0-1]\\d&#123;2&#125;|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d&#123;2&#125;|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d&#123;2&#125;|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d&#123;2&#125;|[1-9]?\\d))\&quot;&quot;;</span><br><span class="line">Pattern compile = Pattern.compile(regex);</span><br><span class="line">Matcher matcher = compile.matcher(log);</span><br><span class="line">if(matcher.matches())&#123;</span><br><span class="line">    System.out.println(matcher.group(1));</span><br><span class="line">    System.out.println(matcher.group(6));</span><br><span class="line">    System.out.println(matcher.group(7));</span><br><span class="line">    System.out.println(matcher.group(8));</span><br><span class="line">    System.out.println(matcher.group(9));</span><br><span class="line">    System.out.println(matcher.group(10));</span><br><span class="line">    System.out.println(matcher.group(11));</span><br><span class="line">    System.out.println(matcher.group(12));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/bigdata/" rel="tag"># bigdata</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/30/HBase集群搭建/" rel="next" title="HBase集群搭建">
+                <i class="fa fa-chevron-left"></i> HBase集群搭建
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/02/HBase/" rel="prev" title="HBase">
+                HBase <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/1.jpg"
+                alt="John Doe" />
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flume架构"><span class="nav-number">2.</span> <span class="nav-text">Flume架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思想"><span class="nav-number">3.</span> <span class="nav-text">思想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Flume"><span class="nav-number">4.</span> <span class="nav-text">安装Flume</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Agent组件配置文件语法"><span class="nav-number">5.</span> <span class="nav-text">Agent组件配置文件语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Agent配置实战"><span class="nav-number">6.</span> <span class="nav-text">Agent配置实战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置常见组件"><span class="nav-number">7.</span> <span class="nav-text">配置常见组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-对接-AVRO-Source"><span class="nav-number">8.</span> <span class="nav-text">Java 对接 AVRO Source</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  访客:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Caotian</a> 驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<script type="text/javascript" src="/js/src/love.js"></script>
